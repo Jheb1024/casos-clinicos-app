@@ -1,45 +1,84 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
-import { BrowserRouter as Router, Switch, 
-    Route, Redirect, useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { useAuth, iniciarSesion } from "../../Firebase/firebase_db";
 
-const auth = getAuth(firebaseApp);
 
 const InicioSesion = () => {
 
+    const auth = getAuth(firebaseApp);
     let history = useHistory();
-    const [isRegistrando, setIsRegistrando] = useState(false);
-    function onSubmit(rol){
-        
-        if(rol === "admin"){
-            history.push('/usuario/admin')
-        }else{
-            if(rol === "docente"){
-                history.push('/usuario/docente')
-            }else{
-                history.push('/usuario/alumno')
-            }
+    var Error = "";
+
+    function onSubmit() {
+
+        const db = getFirestore();
+        const user = auth.currentUser;
+        console.log("uiddd" + user.uid);
+
+        if (user !== null) {
+
+            const docRef = doc(db, "Usuarios", user.uid);
+
+            getDoc(docRef).then((doc) => {
+                console.log(doc.data(), doc.data().correo, doc.data().rol);
+                const roldata = doc.data().rol;
+                if (roldata === "admin") {
+                    history.push('/usuario/admin')
+                } else {
+                    if (roldata === "docente") {
+                        history.push('/usuario/docente')
+                    } else {
+                        history.push('/usuario/alumno')
+                    }
+                }
+            })
         }
-        
-        
-     }
-    function submitHandler (e){
+    }
+    async function submitHandler(e) {
         e.preventDefault();
-        
+
         const email = e.target.elements.email.value;
         const pass = e.target.elements.password.value;
-        const rol = e.target.elements.rol.value;
-        
-        console.log("submit",email,pass,rol);
+        console.log("submit", email, pass);
+     
+            await iniciarSesion(email, pass).then(() => {
+                onSubmit()
+            }).catch(error=>{
+                console.log("entramos al catch, error: ", error)
+                switch (error.code){
+                        case 'auth/invalid-email' :
+                        console.log();
+                        Error = "Email invalido";
+                        break;
+            
+                        case 'auth/user-disabled' :
+                            console.log("Este usuario ha sido desabilitado");
+                            Error = "Este usuario ha sido desabilitado";
+                        break;
+            
+                        case 'auth/user-not-found' :
+                            console.log("Usuario no encontrado");
+                            Error = "Usuario no encontrado";
+                        break;
 
-        signInWithEmailAndPassword(auth, email, pass);
-        onSubmit(rol);
+                        case 'auth/wrong-password' :
+                            console.log("Contraseña incorrecta");
+                            Error = "Contraseña incorrecta";
+                        break;
+
+                    default : 
+                        break;
+                }
+            })
+        
     }
 
     return (
         <div>
-            <h1>{isRegistrando ? "Regístrate" : "Inicia Sesión"}</h1>
+
             <form onSubmit={submitHandler}>
                 <fieldset>
                     <legend>Inicio de sesión</legend>
@@ -53,24 +92,11 @@ const InicioSesion = () => {
                         <input type="password" class="form-control" id="password" placeholder="Constraseña" />
                     </div>
                     <div>
-                        <label>
-                            Rol:
-                            <select id="rol">
-                                <option value='admin'>Administrador</option>
-                                <option value='docente'>Docente</option>
-                                <option value='alumno'>Alumno</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div>
                         <input type="submit"
-                        value={isRegistrando ? "Registrate" : "Iniciar Sesión"}/>
+                            value={"Iniciar Sesión"} />
                     </div>
                 </fieldset>
             </form>
-            <button onClick={()=>setIsRegistrando(!isRegistrando)}>
-                {isRegistrando ? "Ya tengo una cuenta" : "Quiero registrarme"}
-            </button>
         </div>
     );
 }
