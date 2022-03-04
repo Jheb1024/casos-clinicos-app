@@ -3,19 +3,16 @@ import Header from "./Header/header";
 import Footer from "./Footer/Footer";
 import InicioSesion from "./Componentes/IncioSesion/InicioSesion";
 import Registro from "./Componentes/Registro/Registro";
+import RegistroDocente from "./Componentes/Registro/RegistroDocente";
 import HomeAdmin from "./Usuarios/Administrador/HomeAdmin";
 import HomeDocente from "./Usuarios/Docente/HomeDocente";
 import HomeAlumno from "./Usuarios/Alumno/HomeAlumno";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Switch,
-  Route,
-  NavLink
-} from "react-router-dom";
+
+import {BrowserRouter as Router,Routes,Switch,Route,NavLink} from "react-router-dom";
 import { useState } from "react";
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import firebaseApp from "./Firebase/firebase-config";
+
 const auth = getAuth(firebaseApp);
 
 
@@ -40,8 +37,11 @@ function App() {
           <Route path="/inicio-sesion/">
             <InicioSesion></InicioSesion>
           </Route>
-          <Route path="/registro" >
+          <Route path="/registro-alumno" >
             <Registro></Registro>
+          </Route>
+          <Route path="/registro-docente" >
+            <RegistroDocente></RegistroDocente>
           </Route>
           <Route path="/usuario/admin" >
             <HomeAdmin></HomeAdmin>

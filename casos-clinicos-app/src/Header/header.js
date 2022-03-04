@@ -5,63 +5,76 @@ import InicioSesion from "../Componentes/IncioSesion/InicioSesion";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { useAuth } from "../Firebase/firebase_db";
+import 'bootstrap';
 
-export default function Header(){
+export default function Header() {
 
   const [loading, setLoading] = useState(false);
 
   const auth = getAuth(firebaseApp);
   const currentUser = useAuth();
 
-  function cerrarSesion(){
-    signOut(auth).then((user)=>{
+  function cerrarSesion() {
+    signOut(auth).then((user) => {
       console.log("El usaurio a cerrado la sesion");
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err.message);
     })
   }
 
-      
-   
+  const dropRgistro = (
+    
+      <li className="nav-item dropdown">
+           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                Registro
+              </a>
+              <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a className="dropdown-item" href="/registro-docente">Docente</a></li>
+                <li><a className="dropdown-item" href="/registro-alumno">Alumno</a></li>
+              </ul>
+            </li>
+    )
 
-    return(
-     
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-          <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-          <Link class="navbar-brand" to="/">Home</Link>
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarColor01"
-              aria-controls="navbarColor01"
-              aria-expanded="false"
-              aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <p>Bienvenido: { currentUser?.email}</p>
-          </div>
 
-          <div class="navbar-collapse collapse w-120 order-3 dual-collapse2">
-            <ul class="navbar-nav me-auto">
-              <li className="nav-item active">
-                
-              </li>
-              <li class="nav-item active">
-            
-              {!currentUser ? <Link class="nav-link" to="/inicio-sesion">Iniciar sesión</Link>: null}
-              </li>
-              <li class="nav-item">
-               {!currentUser ? <Link class="nav-link" to="/registro" >Registro</Link> : null}
-              </li>
-              <li class="nav-item">
-              {currentUser ? <Link class="nav-link" to="/" onClick={cerrarSesion}>Cerrar sesión</Link> : null}
-              </li>
-            </ul>
-          </div>
+  return (
+
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div className="container-fluid">
+        <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+          <Link className="navbar-brand" to="/">Home</Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarColor01"
+            aria-controls="navbarColor01"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <p>Bienvenido: {currentUser?.email}</p>
         </div>
-      </nav>
-    );
+
+        <div className="navbar-collapse collapse w-120 order-3 dual-collapse2">
+          <ul className="navbar-nav me-auto">
+            <li className="nav-item active">
+
+            </li>
+            <li className="nav-item active">
+
+              {!currentUser ? <Link className="flex-sm-fill text-sm-center nav-link" to="/inicio-sesion">Iniciar sesión</Link> : null}
+            </li>
+            <div>
+             {!currentUser ?  dropRgistro : null}
+             </div>
+            <li className="nav-item">
+              {currentUser ? <Link className="nav-link" to="/" onClick={cerrarSesion}>Cerrar sesión</Link> : null}
+            </li>
+             
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
 }
 
