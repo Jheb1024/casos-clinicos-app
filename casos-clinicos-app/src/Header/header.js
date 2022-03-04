@@ -6,7 +6,7 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { useAuth } from "../Firebase/firebase_db";
 import 'bootstrap';
-
+import "./header.css";
 export default function Header() {
 
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function Header() {
   const dropRgistro = (
     
       <li className="nav-item dropdown">
-           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+           <a className="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="true">
                 Registro
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -38,7 +38,7 @@ export default function Header() {
 
   return (
 
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav className="navbar navbar-expand-lg navbar-dark ">
       <div className="container-fluid">
         <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
           <Link className="navbar-brand" to="/">Home</Link>
@@ -64,7 +64,7 @@ export default function Header() {
 
               {!currentUser ? <Link className="flex-sm-fill text-sm-center nav-link" to="/inicio-sesion">Iniciar sesión</Link> : null}
             </li>
-            <div>
+            <div className="nav-item">
              {!currentUser ?  dropRgistro : null}
              </div>
             <li className="nav-item">
