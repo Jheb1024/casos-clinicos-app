@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Routes, Switch, Route, NavLink } from "react-r
 import { useState } from "react";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from "./Firebase/firebase-config";
+import ReiniciarPasswordUI from "./Componentes/ReiniciarPassword/ReiniciarPasswordUI";
 
 const auth = getAuth(firebaseApp);
 
@@ -51,6 +52,9 @@ function App() {
           </Route>
           <Route path="/usuario/alumno" >
             <HomeAlumno></HomeAlumno>
+          </Route>
+          <Route path="/reiniciar-password">
+            <ReiniciarPasswordUI></ReiniciarPasswordUI>
           </Route>
           <Route path="/" exact>
             <h1 className="h1">¡Bienvenido(a) a CasosClínicos!</h1>

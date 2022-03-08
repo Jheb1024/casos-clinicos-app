@@ -179,6 +179,9 @@ const InicioSesion = () => {
                                                     <a href="/registro-alumno">Registro Alumno</a></label>
                                                     <br />
                                                     <br />
+                                                    <a href="/reiniciar-password">¿Olvidaste tu contraseña?</a>
+                                                    <br />
+                                                    <br />
                                                     <div>
                                                         <input type="submit"
                                                             value={"Iniciar Sesión"} className="btn btn-primary" />
