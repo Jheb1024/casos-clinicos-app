@@ -7,6 +7,8 @@ import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/
 import { useAuth } from "../Firebase/firebase_db";
 import 'bootstrap';
 import "./header.css";
+import logo from "./Logo_CC02.png";
+
 export default function Header() {
 
   const [loading, setLoading] = useState(false);
@@ -23,17 +25,17 @@ export default function Header() {
   }
 
   const dropRgistro = (
-    
-      <li className="nav-item dropdown">
-           <a className="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="true">
-                Registro
-              </a>
-              <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <li><a className="dropdown-item" href="/registro-docente">Docente</a></li>
-                <li><a className="dropdown-item" href="/registro-alumno">Alumno</a></li>
-              </ul>
-            </li>
-    )
+
+    <li className="nav-item dropdown">
+      <a className="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+        Registro
+      </a>
+      <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <li ><a className="dropdown-item" href="/registro-docente">Docente</a></li>
+        <li><a className="dropdown-item" href="/registro-alumno">Alumno</a></li>
+      </ul>
+    </li>
+  )
 
 
   return (
@@ -41,7 +43,11 @@ export default function Header() {
     <nav className="navbar navbar-expand-lg navbar-dark ">
       <div className="container-fluid">
         <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-          <Link className="navbar-brand" to="/">Home</Link>
+          <Link className="navbar-brand" to="/"><img src={logo}
+            width="250"
+            height="60"
+            shadow="grey"></img>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -52,25 +58,25 @@ export default function Header() {
             aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
-          <p>Bienvenido: {currentUser?.email}</p>
+          {/*<p>Bienvenido: {currentUser?.email}</p>*/}
         </div>
 
         <div className="navbar-collapse collapse w-120 order-3 dual-collapse2">
           <ul className="navbar-nav me-auto">
-            <li className="nav-item active">
 
-            </li>
+            <div className="nav-item">
+              {!currentUser ? dropRgistro : null}
+            </div>
             <li className="nav-item active">
 
               {!currentUser ? <Link className="flex-sm-fill text-sm-center nav-link" to="/inicio-sesion">Iniciar sesión</Link> : null}
             </li>
-            <div className="nav-item">
-             {!currentUser ?  dropRgistro : null}
-             </div>
             <li className="nav-item">
               {currentUser ? <Link className="nav-link" to="/" onClick={cerrarSesion}>Cerrar sesión</Link> : null}
             </li>
-             
+
+
+
           </ul>
         </div>
       </div>

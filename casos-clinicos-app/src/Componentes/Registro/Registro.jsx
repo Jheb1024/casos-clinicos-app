@@ -23,15 +23,43 @@ const Registro = () => {
             switch (error.code) {
                 case 'auth/email-already-in-use':
                     console.log(`Email address ${email} already in use.`);
+                    new Swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Este correo electrónico ya esta en uso.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     break;
                 case 'auth/invalid-email':
                     console.log(`Email address ${email} is invalid.`);
+                    new Swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Correo invalido',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     break;
                 case 'auth/operation-not-allowed':
                     console.log(`Error during sign up.`);
+                    new Swal({
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'Ocurrio un error al registrarse',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     break;
                 case 'auth/weak-password':
                     console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+                    new Swal({
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'La contraseña es muy débil',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     break;
                 default:
                     console.log(error.message);

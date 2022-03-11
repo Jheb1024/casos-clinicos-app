@@ -160,7 +160,7 @@ const InicioSesion = () => {
 
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="password">Password</label>
+                                                        <label for="password">Contraseña</label>
                                                         <Field type="password"
                                                             class="form-control"
                                                             id="password"
