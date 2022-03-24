@@ -1,11 +1,74 @@
-.navbar{
-	background-color: #009480;
-    box-shadow: 2px 2px 5px #999;
+.Navbar{
+    background-color:#009480;
+    width: 100%;
+    height: 65px;
+    font: normal Open Sans;
+    box-shadow: 0px 8px 7px #00000029;
+    border-radius: 10px;
+    display: flex;
+    color: #ffff!important;
 }
-.dropdown-item:hover{
-    background-color: #00b9bc;
+.Navbar .leftSide{
+    flex: 50%;
+    color: #ffff;
+    align-items: center;
+    display: flex;
+    justify-content: left;
+    
+    
 }
-.bootstrap-select dropdown-menu {
-    max-width: 100%!important;
+.Navbar .leftSide .leftLinks{
+    max-height: 65px;
+    color: #ffff !important;
+    padding-left: 20px;
+    
+}
+.Navbar .leftSide .leftLinks Link{
+    font-size: 80px;
+    
+}
 
+
+.Navbar .rightSide{
+    flex: 50%;
+    color: #ffff;
+    align-items: center;
+    display: flex;
+    justify-content: right;
+    padding-right: 20px;
+    
+}
+
+.Navbar .leftSide .rightLinks{
+    max-height: 65px;
+    color: #ffff !important;
+    padding-right: 20px !important;
+    
+}
+.Navbar .leftSide .rightLinks Link{
+    font-size: 50px;
+    padding-right: 20px;
+    margin-left: 15px;
+    
+}
+
+li.nav{
+    text-decoration: none;
+}
+::marker {
+    font-variant-numeric: none !important;
+    text-transform: none !important;
+    text-indent: none !important;
+    text-align: none !important;
+    text-align-last: none !important;
+}
+
+@media only screen and (max-width:850px) {
+    link{
+        font-size: 10px;
+        
+    }
+}
+.color-nav{
+    background-color: #009480;
 }

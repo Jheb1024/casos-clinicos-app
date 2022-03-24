@@ -1,5 +1,23 @@
+body, html{
+  height: 100%;
+  background: 
+    url("C:/Users/jhan_/Documents/casosc-app/Images/Curvas.png"), linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)); 
+    background-size: cover;
+  
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+}
+.content-wrap{
+  flex: 1;
 }
 
 .App-logo {
@@ -36,3 +54,4 @@
     transform: rotate(360deg);
   }
 }
+

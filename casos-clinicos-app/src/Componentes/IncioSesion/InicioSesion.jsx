@@ -6,6 +6,7 @@ import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { useAuth, iniciarSesion } from "../../Firebase/firebase_db";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 import "./inicioSesion.css";
 
 const InicioSesion = () => {
@@ -32,13 +33,13 @@ const InicioSesion = () => {
                 console.log(doc.data(), doc.data().correo, doc.data().rol);
                 const roldata = doc.data().rol;
                 if (roldata === "admin") {
-                    history.push('/usuario/admin')
+                    history.push('/usuario/admin/administrar-cuestionarios')
                 } else if (roldata === "docente") {
-                    history.push('/usuario/docente')
+                    history.push('/usuario/docente/lista-alumno')
                 } else if (roldata === "alumno") {
-                    history.push('/usuario/alumno')
+                    history.push('/usuario/alumno/cuestionarios-alumno')
                 } else {
-                    Swal(
+                    new Swal(
                         'Error!',
                         'Verifique los datos de la cuenta',
                         'error',
@@ -63,7 +64,7 @@ const InicioSesion = () => {
                 case 'auth/invalid-email':
                     console.log();
                     Error = "Email invalido";
-                    Swal.fire(
+                    new Swal.fire(
                         'Error!',
                         'Email invalido',
                         'error',
@@ -73,19 +74,35 @@ const InicioSesion = () => {
                 case 'auth/user-disabled':
                     console.log("Este usuario ha sido desabilitado");
                     Error = "Este usuario ha sido desabilitado";
+                    new Swal(
+                        'Error!',
+                        'Usuario deshabilitado',
+                        'error',
+                    );
                     break;
 
                 case 'auth/user-not-found':
                     console.log("Usuario no encontrado");
                     Error = "Usuario no encontrado";
+                    new Swal(
+                        'Error!',
+                        'Usuario no encontrado',
+                        'error',
+                    );
                     break;
 
                 case 'auth/wrong-password':
                     console.log("Contraseña incorrecta");
                     Error = "Contraseña incorrecta";
+                    new Swal(
+                        'Error!',
+                        Error,
+                        'error',
+                    );
                     break;
 
                 default:
+                    
                     break;
             }
         })
@@ -174,13 +191,12 @@ const InicioSesion = () => {
                                                     </div>
                                                     <br />
                                                     <label for="txt">¿Aún no tienes una cuenta? <br/>
-                                                    <a href="/registro-docente">Registro Docente</a>
+                                                    <Link to="/registro-docente">Registro Docente</Link>
                                                     <br/>
-                                                    <a href="/registro-alumno">Registro Alumno</a></label>
+                                                    <Link to="/registro-alumno">Registro Alumno</Link></label>
                                                     <br />
                                                     <br />
-                                                    <a href="/reiniciar-password">¿Olvidaste tu contraseña?</a>
-                                                    <br />
+                                                    <Link to="/reiniciar-password">¿Olvidaste tu contraseña?</Link>                                                   <br />
                                                     <br />
                                                     <div>
                                                         <input type="submit"

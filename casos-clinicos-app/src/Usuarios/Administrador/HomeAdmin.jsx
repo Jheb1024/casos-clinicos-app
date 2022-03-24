@@ -1,5 +1,17 @@
+//HomeAdmin.jsx
 import React from "react";
 import { getAuth } from "firebase/auth";
+import { BrowserRouter as Router, Route } from "react-router-dom"
+import SidebarAD from "../../Componentes/Sidebar/SidebarAD"
+import styled from "styled-components";
+//Páginas admi
+import AdministrarCuestionarios from "./AdministrarCuestionarios"
+import AdministrarTemas from "./AdministrarTemas"
+import ListaUsuarios from "./ListarUsuarios"
+//iconos
+import * as FaIcons from 'react-icons/fa';
+import { MdQuiz } from "react-icons/md";
+
 const HomeAdmin = () => {
 
 
@@ -21,53 +33,23 @@ const HomeAdmin = () => {
     const uid = user.uid;
   }
   return (
-    <div>
-      <div>
-
-        <ul class="navbar1" >
-          <li><p>Datos del administrador</p> </li>
-          <li><a class="active" href="#home"> Lista de usuarios </a> </li>
-          <li><a href="#"> Agregar nuevo usuario </a> </li>
-          <li><a href="#"> Lista de temas </a> </li>
-          <li><a href="#"> Administrar Cuestiopnarios </a> </li>
-        </ul>
-      </div>
-
-      <div className="margin-left:25%">
-
-        <div class="w3-container">
-          <div class="container-fluid">
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
-              <button class="btn btn-outline-success" type="submit">Buscar</button>
-            </form>
-          </div>
-          <div>
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Matrícula</th>
-                  <th scope="col">Rol</th>
-                  <th scope="col">Fecha registro</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                </tr>
-
-              </tbody>
-            </table>
-          </div>
+    <Div>
+    <Router>
+        <SidebarAD PrimerT="Administrar cuestionarios" PrimerR="/usuario/admin/administrar-cuestionarios" iconoP={<MdQuiz/>}
+                   DosT="Administrar temas" DosR="/usuario/admin/administrar-temas" iconoS={<FaIcons.FaListAlt/>} 
+                   TresT="Lista de usuarios" TresR="/usuario/admin/lista-usuarios" iconoT={<FaIcons.FaUserFriends/>}
+        />
+        <div className="content w-100">
+            <Route path="/usuario/admin/administrar-cuestionarios" exact="true" component={AdministrarCuestionarios} />
+            <Route path="/usuario/admin/administrar-temas" exact="true" component={AdministrarTemas} />
+            <Route path="/usuario/admin/lista-usuarios" exact="true" component={ListaUsuarios} />
         </div>
-      </div>
-    </div>
+
+    </Router>
+</Div>
   );
 }
 export default HomeAdmin
+const Div = styled.div`
+  position: relative;
+`;
