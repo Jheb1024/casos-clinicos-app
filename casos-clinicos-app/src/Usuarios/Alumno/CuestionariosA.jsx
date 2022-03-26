@@ -1,7 +1,12 @@
 //CuestionarioA.jsx
-import React, {useEffect } from "react";
+import {useEffect } from "react";
+import * as React from 'react';
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
+
+import AdministradorAlumno from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Modelo/AdministrarUsuarios/AdministradorAlumno.ts";
+
+
 
 export default function CuestionariosA() {
     useEffect(() => {
@@ -23,7 +28,11 @@ export default function CuestionariosA() {
         }
       );
     }, []);
+   {/* const alumno = new AdministradorAlumno();
+  alumno.extraer(1);*/}
+
     return (
+      
       <Section>
         <div className="table-responsive border bg-light px-4">
                         <h1>Temas de cuestionarios</h1>
