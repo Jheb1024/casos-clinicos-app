@@ -2,8 +2,35 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
 import Modal from "../../Componentes/Modal/Modal";
+import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'firebase/firestore';
+const auth = getAuth(firebaseApp);
+const db = getFirestore();
 
-export default function Miperfil() {
+
+export default function Miperfil({user}) {
+//Hooks para poder obtener los datos del alumno
+
+console.log("usuario dntro de mi perfil: ", user.uid);
+//const user = auth.currentUser;
+const [alumno, setAlumno] = useState();
+useEffect(()=>{
+  const docRef = doc(db, `Alumno/${user.uid}`);
+  const unsubscribe = onSnapshot(docRef, (doc) => {
+    console.log("Current data: ", doc.data());
+    const alumnoData= doc.data();
+    setAlumno(alumnoData);
+});
+return()=>{
+  unsubscribe();
+}
+}, []);
+
+
+
+
+
   useEffect(() => {
     const sr = scrollreveal({
       origin: "bottom",
@@ -22,16 +49,24 @@ export default function Miperfil() {
         interval: 100,
       }
     );
+
+    return()=>{
+      sr();
+    }
   }, []);
+  
   const [estadoModalE, cambiarEstadoModalE] = useState(false);
   return (
     <Section>
       <div className="border bg-light px-4">
-
+    
         <form className="" method="POST" action="">
           <fieldset>
             <br></br>
             <h1>Información personal</h1>
+            <div>
+            {alumno ? alumno.Nombre : null}
+            </div>
 
             <div class="form-group">
               <label for="InputMatricula">Matrícula</label>

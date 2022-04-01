@@ -34,6 +34,7 @@ function App() {
 
   onAuthStateChanged(auth, (usuarioFirebase) => {
     if (usuarioFirebase) {
+      console.log("Usuario desde el app", usuarioFirebase);
       setUser(usuarioFirebase);
     } else {
       setUser(null);
@@ -63,7 +64,7 @@ function App() {
               <HomeDocente></HomeDocente>
             </Route>
             <Route path="/usuario/alumno" >
-              <HomeAlumno></HomeAlumno>
+              {user && <HomeAlumno usuario={user}/>}
             </Route>
             <Route path="/reiniciar-password">
               <ReiniciarPasswordUI></ReiniciarPasswordUI>

@@ -1,10 +1,10 @@
 //CuestionarioA.jsx
-import {useEffect } from "react";
+import {useEffect, useState } from "react";
 import * as React from 'react';
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
 
-import AdministradorAlumno from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Modelo/AdministrarUsuarios/AdministradorAlumno.ts";
+import AdministradorAlumno from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Modelo/AdministrarUsuarios/AdministradorAlumno";
 
 
 
@@ -28,8 +28,8 @@ export default function CuestionariosA() {
         }
       );
     }, []);
-   {/* const alumno = new AdministradorAlumno();
-  alumno.extraer(1);*/}
+
+    
 
     return (
       
@@ -92,6 +92,8 @@ export default function CuestionariosA() {
                             </div>
                         </div>
                     </div>
+                   
+                    
       </Section>
     );
   }

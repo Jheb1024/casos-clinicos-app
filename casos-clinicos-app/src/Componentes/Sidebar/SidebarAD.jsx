@@ -23,7 +23,7 @@ export default function SidebarAD(props) {
       reset: false,
     });
 
-    sr.reveal(
+    return()=>{ sr.reveal(
       `
       .links>ul>li:nth-of-type(1),
       .links>ul>li:nth-of-type(2),
@@ -34,7 +34,8 @@ export default function SidebarAD(props) {
         opacity: 0,
         interval: 300,
       }
-    );
+    );}
+
   }, []);
 
   return (

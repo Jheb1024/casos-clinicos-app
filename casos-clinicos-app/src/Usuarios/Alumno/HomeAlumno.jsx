@@ -1,5 +1,5 @@
 //Esto van en HomeAlumno.jsx
-import React from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components";
 import SidebarAD from "../../Componentes/Sidebar/SidebarAD"
 import { BrowserRouter as Router, Route } from "react-router-dom"
@@ -9,7 +9,14 @@ import MiavanceA from './MiavanceA'
 import Miperfil from './Miperfil'
 //iconos
 import * as FaIcons from 'react-icons/fa';
-function HomeAlumno() {
+function HomeAlumno({usuario}) {
+
+  
+
+  
+    
+
+    console.log("leemos el usuario desde home alumno",usuario.uid);
     return (
         <Div>
         <Router>
@@ -20,7 +27,7 @@ function HomeAlumno() {
                 <div className="content w-100">
 
                     <Route path="/usuario/alumno/cuestionarios-alumno" exact="true"  component={CuestionariosA} />
-                    <Route path="/usuario/alumno/miperfil-alumno"  exact="true" component={Miperfil} />
+                    <Route path="/usuario/alumno/miperfil-alumno"  ><Miperfil user = {usuario}/></Route>
                     <Route path="/usuario/alumno/miavance-alumno"  exact="true" component={MiavanceA} />
                 </div>
 

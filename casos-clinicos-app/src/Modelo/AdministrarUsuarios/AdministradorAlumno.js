@@ -1,5 +1,5 @@
 import Alumno from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Modelo/Usuarios/Alumno";
-import AdministradorUsuarios from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Modelo/AdministrarUsuarios/AdministradorUsuarios";
+import AdministradorUsuario from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Modelo/AdministrarUsuarios/AdministradorUsuario";
 import {
   doc,
   getDoc,
@@ -12,7 +12,7 @@ import {
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-export default class AdministradorAlumno extends AdministradorUsuarios {
+export default class AdministradorAlumno extends AdministradorUsuario {
   listaAlumnos = [];
   alumno;
   auth;
@@ -20,10 +20,11 @@ export default class AdministradorAlumno extends AdministradorUsuarios {
   user;
 
   constructor() {
+      super();
     this.auth = getAuth(firebaseApp);
     this.db = getFirestore();
    
-    this.alumno = new Alumno();
+    
   }
 
   registrar(){
@@ -47,21 +48,24 @@ export default class AdministradorAlumno extends AdministradorUsuarios {
               //this.alumno = doc.data();
               
                 console.log(doc.data());
+                this.alumno = new Alumno(doc.data().email,
+                                            doc.data().password,
+                                            doc.data().rol,
+                                            doc.data().Nombre,
+                                            doc.data().ApellidoPaterno,
+                                            doc.data().ApellidoMaterno,
+                                            doc.data().Edad,
+                                            doc.data().EstudiosPrevios,
+                                            doc.data().FechaRegistro,
+                                            doc.data().Matricula,
+                                            doc.data().NRC,
+                                            doc.data().NumVecesTomadoMateria,
+                                            doc.data().Sexo);
+                console.log(this.alumno);
                 //const roldata = doc.data().rol;
+
             })
-      /*
-      const ref = doc(this.db, "Alumno", this.user.uid).withConverter(this.alumnoConverter);
-      const docSnap = await getDoc(ref);
-      if (docSnap.exists()) {
-        
-        // Convert to City object
-        
-        this.alumno = docSnap.data();
-        // Use a City instance method
-        console.log("datos"+docSnap.data().toString());
-      } else {
-        console.log("No such document!");
-      }*/
+    
     } catch (error) {
       console.error(error);
     }
@@ -71,42 +75,4 @@ export default class AdministradorAlumno extends AdministradorUsuarios {
 
   extraerListaAlumno() {}
 
-  // Firestore data converter
-  alumnoConverter = {
-    toFirestore: (alumno) => {
-      return {
-        edad: alumno.Edad,
-        estudiosPrevios: alumno.EstudiosPrevios,
-        fechaRegistro: alumno.FechaRegistro,
-        matricula: alumno.Matricula,
-        nrc: alumno.NRC,
-        nombre: alumno.Nombre,
-        numVecesTomadoMateria: alumno.NumVecesTomadoMateria,
-        sexo: alumno.Sexo,
-        email: alumno.correo,
-        password: alumno.password,
-        rol: alumno.rol,
-        apellidoPaterno: alumno.ApellidoPaterno,
-        apellidoMaterno: alumno.ApellidoMaterno,
-      };
-    },
-    fromFirestore: (snapshot, options) => {
-      const data = snapshot.data(options);
-      return new Alumno(
-        data.email,
-        data.password,
-        data.rol,
-        data.nombre,
-        data.apellidoPaterno,
-        data.apellidoMaterno,
-        data.edad,
-        data.estudiosPrevios,
-        data.fechaRegistro,
-        data.matricula,
-        data.nrc,
-        data.numVecesTomadoMateria,
-        data.sexo
-      );
-    },
-  };
 }
