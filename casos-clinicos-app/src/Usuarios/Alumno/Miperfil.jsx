@@ -14,15 +14,18 @@ export default function Miperfil({user}) {
 
 console.log("usuario dntro de mi perfil: ", user.uid);
 //const user = auth.currentUser;
-const [alumno, setAlumno] = useState();
+const [alumno, setAlumno] = useState(null);
 useEffect(()=>{
+  
+
   const docRef = doc(db, `Alumno/${user.uid}`);
   const unsubscribe = onSnapshot(docRef, (doc) => {
     console.log("Current data: ", doc.data());
     const alumnoData= doc.data();
     setAlumno(alumnoData);
 });
-return()=>{
+
+  return()=>{
   unsubscribe();
 }
 }, []);
@@ -32,13 +35,15 @@ return()=>{
 
 
   useEffect(() => {
+
     const sr = scrollreveal({
       origin: "bottom",
       distance: "80px",
       duration: 2000,
       reset: false,
     });
-    sr.reveal(
+
+    return()=>{sr.reveal(
       `
           nav,
           .row__one,
@@ -50,8 +55,7 @@ return()=>{
       }
     );
 
-    return()=>{
-      sr();
+      
     }
   }, []);
   
@@ -60,12 +64,13 @@ return()=>{
     <Section>
       <div className="border bg-light px-4">
     
-        <form className="" method="POST" action="">
+        {alumno ?<form className="" method="POST" action="">
           <fieldset>
             <br></br>
             <h1>Información personal</h1>
             <div>
-            {alumno ? alumno.Nombre : null}
+            
+            
             </div>
 
             <div class="form-group">
@@ -74,7 +79,7 @@ return()=>{
             </div>
             <div class="form-group">
               <label for="InputNombre">Nombres</label>
-              <input type="txt" class="form-control" id="InputNombre" />
+              <input type="txt" class="form-control" id="InputNombre" value={  alumno.Nombre }/>
             </div>
             <div class="form-group">
               <label for="InputApellidoP">Apellido paterno</label>
@@ -90,7 +95,7 @@ return()=>{
             </div>
 
           </fieldset>
-        </form>
+        </form>: null}
         <br></br>
         <div>
           <ContenedorBotones>
@@ -105,6 +110,7 @@ return()=>{
           >
             <Contenido>
               <h2>Información personal</h2>
+              
               <Boton onClick={() => cambiarEstadoModalE(!estadoModalE)}>Aceptar</Boton>
             </Contenido>
           </Modal>
