@@ -106,7 +106,7 @@ function RegistroDocente() {
                                     No compartiremos tu información
                                 </small>
                                 <div class="form-group">
-                                    <label for="matriculaDoc" class="form-label">Matrícula</label>
+                                    <label for="matriculaDoc" class="form-label">ID</label>
                                     <Field
                                         type="txt"
                                         class="form-control"

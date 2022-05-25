@@ -25,6 +25,7 @@ import Miperfil from "./Usuarios/Alumno/Miperfil";
 import AdministrarCuestionarios from "./Usuarios/Administrador/AdministrarCuestionarios";
 import AdministrarTemas from "./Usuarios/Administrador/AdministrarTemas";
 import ListaUsuarios from "./Usuarios/Administrador/ListarUsuarios";
+import Cuestionario from "./Componentes/Cuestionario/Cuestionario";
 const auth = getAuth(firebaseApp);
 
 
@@ -61,7 +62,7 @@ function App() {
               <HomeAdmin></HomeAdmin>
             </Route>
             <Route path="/usuario/docente" >
-              <HomeDocente></HomeDocente>
+            {user && <HomeDocente usuario={user}/>}
             </Route>
             <Route path="/usuario/alumno" >
               {user && <HomeAlumno usuario={user}/>}
@@ -106,6 +107,7 @@ function App() {
           <Route path="/usuario/admin/lista-usuarios" >
             <ListaUsuarios></ListaUsuarios>
           </Route>
+          
           </Switch>
           
         </Router>

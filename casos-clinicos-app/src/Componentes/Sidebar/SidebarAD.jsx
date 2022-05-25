@@ -129,8 +129,9 @@ export default function SidebarAD(props) {
   );
 }
 const Section = styled.section`
-  position: fixed;
+  position: absolute;
   left: 0;
+  top : 0px;
   background-color: #009480;
   height: 100vh;
   width: 18vw;
@@ -145,6 +146,7 @@ const Section = styled.section`
     flex-direction: column;
     gap: 2rem;
     width: 100%;
+    height: 100%;
 
     .toggle {
       display: none;

@@ -11,8 +11,9 @@ import ListaUsuarios from "./ListarUsuarios"
 //iconos
 import * as FaIcons from 'react-icons/fa';
 import { MdQuiz } from "react-icons/md";
+import PerfilDocente from "./PerfilDocente";
 
-const HomeAdmin = () => {
+const HomeAdmin = ({usuario}) => {
 
 
   const auth = getAuth();
@@ -42,6 +43,7 @@ const HomeAdmin = () => {
         <div className="content w-100">
             <Route path="/usuario/admin/administrar-cuestionarios" exact="true" component={AdministrarCuestionarios} />
             <Route path="/usuario/admin/administrar-temas" exact="true" component={AdministrarTemas} />
+            
             <Route path="/usuario/admin/lista-usuarios" exact="true" component={ListaUsuarios} />
         </div>
 

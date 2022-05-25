@@ -99,8 +99,8 @@ export default function Header() {
     </Nav>
     <Nav>
     {!currentUser ? 
-    <NavDropdown title="Registro" id="collasible-nav-dropdown">
-      <LinkContainer to="/registro-docente"><NavDropdown.Item >Docente</NavDropdown.Item></LinkContainer>
+    <NavDropdown title="Registro" id="collasible-nav-dropdown" >
+      <LinkContainer to="/registro-docente" ><NavDropdown.Item >Docente</NavDropdown.Item></LinkContainer>
         <LinkContainer to="/registro-alumno"><NavDropdown.Item >Alumno</NavDropdown.Item></LinkContainer>
       </NavDropdown> : null}
 

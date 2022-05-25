@@ -1,0 +1,29 @@
+.errors{
+    color: red;
+}
+.pregunta{
+    text-align: center;
+    width: 500px;
+    height: 130px;
+}
+.pregunta-respuesta{
+    float: left;
+    width: 300px;
+}
+.select-respuesta{
+    float: right;
+    width: 200px;
+}
+.btn_guardar{
+    padding: 3px;
+    margin: 15px;
+    color: white;
+    background-color: rgb(63, 212, 63);
+
+}
+.pregunta_field{
+    width: 300px;
+}
+.respuesta_field{
+    width: 270px;
+}

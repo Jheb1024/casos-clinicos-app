@@ -298,6 +298,7 @@ const Registro = () => {
                                             <option  value="Elige una opción">Elige una opción</option>
                                             <option value="Mujer">Mujer</option>
                                             <option value="Hombre">Hombre</option>
+                                            <option value="Hombre">Otro</option>
                                         </Field>
                                         <ErrorMessage name="SelectSexo" component={() => (
                                             <div className="error"><p class="text-danger"><small>{errors.SelectSexo}</small></p></div>
@@ -331,7 +332,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div class="form-group">
-                                        <label for="SelectVeces">¿Cuántas veces a tomado la materia?</label>
+                                        <label for="SelectVeces">¿Cuántas veces ha tomado la materia?</label>
                                         <Field class="form-select" id="SelectVeces" name="SelectVeces" as="select">
                                             <option value="Elige una opción">Elige una opción</option>
                                             <option value="0">0</option>

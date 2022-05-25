@@ -1,9 +1,75 @@
 //Aqui el docente podra agregar nuevo cuestionario
-import React, {useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
+import { collection, getDocs, getFirestore, onSnapshot, query, where } from "firebase/firestore";
+import firebaseApp from "../../Firebase/firebase-config";
+import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row } from 'react-bootstrap'
+import CuestionarioModal from "../../Componentes/Cuestionario/CuestionarioModal";
 
-export default function AgregarCuestionario() {
+import { Link } from "react-router-dom";
+import CuestionarioModalDocente from "../../Componentes/Cuestionario/CuestionarioModalDocente";
+export default function AgregarCuestionario({user}) {
+
+  const [temas, setTemas] = useState(null);
+  const [subtemas, setSubtemas] = useState(null);
+  const [cuestionarios, setCuestionarios] = useState(null);
+  const [temaCompuesto, setTemaCompuesto] = useState(null);
+  const [subtema, setSubtema] = useState(null);
+
+  const db = getFirestore(firebaseApp);
+  useEffect(
+    () =>
+      onSnapshot(collection(db, 'Temas'), (snapshot) => {
+        console.log(snapshot.docs.map((doc) => doc.data()))
+        setTemas(snapshot.docs.map((doc) => doc.data()))
+      }),
+
+    []);
+  async function getSubtemas(tema) {
+    const q = query(collection(db, "Subtemas"), where("Tema", "==", tema));
+
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size > 0) {
+      setSubtemas(querySnapshot.docs.map((doc) => doc.data()))
+    }
+  }
+
+  function CustomToggle({ children, eventKey }) {
+    const decoratedOnClick = useAccordionButton(eventKey, () =>
+      //console.log(children),
+      getSubtemas(children)
+    );
+
+    return (
+      <button
+        type="button"
+        style={{ backgroundColor: 'pink' }}
+        onClick={decoratedOnClick}
+      >
+        {children}
+      </button>
+    );
+  }
+
+  async function getCuestionarios(tema,subtema) {
+    const temaCompuesto ={
+      Tema:tema,
+      Subtema:subtema
+    }
+    setTemaCompuesto(temaCompuesto)
+    
+    const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", subtema));
+
+    const querySnapshot = await getDocs(q);
+    if ((querySnapshot.size > 0) && tema!== null){
+      console.log(querySnapshot.docs.map((doc) => doc.data()))
+      setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
+    }
+
+    console.log(temaCompuesto)
+  }
+
     useEffect(() => {
       const sr = scrollreveal({
         origin: "bottom",
@@ -24,9 +90,57 @@ export default function AgregarCuestionario() {
       );
     }, []);
     return (
-      <Section>
-        <p>aqui el docente va a poder agregar un cuestionario</p>
-      </Section>
+      <Container>
+      <Row>
+        <Col>
+          <Section>
+            <p>aqui el admi podra tener todas las opciones para administrar los temas</p>
+            Crear Temas
+            {temas?.map((tema) => (
+              <div>
+
+                <Accordion>
+                  <Card>
+                    <Card.Header>
+                      <CustomToggle eventKey="0">{tema.Tema}</CustomToggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0">
+                      <ListGroup variant="flush">
+                        {subtemas?.map((subtema) => (
+                          <ListGroup.Item action onClick={() => getCuestionarios(tema.Tema,subtema.Subtema)}>{subtema.Subtema}</ListGroup.Item>
+                        ))}
+                       
+                      </ListGroup>
+                    </Accordion.Collapse>
+
+                  </Card>
+                </Accordion>
+              </div>
+            ))}
+            
+          </Section>
+        </Col>
+        <Col xs={3}>
+        
+          <ListGroup defaultActiveKey="#link1">
+           {cuestionarios?.map((cuestionario)=>( 
+           
+           <>
+            <ListGroup.Item>
+              {cuestionario.Titulo}
+            </ListGroup.Item>
+            <CuestionarioModal quiz={cuestionario}/>
+            </>
+            ))
+      
+          
+        }
+       <CuestionarioModalDocente data={temaCompuesto} user={user}/>
+          </ListGroup>
+        
+        </Col>
+      </Row>
+    </Container>
     );
   }
 const Section = styled.section`

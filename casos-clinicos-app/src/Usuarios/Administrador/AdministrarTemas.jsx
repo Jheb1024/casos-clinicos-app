@@ -1,17 +1,105 @@
 //Aquí el admi podra ver la lista de temas junto con la de subtemas y poderlos editar,
 //eliminar o agregar nuevo tema o subtema
-import React, {useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
+import { collection, getDocs, getFirestore, onSnapshot, query, where } from "firebase/firestore";
+import firebaseApp from "../../Firebase/firebase-config";
+import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row } from 'react-bootstrap'
+import CuestionarioModal from "../../Componentes/Cuestionario/CuestionarioModal";
+import TemaModal from "../../Componentes/Cuestionario/TemaModal";
+import SubtemaModal from "../../Componentes/Cuestionario/SubtemaModal";
+import { Button } from "bootstrap";
+import { editarTema, editarTemaAdmin } from "../../Modelo/AdministrarCuestionarios/administrarCuestionarios";
+import Swal from "sweetalert2";
+import EditarTemaModal from "../../Componentes/Cuestionario/EditarTemaModal";
+import EditarSubtemaModal from "../../Componentes/Cuestionario/EditarSubtemaModal";
+
+
 
 export default function AdministrarTemas() {
-    useEffect(() => {
-      const sr = scrollreveal({
-        origin: "bottom",
-        distance: "80px",
-        duration: 2000,
-        reset: false,
-      });
+
+  const [temas, setTemas] = useState(null);
+  const [subtemas, setSubtemas] = useState(null);
+  const [cuestionarios, setCuestionarios] = useState(null);
+
+  const db = getFirestore(firebaseApp);
+  useEffect(
+    () =>
+      onSnapshot(collection(db, 'Temas'), (snapshot) => {
+        console.log(snapshot.docs.map((doc) => doc.data()))
+        setTemas(snapshot.docs.map((doc) => doc.data()))
+      }),
+
+    []);
+  async function getSubtemas(tema) {
+    const q = query(collection(db, "Subtemas"), where("Tema", "==", tema));
+
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size > 0) {
+      setSubtemas(querySnapshot.docs.map((doc) => doc.data()))
+    }
+  }
+
+  function CustomToggle({ children, eventKey }) {
+    const decoratedOnClick = useAccordionButton(eventKey, () =>
+      //console.log(children),
+      getSubtemas(children)
+    );
+
+    
+
+    return (
+      <button
+        type="button"
+        style={{ backgroundColor: 'pink' }}
+        onClick={decoratedOnClick}
+      >
+        {children}
+      </button>
+    );
+  }
+
+  async function getCuestionarios(subtema) {
+    const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", subtema));
+
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size > 0) {
+      console.log(querySnapshot.docs.map((doc) => doc.data()))
+      setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
+    }
+  }
+  function editarTema(tema, id){
+    new Swal({
+      title: "Are you sure?",
+      text: "Al editar el tema se actualizarán todas las ocurrencias del tema en los subtemas y cuestionarios!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        editarTemaAdmin(tema,id).then(()=>Swal("Poof! Your imaginary file has been deleted!", {
+          icon: "success",
+        }))
+        
+      } else {
+        Swal("Your imaginary file is safe!");
+      }
+    });
+    
+  }
+
+
+
+  useEffect(() => {
+    const sr = scrollreveal({
+      origin: "bottom",
+      distance: "80px",
+      duration: 2000,
+      reset: false,
+    });
+    return () => {
       sr.reveal(
         `
           nav,
@@ -23,13 +111,72 @@ export default function AdministrarTemas() {
           interval: 100,
         }
       );
-    }, []);
-    return (
-      <Section>
-        <p>aqui el admi podra tener todas las opciones para administrar los temas</p>
-      </Section>
-    );
-  }
+
+
+    }
+  }, []);
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <Section>
+            <p>aqui el admi podra tener todas las opciones para administrar los temas</p>
+            Crear Temas
+            {temas?.map((tema) => (
+              <div>
+
+                <Accordion>
+                  <Card>
+                    <Card.Header style={{textAlign:'left'}}>
+                      
+                      <CustomToggle eventKey="0" >{tema.Tema}</CustomToggle>
+                      <button style={{float:'right'}}>Borrar</button>
+                      <EditarTemaModal tema={tema.Tema } idTema={tema.idTema} />
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0">
+                      <ListGroup variant="flush">
+                        {subtemas?.map((subtema) => (
+                          <div>
+                          <ListGroup.Item action onClick={() => getCuestionarios(subtema.Subtema)}>{subtema.Subtema} </ListGroup.Item>
+                            <div className="btns-actions">
+                              <button style={{float:'right'}}>Borrar</button></div>
+                              <EditarSubtemaModal subtema={subtema.Subtema} idSubtema={subtema.idSubtema}/>
+                            </div>
+                            
+                        ))}
+                        <ListGroup.Item><SubtemaModal tema={tema.Tema}/></ListGroup.Item>
+                      </ListGroup>
+                    </Accordion.Collapse>
+
+                  </Card>
+                </Accordion>
+              </div>
+            ))}
+           <TemaModal/>
+          </Section>
+        </Col>
+        <Col xs={3}>
+        
+          <ListGroup defaultActiveKey="#link1">
+           {cuestionarios?.map((cuestionario)=>( 
+           
+           <>
+            <ListGroup.Item>
+              {cuestionario.Titulo}
+            </ListGroup.Item>
+            <CuestionarioModal quiz={cuestionario}/>
+            </>
+            ))
+          
+        }
+          </ListGroup>
+        
+        </Col>
+      </Row>
+    </Container>
+
+  );
+}
 const Section = styled.section`
   margin-left: 18vw;
   padding: 2rem;

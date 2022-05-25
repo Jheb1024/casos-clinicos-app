@@ -1,6 +1,6 @@
 import React from "react";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import Swal from "sweetalert2";
 
@@ -12,7 +12,8 @@ async function registrarDocente(email, pass, Matricula, Nombre, Sexo, Edad, NRC,
 
     const infoUsuario = await createUserWithEmailAndPassword(auth, email, pass).then((usuarioFirebase) => {
         return usuarioFirebase;
-    }).catch(error => { //Vemos los errores que pueden ocurrir al crear el usuario en firebase
+    })
+    .catch(error => { //Vemos los errores que pueden ocurrir al crear el usuario en firebase
         switch (error.code) {
             case 'auth/email-already-in-use':
                 console.log(`Email address ${email} already in use.`);
