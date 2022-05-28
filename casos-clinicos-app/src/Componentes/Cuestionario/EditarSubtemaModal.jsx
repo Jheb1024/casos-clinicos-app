@@ -10,7 +10,7 @@ function EditarSubtemaModal({subtema,idSubtema}) {
         e.preventDefault();
         const subtemaNuevo=e.target.elements.subtema.value; 
         console.log("subtema",subtema)
-        //registrarSubtema(tema,subtema);
+        
         editarSubtema(subtema,subtemaNuevo,idSubtema )
     }      
   return (

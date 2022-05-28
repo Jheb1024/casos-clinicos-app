@@ -1,28 +1,25 @@
 import firebaseApp from "../../Firebase/firebase-config";
-import {
-  addDoc,
-  collection,
-  getFirestore,
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  getDocs,
-  runTransaction,
-  query,
-  where,
-} from "firebase/firestore";
-import { InputGroup } from "react-bootstrap";
+import {addDoc,collection,getFirestore,doc,getDoc,updateDoc,  
+  deleteDoc,getDocs,runTransaction,  query,where} from "firebase/firestore";
 
 const db = getFirestore(firebaseApp);
 
 //Para registrar tema
 export async function registrarTema(tema) {
-  await addDoc(collection(db, "Temas"), {
+ const temaRegistrado = await addDoc(collection(db, "Temas"), {
     Tema: tema,
-  }).then(() => {
+  }).then((tema) => {
+    const temaDoc = doc(db, "Temas", tema.id);
+   updateDoc(temaDoc,{
+      idTema : tema.id
+    }).then(()=>{
+      console.log("idTema actualizado");
+    })
     console.log("Tema registrado");
   });
+
+    
+  
 }
 //Para editar tema
 //Al editar un tema, los cambios repercuten en el subtema
@@ -111,13 +108,67 @@ async function actualizarTemaCuestionario(id, nuevoTema) {
 }
 
 //Para borrar Tema ... existen advertencias al eliminar un tema
+export async function borrarTemaAdmin(tema, id){
+  let subtemaBorrado;
+  //Borramos el tema
+  const temaBorrado = await deleteDoc(doc(db, "Temas", id)).then(()=>{
+    console.log("El tema ha sido eliminado");
+  })
+  
+  //Borramos los subtemas del tema
+  if(temaBorrado !== null){
+    const q = query(collection(db, "Subtemas"),where("Tema", "==", tema));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      //console.log(doc.id, " => ", doc.data());
+     borrarTemaSubtema(doc.id);
+    });
+    subtemaBorrado = true;
+  }
 
-//Para registrar un subtema
+  //Borramos los cuestionarios del tema
+  if(subtemaBorrado === true){
+    const q = query(collection(db, "Cuestionarios"),where("Tema", "==", tema));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    //console.log(doc.id, " => ", doc.data());
+    eliminarCuestionarioTema(doc.id);
+  });
+  }
+}
+//Borramos cada subtema que contenga el tema
+async function borrarTemaSubtema(id){
+ await deleteDoc(doc(db, "Subtemas", id)).then(()=>{
+    console.log("El subtema ha sido eliminado que era parte del tema");
+  })
+}
+
+//Elimino todos los cuestionarios que tiene el mismo tema
+async function eliminarCuestionarioTema(id){
+  await deleteDoc(doc(db, "Cuestionarios", id)).then(()=>{
+    console.log("El cuesitonario que contiene el tema han sido eliminados");
+  })
+  
+}
+
+
+//** Para registrar un nuevo subtema 
+//*
+// * 
+// * @param {*} tema 
+// * @param {*} subtema 
+// */
 export async function registrarSubtema(tema, subtema) {
-  await addDoc(collection(db, "Subtemas"), {
+ const subtemaRegistrado =  await addDoc(collection(db, "Subtemas"), {
     Tema: tema,
     Subtema: subtema,
-  }).then(() => {
+  }).then((subtema) => {
+   const subtemaDoc= doc(db, "Subtemas", subtema.id);
+     updateDoc(subtemaDoc,{
+      idSubtema : subtema.id
+    }).then(()=>{
+      console.log("idSubtema actualizado");
+    })
     console.log("Subtema registrado");
   });
 }
@@ -160,7 +211,6 @@ async function actualizarSubtemaCuestionario(id, nuevoSubtema){
       } else {
         transaction.update(sfDocRef, { Subtema: nuevoSubtema });
         console.log("Cuestionarios actualizados con el subtema");
-        
       }
     });
   } catch (e) {
@@ -169,6 +219,25 @@ async function actualizarSubtemaCuestionario(id, nuevoSubtema){
 }
 
 //Para borrar un subtema, advertencias si se borra
+export async function borrarSubtemaAdmin(subtema, id){
+  const temaBorrado = await deleteDoc(doc(db, "Subtemas", id)).then(()=>{
+    console.log("El subtema ha sido eliminado");
+  })
+  if(temaBorrado !== null){
+    const q = query(collection(db, "Cuestionarios"),where("Subtema", "==", subtema));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+      borrarCuestionarioSubtema(doc.id)
+    });
+  }
+}
+//para borrar Cuestionario del subtema
+async function borrarCuestionarioSubtema(id){
+  await deleteDoc(doc(db, "Cuestionarios",id)).then(()=>{
+    console.log("El cuestionario ha sido eliminado pertenenciente al tema");
+  })
+}
 
 //Clase de un docente
 class Docente {

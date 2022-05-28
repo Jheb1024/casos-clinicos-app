@@ -9,8 +9,7 @@ import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row } f
 import CuestionarioModal from "../../Componentes/Cuestionario/CuestionarioModal";
 import TemaModal from "../../Componentes/Cuestionario/TemaModal";
 import SubtemaModal from "../../Componentes/Cuestionario/SubtemaModal";
-import { Button } from "bootstrap";
-import { editarTema, editarTemaAdmin } from "../../Modelo/AdministrarCuestionarios/administrarCuestionarios";
+import { borrarSubtemaAdmin, borrarTemaAdmin } from "../../Modelo/AdministrarCuestionarios/administrarCuestionarios";
 import Swal from "sweetalert2";
 import EditarTemaModal from "../../Componentes/Cuestionario/EditarTemaModal";
 import EditarSubtemaModal from "../../Componentes/Cuestionario/EditarSubtemaModal";
@@ -69,26 +68,48 @@ export default function AdministrarTemas() {
       setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
     }
   }
-  function editarTema(tema, id){
+  function borrarTema(tema, id){
     new Swal({
-      title: "Are you sure?",
-      text: "Al editar el tema se actualizarán todas las ocurrencias del tema en los subtemas y cuestionarios!",
+      title: "Está seguro?",
+      text: "Al eliminar un tema se borrarán todos los subtemas provenientes del tema así como los cuestionarios!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     })
     .then((willDelete) => {
       if (willDelete) {
-        editarTemaAdmin(tema,id).then(()=>Swal("Poof! Your imaginary file has been deleted!", {
+        borrarTemaAdmin(tema,id).then(()=>Swal("El tema y los subtemas y cuesitonarios que eran parte de él han sido borrados!", {
           icon: "success",
         }))
         
       } else {
-        Swal("Your imaginary file is safe!");
+        Swal("El tema no se borró!");
       }
     });
     
   }
+
+  function borrarSubtema(subtema, id){
+    new Swal({
+      title: "Está seguro?",
+      text: "Al eliminar un subtema se borrarán todos los cuestionarios pertenecientes al tema!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        borrarSubtemaAdmin(subtema, id).then(()=>Swal("El subtema y cuesitonarios que eran parte de él han sido borrados!", {
+          icon: "success",
+        }))
+        
+      } else {
+        Swal("El subtema no se borró!");
+      }
+    });
+    
+  }
+
 
 
 
@@ -130,7 +151,7 @@ export default function AdministrarTemas() {
                     <Card.Header style={{textAlign:'left'}}>
                       
                       <CustomToggle eventKey="0" >{tema.Tema}</CustomToggle>
-                      <button style={{float:'right'}}>Borrar</button>
+                      <button style={{float:'right'}} onClick={()=>borrarTema(tema.Tema ,tema.idTema)}>Borrar</button>
                       <EditarTemaModal tema={tema.Tema } idTema={tema.idTema} />
                     </Card.Header>
                     <Accordion.Collapse eventKey="0">
@@ -139,7 +160,7 @@ export default function AdministrarTemas() {
                           <div>
                           <ListGroup.Item action onClick={() => getCuestionarios(subtema.Subtema)}>{subtema.Subtema} </ListGroup.Item>
                             <div className="btns-actions">
-                              <button style={{float:'right'}}>Borrar</button></div>
+                              <button style={{float:'right'}} onClick={()=>borrarSubtema(subtema.Subtema, subtema.idSubtema)}>Borrar</button></div>
                               <EditarSubtemaModal subtema={subtema.Subtema} idSubtema={subtema.idSubtema}/>
                             </div>
                             
