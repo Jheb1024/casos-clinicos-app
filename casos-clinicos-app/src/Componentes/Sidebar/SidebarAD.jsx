@@ -85,6 +85,16 @@ export default function SidebarAD(props) {
                   <span> {props.TresT}</span>
                 </NavLink>
               </li>
+              {/**Agregue esta partea al sidebar */}
+              <li
+                className={currentLink === 4 ? "active" : "none"}
+                onClick={() => setCurrentLink(4)}
+              >
+                <NavLink to={props.CuatroR} exact activeClassName="active">
+                  {props.iconoC}
+                  <span> {props.CuatroT}</span>
+                </NavLink>
+              </li>
             </ul>
           </div>
         </div>
@@ -118,6 +128,15 @@ export default function SidebarAD(props) {
                 <NavLink to={props.TresR} exact activeClassName="active">
                   {props.iconoT}
                   <span> {props.TresT}</span>
+                </NavLink>
+              </li>
+              <li
+                className={currentLink === 4 ? "active" : "none"}
+                onClick={() => setCurrentLink(4)}
+              >
+                <NavLink to={props.CuatroR} exact activeClassName="active">
+                  {props.iconoT}
+                  <span> {props.CuatroT}</span>
                 </NavLink>
               </li>
             

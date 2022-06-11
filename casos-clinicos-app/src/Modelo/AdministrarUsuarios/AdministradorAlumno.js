@@ -24,7 +24,7 @@ export default class AdministradorAlumno extends AdministradorUsuario {
   constructor() {
       super();
     this.auth = getAuth(firebaseApp);
-    this.db = getFirestore();
+    this.db = getFirestore(firebaseApp);
    
     
   }
@@ -139,8 +139,9 @@ export default class AdministradorAlumno extends AdministradorUsuario {
 
       console.log("ID del docente logeado" + uid);
       const docRef = doc(this.db, "Docente", uid);
-      const docSnap = await getDoc(docRef);
       let nrc=""
+      const docSnap = await getDoc(docRef);
+      
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data());
         nrc=docSnap.data().NRC

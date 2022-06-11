@@ -16,7 +16,7 @@ function HomeAlumno({usuario}) {
   
     
 
-    console.log("leemos el usuario desde home alumno",usuario.uid);
+    console.log("leemos el usuario desde home alumno",usuario.user.uid);
     return (
         <Div>
         <Router>
@@ -27,7 +27,7 @@ function HomeAlumno({usuario}) {
                 <div className="content w-100">
 
                     <Route path="/usuario/alumno/cuestionarios-alumno" exact="true"  component={CuestionariosA} />
-                    <Route path="/usuario/alumno/miperfil-alumno"  >{<Miperfil user = {usuario}/>}</Route>
+                    <Route path="/usuario/alumno/miperfil-alumno"  >{<Miperfil user = {usuario.user}/>}</Route>
                     <Route path="/usuario/alumno/miavance-alumno"  exact="true" component={MiavanceA} />
                 </div>
 

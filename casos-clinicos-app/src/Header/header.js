@@ -27,6 +27,8 @@ export default function Header() {
   function cerrarSesion() {
     signOut(auth)
       .then((user) => {
+        window.localStorage.removeItem('rol');
+        window.localStorage.clear();
         console.log("El usaurio a cerrado la sesion");
       })
       .catch((err) => {

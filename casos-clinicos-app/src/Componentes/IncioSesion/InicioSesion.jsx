@@ -9,8 +9,10 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import "./inicioSesion.css";
 
-const InicioSesion = () => {
-
+const InicioSesion = ({data}) => {
+    const data1 = data
+    console.log("data",data1)
+    
     const auth = getAuth(firebaseApp);
     let history = useHistory();
     var Error = "";
@@ -33,10 +35,13 @@ const InicioSesion = () => {
                 console.log(doc.data(), doc.data().correo, doc.data().rol);
                 const roldata = doc.data().rol;
                 if (roldata === "admin") {
+                    window.localStorage.setItem("rol", 'admin')
                     history.push('/usuario/admin/administrar-cuestionarios')
                 } else if (roldata === "docente") {
+                    window.localStorage.setItem("rol", 'docente')
                     history.push('/usuario/docente/lista-alumno')
                 } else if (roldata === "alumno") {
+                    window.localStorage.setItem("rol", 'alumno')
                     history.push('/usuario/alumno/cuestionarios-alumno')
                 } else {
                     new Swal(

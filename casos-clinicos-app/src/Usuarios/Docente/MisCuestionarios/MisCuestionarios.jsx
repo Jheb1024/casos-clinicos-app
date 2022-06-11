@@ -267,7 +267,7 @@ function MisCuestionarios({ user }) {
                         </div>
                         
                              <EditarCuestionarioModalDocente data={cuestionario}/>
-                             <Button className='btn_borrar' onClick={()=>borrarCuestionario(cuestionario.idCuestionario)}/>
+                             <Button className='btn_borrar' onClick={()=>borrarCuestionario(cuestionario.idCuestionario)}>Borrar</Button>
                              <br />
                       </Form>
                                 

@@ -12,17 +12,27 @@ import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorA
 import { BsArrowReturnLeft } from "react-icons/bs";
 import { AiTwotoneEdit } from "react-icons/ai";
 import Modal from "../../Componentes/Modal/Modal";
-
-
+import {getAuth} from 'firebase/auth'
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc
+} from "firebase/firestore";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { GoSearch } from "react-icons/go";
+import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 
-export default function ListaAlumno({ user }) {
-  console.log("usuario dntro de mi lista alumnos en opciones DOCENTE: ", user.uid);
-
+export default function ListaAlumno( {user1} ) {
+  //console.log("usuario dntro de mi lista alumnos en opciones DOCENTE: ", user.uid);
+  console.log(user1)
   const admiAl = new AdministradorAlumno();
-
+  const db = getFirestore(firebaseApp);
   let i = 0;
 
   const [alumnos, setAlumnos] = useState([]);
@@ -37,19 +47,44 @@ export default function ListaAlumno({ user }) {
     setAlumnos(nvosDocus);
   }
 
-  function actualizarEstadoAlumnos() {
+  async function actualizarEstadoAlumnos(user) {
+    
     admiAl.getNRCDocenteLogeado().then((nrc) => {
       setNrc(nrc);
       console.log("dddddddddddddddddddddddddddddddd");
       console.log(nrc);
     
     const nrcd = "11111";
-    admiAl.getAlumnosFiltroNRC(nrc).then((alumnos) => {
+    admiAl.getAlumnosFiltroNRC("13451").then((alumnos) => {
       setAlumnos(alumnos);
       console.log("DAtos de alumno en funcion actualizas....");
       console.log(alumnos);
     });
-  });
+  });/*
+  const auth = getAuth();
+    
+    if (user !== null) {
+
+      //const nrcD = user1.NRC;
+      console.log(user)
+      const uid = user.uid
+
+      console.log("ID del docente logeado" + uid);
+      const docRef = doc(db, "Docente", uid);
+      let nrc=""
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        //nrc=docSnap.data().NRC
+        //console.log("NRC docente:", nrc);
+
+
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("Sin docente con ese id!");
+      }
+    }*/
 
   }
 
@@ -70,9 +105,9 @@ export default function ListaAlumno({ user }) {
       {
         opacity: 0,
         interval: 100,
-      }
-    );
-    actualizarEstadoAlumnos();
+      })
+      actualizarEstadoAlumnos(user1)
+    
   }, []);
 
   return (

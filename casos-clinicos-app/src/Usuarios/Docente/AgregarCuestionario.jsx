@@ -96,15 +96,15 @@ export default function AgregarCuestionario({user}) {
           <Section>
             <p>aqui el admi podra tener todas las opciones para administrar los temas</p>
             Crear Temas
-            {temas?.map((tema) => (
+            {temas?.map((tema, key) => (
               <div>
 
                 <Accordion>
                   <Card>
                     <Card.Header>
-                      <CustomToggle eventKey="0">{tema.Tema}</CustomToggle>
+                      <CustomToggle eventKey={key}>{tema.Tema}</CustomToggle>
                     </Card.Header>
-                    <Accordion.Collapse eventKey="0">
+                    <Accordion.Collapse eventKey={key }>
                       <ListGroup variant="flush">
                         {subtemas?.map((subtema) => (
                           <ListGroup.Item action onClick={() => getCuestionarios(tema.Tema,subtema.Subtema)}>{subtema.Subtema}</ListGroup.Item>
