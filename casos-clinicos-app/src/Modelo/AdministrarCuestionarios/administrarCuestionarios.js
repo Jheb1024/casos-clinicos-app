@@ -1,6 +1,11 @@
-import firebaseApp from "../../Firebase/firebase-config";
-import {addDoc,collection,getFirestore,doc,getDoc,updateDoc,  
-  deleteDoc,getDocs,runTransaction,  query,where} from "firebase/firestore";
+import firebaseApp,{ storage} from "../../Firebase/firebase-config";
+import {
+  addDoc, collection, getFirestore, doc, getDoc, updateDoc,
+  deleteDoc, getDocs, runTransaction, query, where, arrayUnion, onSnapshot, setDoc, orderBy
+} from "firebase/firestore";
+  import Swal from "sweetalert2";
+  import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
 const db = getFirestore(firebaseApp);
 
@@ -273,8 +278,12 @@ const docenteConverter = {
 };
 
 //Para registrar un nuevo cuestionario. Datos: preguntas, respuestas, tema, subtmea, usuario
-export async function registrarNuevoCuestionario(cuestionario, data, user) {
+export async function registrarNuevoCuestionario(cuestionario, data, user,imageUpload) {
   //Para obtener información del docente que crea el custionario
+  const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+  uploadBytes(imageRef, imageUpload).then(() => {
+    //alert("uploaded");
+  });
   const refDocente = doc(db, "Docente", user.uid).withConverter(
     docenteConverter
   );
@@ -287,6 +296,7 @@ export async function registrarNuevoCuestionario(cuestionario, data, user) {
       Autor: docente.name + " " + docente.apellidoPaterno,
       AutorMatricula: docente.matricula,
       AutorId: user.uid,
+      imageRef: imageRef.fullPath,
       Tema: data.Tema,
       Subtema: data.Subtema,
       Titulo: cuestionario.Titulo,
@@ -359,59 +369,72 @@ export async function registrarNuevoCuestionario(cuestionario, data, user) {
 
 //Editar un cuestionario
 export async function actualizarCuestionario(cuestionario, data) {
+  
+  
   if (cuestionario !== null) {
     const cuestionarioRef = doc(db, "Cuestionarios", data.idCuestionario);
     await updateDoc(cuestionarioRef, {
       Titulo: cuestionario.Titulo,
+      enunciado: cuestionario.enunciado,
       pregunta_1: cuestionario.pregunta_1,
       respuesta_1: cuestionario.respuesta_1,
       respuesta_2: cuestionario.respuesta_2,
       respuesta_3: cuestionario.respuesta_3,
+      respuesta_4: cuestionario.respuesta_4,
       respuestaCorrectaP1: cuestionario.respuestaCorrectaP1,
       pregunta_2: cuestionario.pregunta_2,
       respuesta_2_1: cuestionario.respuesta_2_1,
       respuesta_2_2: cuestionario.respuesta_2_2,
       respuesta_2_3: cuestionario.respuesta_2_3,
+      respuesta_2_4: cuestionario.respuesta_2_4,
       respuestaCorrectaP2: cuestionario.respuestaCorrectaP2,
       pregunta_3: cuestionario.pregunta_3,
       respuesta_3_1: cuestionario.respuesta_3_1,
       respuesta_3_2: cuestionario.respuesta_3_2,
       respuesta_3_3: cuestionario.respuesta_3_3,
+      respuesta_3_4: cuestionario.respuesta_3_4,
       respuestaCorrectaP3: cuestionario.respuestaCorrectaP3,
       pregunta_4: cuestionario.pregunta_4,
       respuesta_4_1: cuestionario.respuesta_4_1,
       respuesta_4_2: cuestionario.respuesta_4_2,
       respuesta_4_3: cuestionario.respuesta_4_3,
+      respuesta_4_4: cuestionario.respuesta_4_4,
       respuestaCorrectaP4: cuestionario.respuestaCorrectaP4,
       pregunta_5: cuestionario.pregunta_5,
       respuesta_5_1: cuestionario.respuesta_5_1,
       respuesta_5_2: cuestionario.respuesta_5_2,
       respuesta_5_3: cuestionario.respuesta_5_3,
+      respuesta_5_4: cuestionario.respuesta_5_4,
       respuestaCorrectaP5: cuestionario.respuestaCorrectaP5,
       pregunta_6: cuestionario.pregunta_6,
       respuesta_6_1: cuestionario.respuesta_6_1,
       respuesta_6_2: cuestionario.respuesta_6_2,
       respuesta_6_3: cuestionario.respuesta_6_3,
+      respuesta_6_4: cuestionario.respuesta_6_4,
       respuestaCorrectaP6: cuestionario.respuestaCorrectaP6,
       pregunta_7: cuestionario.pregunta_7,
       respuesta_7_1: cuestionario.respuesta_7_1,
       respuesta_7_2: cuestionario.respuesta_7_2,
       respuesta_7_3: cuestionario.respuesta_7_3,
+      respuesta_7_4: cuestionario.respuesta_7_4,
       respuestaCorrectaP7: cuestionario.respuestaCorrectaP7,
       pregunta_8: cuestionario.pregunta_8,
       respuesta_8_1: cuestionario.respuesta_8_1,
       respuesta_8_2: cuestionario.respuesta_8_2,
       respuesta_8_3: cuestionario.respuesta_8_3,
+      respuesta_8_4: cuestionario.respuesta_8_4,
       respuestaCorrectaP8: cuestionario.respuestaCorrectaP8,
       pregunta_9: cuestionario.pregunta_9,
       respuesta_9_1: cuestionario.respuesta_9_1,
       respuesta_9_2: cuestionario.respuesta_9_2,
       respuesta_9_3: cuestionario.respuesta_9_3,
+      respuesta_9_4: cuestionario.respuesta_9_4,
       respuestaCorrectaP9: cuestionario.respuestaCorrectaP9,
       pregunta_10: cuestionario.pregunta_10,
       respuesta_10_1: cuestionario.respuesta_10_1,
       respuesta_10_2: cuestionario.respuesta_10_2,
       respuesta_10_3: cuestionario.respuesta_10_3,
+      respuesta_10_4: cuestionario.respuesta_10_4,
       respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
     }).then(() => {
       console.log("Cuestionario actualizado...");
@@ -424,4 +447,280 @@ export async function borrarCuestionarioDocente(id) {
   await deleteDoc(doc(db, "Cuestionarios", id)).then(() => {
     console.log("Cuestionario eliminado");
   });
+}
+
+//asignar cuestionario
+export async function asignarCuestionario(id, nrc) {
+  console.log("ingreso funcion de asignar cuestonario");
+
+  if (nrc.length === 5) {
+
+    console.log("nrc Admi", nrc);
+    console.log("id Admni:", id);
+    const cuestionarioRef = doc(db, "Cuestionarios", id);
+    const docRef = doc(db, "Cuestionarios", id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+
+    const ref = collection(db, 'Cuestionarios');
+    const q = query(ref, where("nrcClase", "!=", false));
+    let bandera;
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+
+      console.log(doc.id, " => ", doc.data().idCuestionario);
+      let idCObte = doc.data().idCuestionario;
+      console.log('Id cuest con arreglo::', idCObte);
+
+      if (idCObte == id) {
+        //En este cuestionario ya esta creado el array
+        bandera = 1;
+      };
+      console.log("Bandera->", bandera);
+    });
+    console.log("Bandera->", bandera);
+    if (bandera === 1) {
+      console.log("Bandera igual a 1...");
+      await updateDoc(cuestionarioRef, {
+        nrcClase: arrayUnion(nrc)
+      });
+      new Swal({
+        position: 'top',
+        icon: 'success',
+        title: 'Cuestionario Asignado',
+        showConfirmButton: false,
+        timer: 3000
+    });
+    
+    document.getElementById('nrc').value="";
+    } else {
+      console.log("agregar el arreglo al cuestionario");
+      await updateDoc(cuestionarioRef, {
+        nrcClase: [nrc]
+      })
+      new Swal({
+        position: 'top',
+        icon: 'success',
+        title: 'Cuestionario Asignado',
+        showConfirmButton: false,
+        timer: 3000
+    });
+    
+    document.getElementById('nrc').value="";
+    }
+
+
+  } else if (nrc.length < 5) {
+    new Swal({
+      position: 'top',
+      icon: 'error',
+      title: 'Falta ingresar el NRC o no tiene la longitud requerida (5 caracteres).',
+      showConfirmButton: false,
+      timer: 3000
+  });
+
+  }
+}
+
+//Verificar Resultados resultado cuestionario
+export async function registrarResultadoCuestionario(values, quiz) {
+ var calificacion=0;
+  console.log("Entro a la funcion de guardar los resultados valor entrada", values.respuesta1);
+  console.log("respuesta incorrecta quiz", quiz.respuestaCorrectaP1);
+  if (values.respuesta1 == quiz.respuestaCorrectaP1) {
+    console.log("Respuesta correcta", values.respuesta1);
+    calificacion++;
+  }
+
+  if (values.respuesta2 == quiz.respuestaCorrectaP2) {
+    console.log("Respuesta correcta2", values.respuesta2);
+    calificacion++;
+  }
+  
+
+  if (values.respuesta3 == quiz.respuestaCorrectaP3) {
+    console.log("Respuesta correcta2", values.respuesta3);
+    calificacion++;
+  }
+
+  if (values.respuesta4 == quiz.respuestaCorrectaP4) {
+    console.log("Respuesta correcta", values.respuesta4);
+    calificacion++;
+  }
+  if (values.respuesta5 == quiz.respuestaCorrectaP5) {
+    console.log("Respuesta correcta2", values.respuesta5);
+    calificacion++;
+  }
+
+
+  if (values.respuesta6 == quiz.respuestaCorrectaP6) {
+    console.log("Respuesta correcta2", values.respuesta6);
+    calificacion++;
+  }
+
+  if (values.respuesta7 == quiz.respuestaCorrectaP7) {
+    console.log("Respuesta correcta", values.respuesta7);
+    calificacion++;
+  }
+
+  if (values.respuesta8 == quiz.respuestaCorrectaP8) {
+    console.log("Respuesta correcta2", values.respuesta8);
+    calificacion++;
+  } 
+
+
+  if (values.respuesta9 == quiz.respuestaCorrectaP9) {
+    console.log("Respuesta correcta2", values.respuesta9);
+    calificacion++;
+  }
+
+  if (values.respuesta10 == quiz.respuestaCorrectaP10) {
+    console.log("Respuesta correcta2", values.respuesta10);
+    calificacion++;
+  }
+
+ return calificacion;
+}
+
+//Registrar resultado cuestionario
+export async function registrarResultadoCuestionarioAsignado(values, quiz, user) {
+  var cal = 0;
+  var intento = 1;
+  var contIgualAlum=0;
+  var calSub=0;
+
+  console.log("Entro a la funcion de guardar los resultados valor entrada", values.respuesta1);
+  console.log("respuesta incorrecta quiz", quiz.respuestaCorrectaP1);
+  if (values.respuesta1 === quiz.respuestaCorrectaP1) {
+    console.log("Respuesta correcta", values.respuesta1);
+    cal++;
+  } 
+
+  if (values.respuesta2 === quiz.respuestaCorrectaP2) {
+    console.log("Respuesta correcta2", values.respuesta2);
+    cal++;
+  }
+
+
+  if (values.respuesta3 === quiz.respuestaCorrectaP3) {
+    console.log("Respuesta correcta2", values.respuesta3);
+    cal++;
+  }
+
+  if (values.respuesta4 === quiz.respuestaCorrectaP4) {
+    console.log("Respuesta correcta", values.respuesta4);
+    cal++;
+  }
+
+  if (values.respuesta5 === quiz.respuestaCorrectaP5) {
+    console.log("Respuesta correcta2", values.respuesta5);
+    cal++;
+  }
+
+
+  if (values.respuesta6 === quiz.respuestaCorrectaP6) {
+    console.log("Respuesta correcta2", values.respuesta6);
+    cal++;
+  }
+  if (values.respuesta7 === quiz.respuestaCorrectaP7) {
+    console.log("Respuesta correcta", values.respuesta7);
+    cal++;
+  }
+  if (values.respuesta8 === quiz.respuestaCorrectaP8) {
+    console.log("Respuesta correcta2", values.respuesta8);
+    cal++;
+  }
+
+
+  if (values.respuesta9 === quiz.respuestaCorrectaP9) {
+    console.log("Respuesta correcta2", values.respuesta9);
+    cal++;
+  }
+  if (values.respuesta10 === quiz.respuestaCorrectaP10) {
+    console.log("Respuesta correcta2", values.respuesta10);
+    cal++;
+  }
+
+  console.log("Calificacion", cal);
+  console.log("idCuestionario=>", quiz.idCuestionario);
+  console.log("idAlumno", user.uid);
+
+  const cuestionarioRef = collection(db, "Resultado");
+  const museums = query(cuestionarioRef, where("idCuestionario", "==", quiz.idCuestionario), where("idAlumno", "==", user.uid));
+  const querySnapshot = await getDocs(museums);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, ' => ', doc.data());
+  });
+  
+  if (querySnapshot.size > 0) {
+    let idRes;
+    console.log("Hay al menos un registro con esa informacion");
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, ' => ', doc.data());
+      console.log("NumIntento::", doc.data().intento);
+      intento = doc.data().intento + 1;
+      idRes = doc.id;
+    });
+    console.log("Nuevo intento::>", intento);
+    if (intento > 3) {
+      console.log("Ya no puede volver a hacer el cuestionario porque ya tienen 3 intentos");
+    } else {
+      const resultadoRef = doc(db, "Resultado", idRes);
+      await updateDoc(resultadoRef, {
+        intento: intento,
+        calificacion: cal,
+      });
+      //Obtener el total de cuestionarios con al menos un intento
+      const cuestionarioRef = collection(db, "Resultado");
+  const museums2 = query(cuestionarioRef, where("intento", "<=", 3));
+  const querySnapshot2 = await getDocs(museums2);
+  
+  querySnapshot2.forEach((doc) => {
+    console.log(doc.id, ' => ', doc.data());
+    console.log(user.uid);
+    console.log(doc.data().idAlumno);
+    if(doc.data().idAlumno==user.uid){
+      contIgualAlum++;
+      calSub=calSub+doc.data().calificacion;
+    }
+  });
+  var prom=calSub/contIgualAlum;
+      console.log("Datos encontradoos",contIgualAlum);
+      console.log("Promdio::",prom);
+//Acceder al doc del alumno que esta contestando para actualizar su avance 
+      const alumnoRef=doc(db,"Alumno",user.uid);
+      await updateDoc(alumnoRef, {
+        "Avance.CuestionariosCompletos": contIgualAlum,
+        "Avance.PromedioGeneral": prom,
+        "Avance.TemasCompletos": contIgualAlum,
+      });
+
+    }
+  } else {
+    console.log("Sin datos");
+    // Add a new document with a generated id.
+
+    const docRef = await addDoc(collection(db, "Resultado"), {
+      calificacion: cal,
+      idAlumno: user.uid,
+      idCuestionario: quiz.idCuestionario,
+      intento: intento,
+    });
+    console.log("Document written with ID: ", docRef.id);
+    const resultadoRef = doc(db, "Resultado", docRef.id);
+
+    await updateDoc(resultadoRef, {
+      idResultado: docRef.id
+    });
+    //Checar porque aqui tambien se tiene que actualizar la tabla de Alumno para el promedio y cuestionarios resueltos
+    
+  }
+
+  return cal;
 }

@@ -1,10 +1,35 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form } from 'react-bootstrap'
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+function getImage(refImage) {
+  const storage = getStorage();
+  getDownloadURL(ref(storage, refImage))
+    .then((url) => {
+      // `url` is the download URL for 'images/stars.jpg'
+
+      // This can be downloaded directly:
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = (event) => {
+        const blob = xhr.response;
+      };
+      xhr.open('GET', url);
+      xhr.send();
+
+      // Or inserted into an <img> element
+      const img = document.getElementById('myimg');
+      img.setAttribute('src', url);
+    })
+    .catch((error) => {
+      // Handle any errors
+    });
+}
 function CuestionarioModal({ quiz }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  getImage(quiz.imageRef);
 
   return (
     <>
@@ -20,6 +45,10 @@ function CuestionarioModal({ quiz }) {
 
           <Form style={{ width: '100%' }}>
             {/*Pregunta 1*/}
+            <div className='enunciado' >
+              <input type='textarea' value={quiz.enunciado} readOnly></input>
+            </div>
+            <img id='myimg' alt=''></img>
             <div className='pregunta' style={{ textAlign: 'center', width: '500px', height: '130px' }}>
               <div className='pregunta-respuesta' style={{ float: 'left', width: '300px' }}>
                 <label htmlFor="pregunta_1">Pregunta 1</label>
@@ -34,10 +63,10 @@ function CuestionarioModal({ quiz }) {
 
                 <br />
                 <input className="respuesta_field" type="text" name="respuesta_3" placeholder="Respuesta 3" value={quiz.respuesta_3} readOnly />
-
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_4" placeholder="Respuesta 4" value={quiz.respuesta_4} readOnly />
               </div>
               <br />
-
             </div>
             <br />
             <div className='pregunta'>
@@ -54,6 +83,8 @@ function CuestionarioModal({ quiz }) {
 
                 <br />
                 <input className="respuesta_field" type="text" name="respuesta_2_3" placeholder="Respuesta 3" value={quiz.respuesta_2_3} readOnly />
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_2_4" placeholder="Respuesta 4" value={quiz.respuesta_2_4} readOnly />
 
                 <br />
               </div>
@@ -69,10 +100,12 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_3_1" placeholder="Respuesta 1" value={quiz.respuesta_3_1} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_3_2" placeholder="Respuesta 2" value={quiz.respuesta_3_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_3_2" placeholder="Respuesta 2" value={quiz.respuesta_3_2} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_3_3" placeholder="Respuesta 3" value={quiz.respuesta_3_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_3_3" placeholder="Respuesta 3" value={quiz.respuesta_3_3} readOnly />
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_3_4" placeholder="Respuesta 4" value={quiz.respuesta_3_4} readOnly />
 
               </div>
 
@@ -88,10 +121,12 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_4_1" placeholder="Respuesta 1" value={quiz.respuesta_4_1} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_4_2" placeholder="Respuesta 2" value={quiz.respuesta_4_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_4_2" placeholder="Respuesta 2" value={quiz.respuesta_4_2} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_4_3" placeholder="Respuesta 3" value={quiz.respuesta_4_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_4_3" placeholder="Respuesta 3" value={quiz.respuesta_4_3} readOnly />
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_4_4" placeholder="Respuesta 4" value={quiz.respuesta_4_4} readOnly />
 
               </div>
 
@@ -108,10 +143,12 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_5_1" placeholder="Respuesta 1" value={quiz.respuesta_5_1} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_5_2" placeholder="Respuesta 2" value={quiz.respuesta_5_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_5_2" placeholder="Respuesta 2" value={quiz.respuesta_5_2} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_5_3" placeholder="Respuesta 3" value={quiz.respuesta_5_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_5_3" placeholder="Respuesta 3" value={quiz.respuesta_5_3} readOnly />
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_5_4" placeholder="Respuesta 4" value={quiz.respuesta_5_4} readOnly />
 
               </div>
 
@@ -127,10 +164,12 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_6_1" placeholder="Respuesta 1" value={quiz.respuesta_6_1} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_6_2" placeholder="Respuesta 2" value={quiz.respuesta_6_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_6_2" placeholder="Respuesta 2" value={quiz.respuesta_6_2} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_6_3" placeholder="Respuesta 3" value={quiz.respuesta_6_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_6_3" placeholder="Respuesta 3" value={quiz.respuesta_6_3} readOnly />
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_6_4" placeholder="Respuesta 4" value={quiz.respuesta_6_4} readOnly />
 
               </div>
 
@@ -146,10 +185,12 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_7_1" placeholder="Respuesta 1" value={quiz.respuesta_7_1} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_7_2" placeholder="Respuesta 2" value={quiz.respuesta_7_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_7_2" placeholder="Respuesta 2" value={quiz.respuesta_7_2} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_7_3" placeholder="Respuesta 3" value={quiz.respuesta_7_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_7_3" placeholder="Respuesta 3" value={quiz.respuesta_7_3} readOnly />
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_7_4" placeholder="Respuesta 4" value={quiz.respuesta_7_4} readOnly />
 
               </div>
 
@@ -165,10 +206,12 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_8_1" placeholder="Respuesta 1" value={quiz.respuesta_8_1} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_8_2" placeholder="Respuesta 2" value={quiz.respuesta_8_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_8_2" placeholder="Respuesta 2" value={quiz.respuesta_8_2} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_8_3" placeholder="Respuesta 3" value={quiz.respuesta_8_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_8_3" placeholder="Respuesta 3" value={quiz.respuesta_8_3} readOnly />
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_8_4" placeholder="Respuesta 4" value={quiz.respuesta_8_4} readOnly />
 
               </div>
 
@@ -184,10 +227,12 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_9_1" placeholder="Respuesta 1" value={quiz.respuesta_9_1} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_9_2" placeholder="Respuesta 2" value={quiz.respuesta_9_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_9_2" placeholder="Respuesta 2" value={quiz.respuesta_9_2} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_9_3" placeholder="Respuesta 3" value={quiz.respuesta_9_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_9_3" placeholder="Respuesta 3" value={quiz.respuesta_9_3} readOnly />
+                <br />
+                <input className="respuesta_field" type="text" name="respuesta_9_4" placeholder="Respuesta 4" value={quiz.respuesta_9_4} readOnly />
 
               </div>
 
@@ -203,10 +248,12 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_10_1" placeholder="Respuesta 1" value={quiz.respuesta_10_1} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_10_2" placeholder="Respuesta 2" value={quiz.respuesta_10_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_10_2" placeholder="Respuesta 2" value={quiz.respuesta_10_2} readOnly />
 
                 <br />
-                <input className="respuesta_field" type="text" name="respuesta_10_3" placeholder="Respuesta 3" value={quiz.respuesta_10_1} readOnly />
+                <input className="respuesta_field" type="text" name="respuesta_10_3" placeholder="Respuesta 3" value={quiz.respuesta_10_3} readOnly />
+                <br/>
+                <input className="respuesta_field" type="text" name="respuesta_1043" placeholder="Respuesta43" value={quiz.respuesta_10_4} readOnly />
 
               </div>
 

@@ -28,7 +28,7 @@ export default function SidebarAD(props) {
       .links>ul>li:nth-of-type(1),
       .links>ul>li:nth-of-type(2),
       .links>ul>li:nth-of-type(3),
-      .links>ul>li:nth-of-type(4)
+     
       `,
       {
         opacity: 0,
@@ -86,15 +86,7 @@ export default function SidebarAD(props) {
                 </NavLink>
               </li>
               {/**Agregue esta partea al sidebar */}
-              <li
-                className={currentLink === 4 ? "active" : "none"}
-                onClick={() => setCurrentLink(4)}
-              >
-                <NavLink to={props.CuatroR} exact activeClassName="active">
-                  {props.iconoC}
-                  <span> {props.CuatroT}</span>
-                </NavLink>
-              </li>
+             
             </ul>
           </div>
         </div>
@@ -130,15 +122,7 @@ export default function SidebarAD(props) {
                   <span> {props.TresT}</span>
                 </NavLink>
               </li>
-              <li
-                className={currentLink === 4 ? "active" : "none"}
-                onClick={() => setCurrentLink(4)}
-              >
-                <NavLink to={props.CuatroR} exact activeClassName="active">
-                  {props.iconoT}
-                  <span> {props.CuatroT}</span>
-                </NavLink>
-              </li>
+             
             
             
           </ul>

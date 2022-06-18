@@ -25,9 +25,8 @@ const HomeDocente = ({usuario}) => {
         <Div>
             <Router>
                 <SidebarAD PrimerT="Lista de alumnos" PrimerR="/usuario/docente/lista-alumno" iconoP={<FaIcons.FaList/>}
-                           DosT="Agregar cuestionario" DosR="/usuario/docente/agregarcuestionario-docente" iconoS={<MdQuiz/>} 
                            TresT="Mi perfil" TresR="/usuario/docente/miperfil-docente" iconoT={<FaIcons.FaAddressCard/>}
-                           CuatroT="Mis cuestionarios" CuatroR="/usuario/docente/mis-cuestionarios" iconoC={<FaIcons.FaAddressBook/>}
+                           DosT="Mis cuestionarios" DosR="/usuario/docente/mis-cuestionarios" iconoS={<FaIcons.FaAddressBook/>}
                 />
                 <div className="content w-100">
                     <Route path="/usuario/docente/lista-alumno" >{<ListaAlumno user1={usuario.user}/>}</Route>

@@ -23,12 +23,12 @@ function HomeAlumno({usuario}) {
                 <SidebarAD PrimerT="Cuestionarios" PrimerR="/usuario/alumno/cuestionarios-alumno" iconoP={<FaIcons.FaBookOpen/>}
                            DosT="Mi avance" DosR="/usuario/alumno/miavance-alumno" iconoS={<FaIcons.FaChartLine/>} 
                            TresT="Mi perfil" TresR="/usuario/alumno/miperfil-alumno" iconoT={<FaIcons.FaUserAlt />}
+                           
                 />
                 <div className="content w-100">
-
-                    <Route path="/usuario/alumno/cuestionarios-alumno" exact="true"  component={CuestionariosA} />
+                    <Route path="/usuario/alumno/cuestionarios-alumno">{<CuestionariosA user = {usuario}/>}</Route>
                     <Route path="/usuario/alumno/miperfil-alumno"  >{<Miperfil user = {usuario.user}/>}</Route>
-                    <Route path="/usuario/alumno/miavance-alumno"  exact="true" component={MiavanceA} />
+                    <Route path="/usuario/alumno/miavance-alumno"  >{<MiavanceA user = {usuario.user}/>}</Route>
                 </div>
 
         </Router>

@@ -6,7 +6,7 @@ import { collection, getDocs, getFirestore, onSnapshot, query, where } from "fir
 import firebaseApp from "../../Firebase/firebase-config";
 import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row } from 'react-bootstrap'
 import CuestionarioModal from "../../Componentes/Cuestionario/CuestionarioModal";
-
+import { IoReturnUpBackOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import CuestionarioModalDocente from "../../Componentes/Cuestionario/CuestionarioModalDocente";
 export default function AgregarCuestionario({user}) {
@@ -89,13 +89,17 @@ export default function AgregarCuestionario({user}) {
         }
       );
     }, []);
-    return (
+    return (<Section>
       <Container>
       <Row>
-        <Col>
-          <Section>
+        
+        <Col><div class="col-5">
+                            <Link to="/usuario/docente/mis-cuestionarios" className="btn btn-info"><IoReturnUpBackOutline />Mis cuestionarios</Link>
+        </div>
+          
             <p>aqui el admi podra tener todas las opciones para administrar los temas</p>
             Crear Temas
+            
             {temas?.map((tema, key) => (
               <div>
 
@@ -118,7 +122,7 @@ export default function AgregarCuestionario({user}) {
               </div>
             ))}
             
-          </Section>
+         
         </Col>
         <Col xs={3}>
         
@@ -140,7 +144,9 @@ export default function AgregarCuestionario({user}) {
         
         </Col>
       </Row>
-    </Container>
+
+    </Container> 
+    </Section>
     );
   }
 const Section = styled.section`

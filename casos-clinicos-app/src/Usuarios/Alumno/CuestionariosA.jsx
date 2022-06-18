@@ -1,14 +1,107 @@
-//CuestionarioA.jsx
-import {useEffect, useState } from "react";
-import * as React from 'react';
+//Aqui el docente podra agregar nuevo cuestionario
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
+import { collection, getDocs, getFirestore, onSnapshot, query, where,doc } from "firebase/firestore";
+import firebaseApp from "../../Firebase/firebase-config";
+import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row } from 'react-bootstrap'
+import CuestionarioModalContestar from "../../Componentes/Cuestionario/CuestionarioModalContestar";
+import CuestionarioModalContestarAsignado from "../../Componentes/Cuestionario/CuestionarioModalContestarAsignado";
 
-import AdministradorAlumno from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Modelo/AdministrarUsuarios/AdministradorAlumno";
+import { Link } from "react-router-dom";
+import CuestionarioModalDocente from "../../Componentes/Cuestionario/CuestionarioModalDocente";
+export default function AgregarCuestionario({user}) {
+
+  const [temas, setTemas] = useState(null);
+  const [subtemas, setSubtemas] = useState(null);
+  const [cuestionarios, setCuestionarios] = useState(null);
+  const [cuestionariosA, setCuestionariosA] = useState(null);
+  const [temaCompuesto, setTemaCompuesto] = useState(null);
+  const [subtema, setSubtema] = useState(null);
+  const [alumno, setAlumno] = useState(null);
 
 
+  const db = getFirestore(firebaseApp);
 
-export default function CuestionariosA() {
+
+  useEffect(() => {
+
+    const docRef = doc(db, `Alumno/${user.user.uid}`);
+    const unsubscribe = onSnapshot(docRef, (doc) => {
+      console.log("Current data: ", doc.data());
+      const alumnoData = doc.data();
+      setAlumno(alumnoData);
+    });
+
+    return () => {
+      unsubscribe();
+    }
+  }, []);
+  useEffect(
+    () =>
+      onSnapshot(collection(db, 'Temas'), (snapshot) => {
+        console.log(snapshot.docs.map((doc) => doc.data()))
+        setTemas(snapshot.docs.map((doc) => doc.data()))
+      }),
+    []);
+  async function getSubtemas(tema) {
+    const q = query(collection(db, "Subtemas"), where("Tema", "==", tema));
+
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size > 0) {
+      setSubtemas(querySnapshot.docs.map((doc) => doc.data()))
+    }
+  }
+
+  function CustomToggle({ children, eventKey }) {
+    const decoratedOnClick = useAccordionButton(eventKey, () =>
+      //console.log(children),
+      getSubtemas(children)
+    );
+
+    return (
+      <button
+        type="button"
+        style={{ backgroundColor: 'pink' }}
+        onClick={decoratedOnClick}
+      >
+        {children}
+      </button>
+    );
+  }
+
+  async function getCuestionarios(tema,subtema) {
+    const nrc=alumno.NRC;
+console.log("NRC_Alumno=>",nrc);
+    const temaCompuesto ={
+      Tema:tema,
+      Subtema:subtema
+    }
+    setTemaCompuesto(temaCompuesto)
+    //Cuestionarios generales
+   // const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", subtema));
+   const q = query(collection(db, "Cuestionarios"),where("nrcClase","not-in",[nrc]));
+
+    const querySnapshot = await getDocs(q);
+    if ((querySnapshot.size > 0) && tema!== null){
+      console.log(querySnapshot.docs.map((doc) => doc.data()))
+      setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
+    }
+//Cuestionarios Asignados
+
+const qA = query(collection(db, "Cuestionarios"),where("nrcClase","array-contains",nrc));
+
+
+    const querySnapshotA = await getDocs(qA);
+    if ((querySnapshotA.size > 0) && tema!== null){
+      console.log(querySnapshotA.docs.map((doc) => doc.data()))
+      setCuestionariosA(querySnapshotA.docs.map((doc) => doc.data()))
+    }
+
+
+    console.log(temaCompuesto)
+  }
+
     useEffect(() => {
       const sr = scrollreveal({
         origin: "bottom",
@@ -28,73 +121,77 @@ export default function CuestionariosA() {
         }
       );
     }, []);
-
-    
-
     return (
+      <Container>
+      <Row>
+        <Col>
+          <Section>
+            <h3>Temas</h3>
+            {temas?.map((tema) => (
+              <div>
+                <Accordion>
+                  <Card>
+                    <Card.Header>
+                      <CustomToggle eventKey="0">{tema.Tema}</CustomToggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0">
+                      <ListGroup variant="flush">
+                        {subtemas?.map((subtema) => (
+                          <ListGroup.Item action onClick={() => getCuestionarios(tema.Tema,subtema.Subtema)}>{subtema.Subtema}</ListGroup.Item>
+                        ))}
+                       
+                      </ListGroup>
+                    </Accordion.Collapse>
+
+                  </Card>
+                </Accordion>
+              </div>
+            ))}
+            
+          </Section>
+        </Col>
+       
+        <Col xs={3}>
+         <h3>Cuestionarios</h3>
+          <ListGroup defaultActiveKey="#link1">
+           {cuestionarios?.map((cuestionario)=>( 
+           
+           <>
+            <ListGroup.Item>
+              {cuestionario.Titulo}
+            </ListGroup.Item>
+
+            <CuestionarioModalContestar quiz={cuestionario}/>
+            </>
+            ))
       
-      <Section>
-        <div className="table-responsive border bg-light px-4">
-                        <h1>Temas de cuestionarios</h1>
-                        <p>Elige un tema para poder ver la lista de subtemas.</p>
-                        <table class=" WIDTH=50% table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Tema</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td><a href="">Ejemplo del tema 1 para poder ver subtemas</a></td>
-                                </tr>
+          
+        }
+          </ListGroup>
+        
+        </Col>
+        
+        <Col xs={3}>
+        <h3>Cuestionarios asignados</h3>
+          <ListGroup defaultActiveKey="#link1">
+           {cuestionariosA?.map((cuestionarioA)=>( 
+           
+           <>
+            <ListGroup.Item>
+              {cuestionarioA.Titulo}
+            </ListGroup.Item>
+            <CuestionarioModalContestarAsignado quiz={cuestionarioA} user={user.user}/>
 
-                            </tbody>
-                        </table>
-
-                        <div class="accordion" id="accordionExample">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        Accordion Item #1
-                                    </button>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <p>Aqui iria la lista de subtemas del tema 1</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingTwo">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Accordion Item #2
-                                    </button>
-                                </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <p>Aqui iria la lista de subtemas del tema 2</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingThree">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                        Accordion Item #3
-                                    </button>
-                                </h2>
-                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <p>Aqui iria la lista de subtemas del tema 3</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                   
-                    
-      </Section>
+            </>
+            ))
+      
+          
+        }
+          </ListGroup>
+        
+        </Col>
+      </Row>
+    </Container>
     );
   }
 const Section = styled.section`

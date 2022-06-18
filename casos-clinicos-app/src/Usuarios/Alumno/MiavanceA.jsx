@@ -1,57 +1,168 @@
 //interfaz para visualizr el avance del alumno
-import React, {useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
+import { FcList } from "react-icons/fc";
+import { FcRatings } from "react-icons/fc";
+import { FcTimeline } from "react-icons/fc";
+import { FcButtingIn } from "react-icons/fc";
 
-export default function  MiavanceA() {
-    useEffect(() => {
-      const sr = scrollreveal({
-        origin: "bottom",
-        distance: "80px",
-        duration: 2000,
-        reset: false,
-      });
-      sr.reveal(
-        `
+import { collection, getDocs, getFirestore, onSnapshot, query, where, doc } from "firebase/firestore";
+import firebaseApp from "../../Firebase/firebase-config";
+
+export default function MiavanceA({ user }) {
+  const [alumno, setAlumno] = useState(null);
+  const [temasNum, settemasNum] = useState(0);
+  const [cuesNum, setCuesNum] = useState(0);
+
+  const db = getFirestore(firebaseApp);
+
+  async function getTemas() {
+    var numTemas = 0;
+    const q = query(collection(db, "Temas"));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      numTemas++;
+    });
+    return numTemas;
+  }
+  async function getCuestionarios() {
+    var numCuestionarios = 0;
+    const q = query(collection(db, "Cuestionarios"));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      numCuestionarios++;
+    });
+    return numCuestionarios;
+  }
+  useEffect(() => {
+
+    getTemas().then(res => {
+      console.log("Num de temas totales", res);
+      settemasNum(res);
+    });
+
+    getCuestionarios().then(res => {
+      console.log("Num de cuestionarios totales", res);
+      setCuesNum(res);
+    });
+
+    const docRef = doc(db, `Alumno/${user.uid}`);
+    const unsubscribe = onSnapshot(docRef, (doc) => {
+      console.log("Current data: ", doc.data());
+      const alumnoData = doc.data();
+      setAlumno(alumnoData);
+    });
+
+    return () => {
+      unsubscribe();
+    }
+  }, []);
+
+  useEffect(() => {
+    const sr = scrollreveal({
+      origin: "bottom",
+      distance: "80px",
+      duration: 2000,
+      reset: false,
+    });
+    sr.reveal(
+      `
           nav,
           .row__one,
           .row__two
       `,
-        {
-          opacity: 0,
-          interval: 100,
-        }
-      );
-    }, []);
-    return (
-      <Section>
-        <div class=" border bg-light px-4">
-                        <form claseName="" method="POST" action="">
-                            <fieldset>
-                                <br></br>
-
-                                <h1>Resultados de uso</h1>
-
-                                <div class="form-group">
-                                    <label for="InputMatricula">Temas completados</label>
-                                    <input type="txt" class="form-control" id="InputMatricula" value="" />
-                                </div>
-                                <div class="form-group">
-                                    <label for="InputMatricula">Cuestionarios completados</label>
-                                    <input type="txt" class="form-control" id="InputMatricula" value="" />
-                                </div>
-                                <div class="form-group">
-                                    <label for="InputMatricula">Promedio general</label>
-                                    <input type="txt" class="form-control" id="InputMatricula" value="" />
-                                </div>
-                            </fieldset>
-                            <br />
-                            <br />
-                        </form>
-                    </div>
-      </Section>
+      {
+        opacity: 0,
+        interval: 100,
+      }
     );
-  }
+  }, []);
+  return (
+    <Section>
+       {alumno ?
+      <div class="row border bg-light px-4">
+      <h1>Resultados de uso</h1>
+        <div className="col-xl-3 col-sm-6 col-12">
+          <div className="card">
+            <div className="card-content">
+              <div className="card-body">
+                <div className="media d-flex">
+                  <div className="align-self-center">
+                  <h1> < FcButtingIn /></h1>
+                    
+                  </div>
+                  <div className="media-body text-right">
+                    <h3>{alumno.Nombre} {alumno.ApellidoPaterno} {alumno.ApellidoMaterno}</h3>
+                    <span>Estudiante</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-3 col-sm-6 col-12">
+          <div className="card">
+            <div className="card-content">
+              <div className="card-body">
+                <div className="media d-flex">
+                  <div className="align-self-center">
+                    <h1><FcList/></h1>
+                  </div>
+                  <div className="media-body text-right">
+                    <h3>Temas completos</h3>
+                    <span>{alumno.Avance.TemasCompletos} / {temasNum}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-3 col-sm-6 col-12 p-2">
+          <div className="card">
+            <div className="card-content">
+              <div className="card-body">
+                <div className="media d-flex">
+                  <div className="align-self-center">
+                    <h1><FcTimeline/></h1>
+                  </div>
+                  <div className="media-body text-right">
+                    <h3>Cuestionarios completos</h3>
+                    <span>{alumno.Avance.CuestionariosCompletos} / {cuesNum}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-3 col-sm-6 col-12 p-2">
+          <div className="card">
+            <div className="card-content">
+              <div className="card-body">
+                <div className="media d-flex">
+                  <div className="align-self-center">
+                   <h1> <FcRatings/></h1> 
+                  </div>
+                  <div className="media-body text-right">
+                    <h3>Promedio general</h3>
+                    <span>{alumno.Avance.PromedioGeneral} / 10</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      : null}
+    </Section>
+  );
+}
 const Section = styled.section`
   margin-left: 18vw;
   padding: 2rem;

@@ -5,11 +5,15 @@ import { ListGroup, Card, Button, Container, Col, Row, Form } from 'react-bootst
 import EditarCuestionarioModalDocente from '../../../Componentes/Cuestionario/EditarCuestionarioModalDocente';
 import Swal from 'sweetalert2';
 import { borrarCuestionarioDocente } from '../../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
+import AsignarCuestionarioModal from '../../../Componentes/Cuestionario/AsignarCuestionarioModal';
+import styled from "styled-components";
+import { Redirect , Link} from 'react-router-dom';
 function MisCuestionarios({ user }) {
 
     const db = getFirestore(firebaseApp);
     const [cuestionarios, setCuestionarios] = useState(null);
     const [cuestionario, setCuestionario] = useState(null);
+    const [NrcAsignado,setNrcAsignado] = useState([0]);  
     function obtenerCuestionario(cuestionario) {
         setCuestionario(cuestionario);
     }
@@ -50,13 +54,17 @@ function MisCuestionarios({ user }) {
     }
     useEffect(
         () => obtenerCuestionariosDocente(user)
-        
     , [])
+    
+      
+  
+  
 
 
     return (
+      <Section>
         <div>MisCuestionarios
-
+        <Link to="/usuario/docente/agregarcuestionario-docente" className="btn btn-success">Agregar Cuestionario</Link>
 
             <Container>
                 <Row>
@@ -72,8 +80,15 @@ function MisCuestionarios({ user }) {
                     </Col>
                     <Col>
                         {cuestionario && 
+                        
                         <Form style={{ width: '100%', height:'400px',overflowY:'auto' }} className="cuestionarioForm">
                         {/*Pregunta 1*/}
+                        
+                        <div className="btn-group">
+                            <AsignarCuestionarioModal quiz={cuestionario}/>
+                             <EditarCuestionarioModalDocente data={cuestionario}/>
+                             <Button className='btn_borrar' onClick={()=>borrarCuestionario(cuestionario.idCuestionario)}>Borrar</Button>
+                        </div>
                         <div className='pregunta' style={{ textAlign: 'center', width: '500px', height: '130px' }}>
                           <div className='pregunta-respuesta' style={{ float: 'left', width: '300px' }}>
                             <label htmlFor="pregunta_1">Pregunta 1</label>
@@ -266,8 +281,7 @@ function MisCuestionarios({ user }) {
             
                         </div>
                         
-                             <EditarCuestionarioModalDocente data={cuestionario}/>
-                             <Button className='btn_borrar' onClick={()=>borrarCuestionario(cuestionario.idCuestionario)}>Borrar</Button>
+                             
                              <br />
                       </Form>
                                 
@@ -276,15 +290,45 @@ function MisCuestionarios({ user }) {
                 </Row>
             </Container>
 
-
-
-
-
-
-
-
         </div>
+        
+        </Section>
+        
     )
 }
 
 export default MisCuestionarios
+
+const Section = styled.section`
+  margin-left: 18vw;
+  padding: 2rem;
+  height: 100%;
+  .grid {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+    margin-top: 2rem;
+    .row__one {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      height: 50%;
+      gap: 1rem;
+    }
+    .row__two {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      height: 50%;
+    }
+  }
+  @media screen and (min-width: 280px) and (max-width: 1080px) {
+    margin-left: 0;
+    .grid {
+      .row__one,
+      .row__two {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+`;
