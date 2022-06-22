@@ -280,10 +280,22 @@ const docenteConverter = {
 //Para registrar un nuevo cuestionario. Datos: preguntas, respuestas, tema, subtmea, usuario
 export async function registrarNuevoCuestionario(cuestionario, data, user,imageUpload) {
   //Para obtener información del docente que crea el custionario
-  const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+  var imageRef;
+  if(imageUpload !== null){
+    imageRef= ref(storage, `images/${imageUpload.name + v4()}`);
   uploadBytes(imageRef, imageUpload).then(() => {
     //alert("uploaded");
   });
+  registrarCuestionarioConImagen(cuestionario, data,user,imageRef)
+
+  }else{
+    registrarCuestionarioSinImagen(cuestionario, data, user)
+  }
+  
+  
+}
+
+async function  registrarCuestionarioSinImagen(cuestionario, data, user){
   const refDocente = doc(db, "Docente", user.uid).withConverter(
     docenteConverter
   );
@@ -296,59 +308,70 @@ export async function registrarNuevoCuestionario(cuestionario, data, user,imageU
       Autor: docente.name + " " + docente.apellidoPaterno,
       AutorMatricula: docente.matricula,
       AutorId: user.uid,
-      imageRef: imageRef.fullPath,
+      imageRef: "none",
       Tema: data.Tema,
       Subtema: data.Subtema,
       Titulo: cuestionario.Titulo,
+      Enunciado : cuestionario.Enunciado,
       pregunta_1: cuestionario.pregunta_1,
       respuesta_1: cuestionario.respuesta_1,
       respuesta_2: cuestionario.respuesta_2,
       respuesta_3: cuestionario.respuesta_3,
+      respuesta_4: cuestionario.respuesta_4,
       respuestaCorrectaP1: cuestionario.respuestaCorrectaP1,
       pregunta_2: cuestionario.pregunta_2,
       respuesta_2_1: cuestionario.respuesta_2_1,
       respuesta_2_2: cuestionario.respuesta_2_2,
       respuesta_2_3: cuestionario.respuesta_2_3,
+      respuesta_2_4: cuestionario.respuesta_2_4,
       respuestaCorrectaP2: cuestionario.respuestaCorrectaP2,
       pregunta_3: cuestionario.pregunta_3,
       respuesta_3_1: cuestionario.respuesta_3_1,
       respuesta_3_2: cuestionario.respuesta_3_2,
       respuesta_3_3: cuestionario.respuesta_3_3,
+      respuesta_3_4: cuestionario.respuesta_3_4,
       respuestaCorrectaP3: cuestionario.respuestaCorrectaP3,
       pregunta_4: cuestionario.pregunta_4,
       respuesta_4_1: cuestionario.respuesta_4_1,
       respuesta_4_2: cuestionario.respuesta_4_2,
       respuesta_4_3: cuestionario.respuesta_4_3,
+      respuesta_4_4: cuestionario.respuesta_4_4,
       respuestaCorrectaP4: cuestionario.respuestaCorrectaP4,
       pregunta_5: cuestionario.pregunta_5,
       respuesta_5_1: cuestionario.respuesta_5_1,
       respuesta_5_2: cuestionario.respuesta_5_2,
       respuesta_5_3: cuestionario.respuesta_5_3,
+      respuesta_5_4: cuestionario.respuesta_5_4,
       respuestaCorrectaP5: cuestionario.respuestaCorrectaP5,
       pregunta_6: cuestionario.pregunta_6,
       respuesta_6_1: cuestionario.respuesta_6_1,
       respuesta_6_2: cuestionario.respuesta_6_2,
       respuesta_6_3: cuestionario.respuesta_6_3,
+      respuesta_6_4: cuestionario.respuesta_6_4,
       respuestaCorrectaP6: cuestionario.respuestaCorrectaP6,
       pregunta_7: cuestionario.pregunta_7,
       respuesta_7_1: cuestionario.respuesta_7_1,
       respuesta_7_2: cuestionario.respuesta_7_2,
       respuesta_7_3: cuestionario.respuesta_7_3,
+      respuesta_7_4: cuestionario.respuesta_7_4,
       respuestaCorrectaP7: cuestionario.respuestaCorrectaP7,
       pregunta_8: cuestionario.pregunta_8,
       respuesta_8_1: cuestionario.respuesta_8_1,
       respuesta_8_2: cuestionario.respuesta_8_2,
       respuesta_8_3: cuestionario.respuesta_8_3,
+      respuesta_8_4: cuestionario.respuesta_8_4,
       respuestaCorrectaP8: cuestionario.respuestaCorrectaP8,
       pregunta_9: cuestionario.pregunta_9,
       respuesta_9_1: cuestionario.respuesta_9_1,
       respuesta_9_2: cuestionario.respuesta_9_2,
       respuesta_9_3: cuestionario.respuesta_9_3,
+      respuesta_9_4: cuestionario.respuesta_9_4,
       respuestaCorrectaP9: cuestionario.respuestaCorrectaP9,
       pregunta_10: cuestionario.pregunta_10,
       respuesta_10_1: cuestionario.respuesta_10_1,
       respuesta_10_2: cuestionario.respuesta_10_2,
       respuesta_10_3: cuestionario.respuesta_10_3,
+      respuesta_10_4: cuestionario.respuesta_10_4,
       respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
     }).then(() => {
       console.log("Cuestionario registrado");
@@ -366,16 +389,123 @@ export async function registrarNuevoCuestionario(cuestionario, data, user,imageU
     console.log("No such document!");
   }
 }
+async function registrarCuestionarioConImagen(cuestionario, data, user,imageRef){
+  const refDocente = doc(db, "Docente", user.uid).withConverter(
+    docenteConverter
+  );
 
+  const docSnapDocente = await getDoc(refDocente);
+  if (docSnapDocente.exists()) {
+    const docente = docSnapDocente.data();
+    console.log(docente.toString());
+    const cuestionarioAgregado = await addDoc(collection(db, "Cuestionarios"), {
+      Autor: docente.name + " " + docente.apellidoPaterno,
+      AutorMatricula: docente.matricula,
+      AutorId: user.uid,
+      imageRef: imageRef.fullPath,
+      Tema: data.Tema,
+      Subtema: data.Subtema,
+      Titulo: cuestionario.Titulo,
+      Enunciado: cuestionario.Enunciado,
+      pregunta_1: cuestionario.pregunta_1,
+      respuesta_1: cuestionario.respuesta_1,
+      respuesta_2: cuestionario.respuesta_2,
+      respuesta_3: cuestionario.respuesta_3,
+      respuesta_4: cuestionario.respuesta_4,
+      respuestaCorrectaP1: cuestionario.respuestaCorrectaP1,
+      pregunta_2: cuestionario.pregunta_2,
+      respuesta_2_1: cuestionario.respuesta_2_1,
+      respuesta_2_2: cuestionario.respuesta_2_2,
+      respuesta_2_3: cuestionario.respuesta_2_3,
+      respuesta_2_4: cuestionario.respuesta_2_4,
+      respuestaCorrectaP2: cuestionario.respuestaCorrectaP2,
+      pregunta_3: cuestionario.pregunta_3,
+      respuesta_3_1: cuestionario.respuesta_3_1,
+      respuesta_3_2: cuestionario.respuesta_3_2,
+      respuesta_3_3: cuestionario.respuesta_3_3,
+      respuesta_3_4: cuestionario.respuesta_3_4,
+      respuestaCorrectaP3: cuestionario.respuestaCorrectaP3,
+      pregunta_4: cuestionario.pregunta_4,
+      respuesta_4_1: cuestionario.respuesta_4_1,
+      respuesta_4_2: cuestionario.respuesta_4_2,
+      respuesta_4_3: cuestionario.respuesta_4_3,
+      respuesta_4_4: cuestionario.respuesta_4_4,
+      respuestaCorrectaP4: cuestionario.respuestaCorrectaP4,
+      pregunta_5: cuestionario.pregunta_5,
+      respuesta_5_1: cuestionario.respuesta_5_1,
+      respuesta_5_2: cuestionario.respuesta_5_2,
+      respuesta_5_3: cuestionario.respuesta_5_3,
+      respuesta_5_4: cuestionario.respuesta_5_4,
+      respuestaCorrectaP5: cuestionario.respuestaCorrectaP5,
+      pregunta_6: cuestionario.pregunta_6,
+      respuesta_6_1: cuestionario.respuesta_6_1,
+      respuesta_6_2: cuestionario.respuesta_6_2,
+      respuesta_6_3: cuestionario.respuesta_6_3,
+      respuesta_6_4: cuestionario.respuesta_6_4,
+      respuestaCorrectaP6: cuestionario.respuestaCorrectaP6,
+      pregunta_7: cuestionario.pregunta_7,
+      respuesta_7_1: cuestionario.respuesta_7_1,
+      respuesta_7_2: cuestionario.respuesta_7_2,
+      respuesta_7_3: cuestionario.respuesta_7_3,
+      respuesta_7_4: cuestionario.respuesta_7_4,
+      respuestaCorrectaP7: cuestionario.respuestaCorrectaP7,
+      pregunta_8: cuestionario.pregunta_8,
+      respuesta_8_1: cuestionario.respuesta_8_1,
+      respuesta_8_2: cuestionario.respuesta_8_2,
+      respuesta_8_3: cuestionario.respuesta_8_3,
+      respuesta_8_4: cuestionario.respuesta_8_4,
+      respuestaCorrectaP8: cuestionario.respuestaCorrectaP8,
+      pregunta_9: cuestionario.pregunta_9,
+      respuesta_9_1: cuestionario.respuesta_9_1,
+      respuesta_9_2: cuestionario.respuesta_9_2,
+      respuesta_9_3: cuestionario.respuesta_9_3,
+      respuesta_9_4: cuestionario.respuesta_9_4,
+      respuestaCorrectaP9: cuestionario.respuestaCorrectaP9,
+      pregunta_10: cuestionario.pregunta_10,
+      respuesta_10_1: cuestionario.respuesta_10_1,
+      respuesta_10_2: cuestionario.respuesta_10_2,
+      respuesta_10_3: cuestionario.respuesta_10_3,
+      respuesta_10_4: cuestionario.respuesta_10_4,
+      respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
+    }).then(() => {
+      console.log("Cuestionario registrado");
+    });
+
+    if (cuestionarioAgregado) {
+      const cuestionarioRef = doc(db, "Cuestionarios", cuestionarioAgregado.id);
+      await updateDoc(cuestionarioRef, {
+        idCuestionario: cuestionarioAgregado.id,
+      }).then(() => {
+        console.log("Cuestionario actualizado con el id");
+      });
+    }
+  } else {
+    console.log("No such document!");
+  }
+}
 //Editar un cuestionario
-export async function actualizarCuestionario(cuestionario, data) {
+export function actualizarCuestionario(cuestionario, data,imageUpload) {
   
+  var imageRef;
+  if(imageUpload !== null){
+    imageRef= ref(storage, `images/${imageUpload.name + v4()}`);
+  uploadBytes(imageRef, imageUpload).then(() => {
+    //alert("uploaded");
+  });
+  actualizarCuestionarioConImagen(cuestionario, data,imageRef)
+
+  }else{
+    actualizarCuestionarioSinImagen(cuestionario, data)
+  }
   
+}
+
+async function actualizarCuestionarioSinImagen(cuestionario, data){
   if (cuestionario !== null) {
     const cuestionarioRef = doc(db, "Cuestionarios", data.idCuestionario);
     await updateDoc(cuestionarioRef, {
       Titulo: cuestionario.Titulo,
-      enunciado: cuestionario.enunciado,
+      Enunciado: cuestionario.Enunciado,
       pregunta_1: cuestionario.pregunta_1,
       respuesta_1: cuestionario.respuesta_1,
       respuesta_2: cuestionario.respuesta_2,
@@ -441,6 +571,79 @@ export async function actualizarCuestionario(cuestionario, data) {
     });
   }
 }
+async function actualizarCuestionarioConImagen(cuestionario, data,imageRef){
+  if (cuestionario !== null) {
+    const cuestionarioRef = doc(db, "Cuestionarios", data.idCuestionario);
+    await updateDoc(cuestionarioRef, {
+      Titulo: cuestionario.Titulo,
+      Enunciado: cuestionario.Enunciado,
+      imageRef: imageRef.fullPath,
+      pregunta_1: cuestionario.pregunta_1,
+      respuesta_1: cuestionario.respuesta_1,
+      respuesta_2: cuestionario.respuesta_2,
+      respuesta_3: cuestionario.respuesta_3,
+      respuesta_4: cuestionario.respuesta_4,
+      respuestaCorrectaP1: cuestionario.respuestaCorrectaP1,
+      pregunta_2: cuestionario.pregunta_2,
+      respuesta_2_1: cuestionario.respuesta_2_1,
+      respuesta_2_2: cuestionario.respuesta_2_2,
+      respuesta_2_3: cuestionario.respuesta_2_3,
+      respuesta_2_4: cuestionario.respuesta_2_4,
+      respuestaCorrectaP2: cuestionario.respuestaCorrectaP2,
+      pregunta_3: cuestionario.pregunta_3,
+      respuesta_3_1: cuestionario.respuesta_3_1,
+      respuesta_3_2: cuestionario.respuesta_3_2,
+      respuesta_3_3: cuestionario.respuesta_3_3,
+      respuesta_3_4: cuestionario.respuesta_3_4,
+      respuestaCorrectaP3: cuestionario.respuestaCorrectaP3,
+      pregunta_4: cuestionario.pregunta_4,
+      respuesta_4_1: cuestionario.respuesta_4_1,
+      respuesta_4_2: cuestionario.respuesta_4_2,
+      respuesta_4_3: cuestionario.respuesta_4_3,
+      respuesta_4_4: cuestionario.respuesta_4_4,
+      respuestaCorrectaP4: cuestionario.respuestaCorrectaP4,
+      pregunta_5: cuestionario.pregunta_5,
+      respuesta_5_1: cuestionario.respuesta_5_1,
+      respuesta_5_2: cuestionario.respuesta_5_2,
+      respuesta_5_3: cuestionario.respuesta_5_3,
+      respuesta_5_4: cuestionario.respuesta_5_4,
+      respuestaCorrectaP5: cuestionario.respuestaCorrectaP5,
+      pregunta_6: cuestionario.pregunta_6,
+      respuesta_6_1: cuestionario.respuesta_6_1,
+      respuesta_6_2: cuestionario.respuesta_6_2,
+      respuesta_6_3: cuestionario.respuesta_6_3,
+      respuesta_6_4: cuestionario.respuesta_6_4,
+      respuestaCorrectaP6: cuestionario.respuestaCorrectaP6,
+      pregunta_7: cuestionario.pregunta_7,
+      respuesta_7_1: cuestionario.respuesta_7_1,
+      respuesta_7_2: cuestionario.respuesta_7_2,
+      respuesta_7_3: cuestionario.respuesta_7_3,
+      respuesta_7_4: cuestionario.respuesta_7_4,
+      respuestaCorrectaP7: cuestionario.respuestaCorrectaP7,
+      pregunta_8: cuestionario.pregunta_8,
+      respuesta_8_1: cuestionario.respuesta_8_1,
+      respuesta_8_2: cuestionario.respuesta_8_2,
+      respuesta_8_3: cuestionario.respuesta_8_3,
+      respuesta_8_4: cuestionario.respuesta_8_4,
+      respuestaCorrectaP8: cuestionario.respuestaCorrectaP8,
+      pregunta_9: cuestionario.pregunta_9,
+      respuesta_9_1: cuestionario.respuesta_9_1,
+      respuesta_9_2: cuestionario.respuesta_9_2,
+      respuesta_9_3: cuestionario.respuesta_9_3,
+      respuesta_9_4: cuestionario.respuesta_9_4,
+      respuestaCorrectaP9: cuestionario.respuestaCorrectaP9,
+      pregunta_10: cuestionario.pregunta_10,
+      respuesta_10_1: cuestionario.respuesta_10_1,
+      respuesta_10_2: cuestionario.respuesta_10_2,
+      respuesta_10_3: cuestionario.respuesta_10_3,
+      respuesta_10_4: cuestionario.respuesta_10_4,
+      respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
+    }).then(() => {
+      console.log("Cuestionario actualizado...");
+    });
+  }
+}
+
 
 //para borrar el cuestionario especifico
 export async function borrarCuestionarioDocente(id) {

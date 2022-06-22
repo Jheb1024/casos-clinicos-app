@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal } from 'react-bootstrap'
-import { Formik, Form, Field, ErrorMessage, setIn } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-import { collection, getDocs, getFirestore, onSnapshot, query, where, doc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, onSnapshot, query, where } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
 import { registrarResultadoCuestionarioAsignado } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios'
 import Swal from "sweetalert2";

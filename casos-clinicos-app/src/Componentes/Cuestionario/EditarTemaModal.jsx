@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Modal, Button, Form} from 'react-bootstrap'
-import { registrarTema, registrarSubtema, editarTemaAdmin } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
+import { editarTemaAdmin } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
 function EditarTemaModal({tema,idTema}) {
 
     const [show, setShow] = useState(false);

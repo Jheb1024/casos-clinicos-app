@@ -1,5 +1,5 @@
 //HomeAdmin.jsx
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import { getAuth } from "firebase/auth";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom"
 import SidebarAD from "../../Componentes/Sidebar/SidebarAD"
@@ -11,12 +11,10 @@ import ListaUsuarios from "./ListarUsuarios"
 //iconos
 import * as FaIcons from 'react-icons/fa';
 import { MdQuiz } from "react-icons/md";
-import PerfilDocente from "./PerfilDocente";
-import AdminProtectedRoutes from "../../ProtectedRoutes/AdminProtectedRoutes";
 
 const HomeAdmin = ({user1}) => {
 
-   const userRol = localStorage.getItem("rol");
+   const [userRol, setUserRol] = useState(null)
 
   const auth = getAuth();
   const user = auth.currentUser;
@@ -34,7 +32,15 @@ const HomeAdmin = ({user1}) => {
     //es decir ejecutamos la consulta para saber el rol de la persona que se está loguaendo
 
     const uid = user.uid;
-  }
+    
+    
+  }useEffect(() => {
+      setUserRol(localStorage.getItem("rol"));
+    
+      return () => {
+        setUserRol(localStorage.getItem("rol"));
+      }
+    }, [])
   return (
     <Div>
     <Router>
@@ -49,15 +55,15 @@ const HomeAdmin = ({user1}) => {
             */}
             <Route path="/usuario/admin/administrar-temas"
               render={(props) =>
-                userRol ? <AdministrarTemas user1={user}/> : <Redirect to="/inicio-sesion" />
+                userRol ? <AdministrarTemas user1={user}/> : <Redirect to={window.location} />
             }/>
             <Route path="/usuario/admin/administrar-cuestionarios"
               render={(props) =>
-                userRol ? <AdministrarCuestionarios user1={user}/> : <Redirect to="/inicio-sesion" />
+                userRol ? <AdministrarCuestionarios user1={user}/> : <Redirect to={window.location} />
             }/>
             <Route path="/usuario/admin/lista-usuarios"
               render={(props) =>
-                userRol ? <ListaUsuarios user1={user}/> : <Redirect to="/inicio-sesion" />
+                userRol ? <ListaUsuarios user1={user}/> : <Redirect to={window.location} />
             }/>
             
             {/*<AdminProtectedRoutes path="/usuario/admin/administrar-cuestionarios" component={AdministrarCuestionarios} user={user}/>

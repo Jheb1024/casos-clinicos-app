@@ -129,7 +129,7 @@ function ReiniciarPasswordUI() {
                                                     placeholder="juan@gmail.com"
                                                 />
                                                 <ErrorMessage name="correoRecuperacion" component={() => (
-                                                    <div className="error"><p class="text-danger"><small>{errors.correoRecuperacion}</small></p></div>
+                                                    <div className="error"><p className="text-danger"><small>{errors.correoRecuperacion}</small></p></div>
                                                 )} />
                                             </div>
                                             <br></br>

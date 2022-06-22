@@ -32,15 +32,15 @@ function CuestionarioModalDocente({ data, user}) {
             <Button variant="primary" onClick={()=>openModal()}>
                 Crear nuevo cuestionario
             </Button>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} >
                 <Modal.Header closeButton>
                     <Modal.Title>Nuevo Cuestionario</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body >
                     <Formik
                         initialValues={{
                             Titulo:'',
-                            enunciado:'',
+                            Enunciado:'',
                             pregunta_1: '',
                             respuesta_1: '',
                             respuesta_2: '',
@@ -105,7 +105,7 @@ function CuestionarioModalDocente({ data, user}) {
                         validate={values => {
                             const errors = {};
                             if (!values.Titulo) errors.Titulo = 'Título requerido';
-                            if (!values.enunciado) errors.enunciado = 'Enunciado requerido';
+                            if (!values.Enunciado) errors.Enunciado = 'Enunciado requerido';
                             if (!values.pregunta_1) errors.pregunta_1 = 'Pregunta requerida';
                             if (!values.respuesta_1) errors.respuesta_1 = 'Respuesta requerida';
                             if (!values.respuesta_2) errors.respuesta_2 = 'Respuesta requerida';
@@ -171,16 +171,17 @@ function CuestionarioModalDocente({ data, user}) {
                         }}
                         onSubmit={(values, { setSubmitting }) => {
                             registrarNuevoCuestionario(values,data, user, imageUpload);
-                        }}
+                        }} 
                     >
                         {({ isSubmitting }) => (
-                            <Form style={{  width: '700px' }}>
-                                <Field className="titulo" type="text" name="Titulo" style={{width:'300px'}}  placeholder="Título"/>
-                                <ErrorMessage name="enunciado" component="div" className='errors'/>
-                                <Field component='textarea' className="enunciado" type="text" name="enunciado" style={{width:'300px'}}  placeholder="Enunciado"/>
-                                <ErrorMessage name="enunciado" component="div" className='errors'/>
-                                <div className='image' >
-                                    <input clasName='file' type='file' onChange={(event) => {
+                            <Form style={{  width: '800px' }}>
+                                <Field className="titulo" type="text" name="Titulo" style={{width:'500px'}}  placeholder="Título"/>
+                                <ErrorMessage name="Titulo" component="div" className='errors'/>
+                                <Field component='textarea' className="Enunciado" name="Enunciado" style={{width:'500px'}}  placeholder="Enunciado"/>
+                                <ErrorMessage name="Enunciado" component="div" className='errors'/>
+                                <label htmlFor="image" style={{widt:'500px'}}>Insertar más información como imagen</label>
+                                <div className='image' name='image' >
+                                    <input className='file' type='file' onChange={(event) => {
                                         setImageUpload(event.target.files[0])
                                     }}></input>
                                 </div>
@@ -252,7 +253,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP2" component="div" className='errors'/>
                                 </div>
@@ -286,7 +287,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP3" component="div" className='errors'/>
                                 </div>
@@ -321,7 +322,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP4" component="div" className='errors'/>
                                 </div>
@@ -357,7 +358,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP5" component="div" className='errors'/>
                                 </div>
@@ -392,7 +393,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP6" component="div" className='errors'/>
                                 </div>
@@ -427,7 +428,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP7" component="div" className='errors'/>
                                 </div>
@@ -462,7 +463,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP8" component="div" className='errors'/>
                                 </div>
@@ -497,7 +498,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP9" component="div" className='errors'/>
                                 </div>
@@ -532,7 +533,7 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_1">Respuesta 1</option>
                                     <option value="respuesta_2">Respuesta 2</option>
                                     <option value="respuesta_3">Respuesta 3</option>
-                                    <option value="respuesta_3">Respuesta 4</option>
+                                    <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP10" component="div" className='errors'/>
                                 </div>

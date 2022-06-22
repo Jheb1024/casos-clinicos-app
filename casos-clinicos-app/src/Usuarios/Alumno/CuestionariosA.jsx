@@ -7,9 +7,6 @@ import firebaseApp from "../../Firebase/firebase-config";
 import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row } from 'react-bootstrap'
 import CuestionarioModalContestar from "../../Componentes/Cuestionario/CuestionarioModalContestar";
 import CuestionarioModalContestarAsignado from "../../Componentes/Cuestionario/CuestionarioModalContestarAsignado";
-
-import { Link } from "react-router-dom";
-import CuestionarioModalDocente from "../../Componentes/Cuestionario/CuestionarioModalDocente";
 export default function AgregarCuestionario({user}) {
 
   const [temas, setTemas] = useState(null);

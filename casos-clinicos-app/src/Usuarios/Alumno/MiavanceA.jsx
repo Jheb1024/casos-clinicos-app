@@ -7,7 +7,7 @@ import { FcRatings } from "react-icons/fc";
 import { FcTimeline } from "react-icons/fc";
 import { FcButtingIn } from "react-icons/fc";
 
-import { collection, getDocs, getFirestore, onSnapshot, query, where, doc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, onSnapshot, query, doc } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
 
 export default function MiavanceA({ user }) {

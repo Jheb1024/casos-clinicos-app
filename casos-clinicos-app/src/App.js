@@ -10,12 +10,10 @@ import HomeAlumno from "./Usuarios/Alumno/HomeAlumno";
 
 import {
   BrowserRouter as Router,
-  Routes,
   Switch,
   Route,
-  NavLink,
 } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import firebaseApp from "./Firebase/firebase-config";
 import ReiniciarPasswordUI from "./Componentes/ReiniciarPassword/ReiniciarPasswordUI";
@@ -40,16 +38,23 @@ import AlumnoProtectedRoutes from "./ProtectedRoutes/AlumnoProtectedRoutes";
 const auth = getAuth(firebaseApp);
 
 function App() {
+  
   const [user, setUser] = useState(null);
-
-  onAuthStateChanged(auth, (usuarioFirebase) => {
-    if (usuarioFirebase) {
-      console.log("Usuario desde el app", usuarioFirebase);
-      setUser(usuarioFirebase);
-    } else {
-      setUser(null);
-    }
-  });
+  const [localUser, setLocalUser] = useState(null);
+  
+  useEffect(() => 
+    //
+    onAuthStateChanged(auth, (usuarioFirebase) => {
+      if (usuarioFirebase) {
+        console.log("Usuario desde el app", usuarioFirebase);
+        setUser(usuarioFirebase);
+        setLocalUser(localStorage.getItem("rol"))
+      } else {
+        setUser(null);
+      }
+    })
+    
+  , [])
 
   return (
     <div className="App">
@@ -74,8 +79,8 @@ function App() {
               <h1 className="h1">¡Bienvenido(a) a Casos Clínicos!</h1>
             </Route>
             {/**Rutas privadas del administrador */}
-            { user ? <AdminProtectedRoutes path="/usuario/admin" component={HomeAdmin} user={user}/> :
-             <Redirect to='/inicio-sesion'/>}
+            { user || localUser? <AdminProtectedRoutes path="/usuario/admin" component={HomeAdmin} user={user}/> :
+             <Redirect to={window.location}/>}
             {/*<AdminProtectedRoutes path="/usuario/admin/administrar-cuestionarios" component={AdministrarCuestionarios} user={user}/>
             <AdminProtectedRoutes path="/usuario/admin/administrar-temas" component={AdministrarTemas} user={user}/>
             <AdminProtectedRoutes path="/usuario/admin/lista-usuarios" component={ListaUsuarios} user={user}/>*/}

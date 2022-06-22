@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { useHistory } from "react-router-dom";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { useAuth, iniciarSesion } from "../../Firebase/firebase_db";
+import { iniciarSesion } from "../../Firebase/firebase_db";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -116,7 +116,7 @@ const InicioSesion = ({data}) => {
     return (
         
         <div >
-            <div class="container">
+            <div className="container">
                 <div class="row justify-content-md-center">
                     <div id ="FormContainer" class="col-md-15 offset-md-0">
                         <Formik

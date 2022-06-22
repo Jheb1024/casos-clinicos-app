@@ -1,14 +1,13 @@
-import React from "react";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc,updateDoc } from 'firebase/firestore';
 import Swal from "sweetalert2";
 
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
 
-async function registrarDocente(email, pass, Matricula, Nombre, Sexo, Edad, NRC, FechaRegistro) {
+async function registrarDocente(email, pass, Matricula, Nombre,apellidoP,apellidoM, Sexo, Edad, FechaRegistro) {
 
     const infoUsuario = await createUserWithEmailAndPassword(auth, email, pass).then((usuarioFirebase) => {
         return usuarioFirebase;
@@ -74,19 +73,33 @@ async function registrarDocente(email, pass, Matricula, Nombre, Sexo, Edad, NRC,
             rol: "docente",
             Matricula: Matricula,
             Nombre: Nombre,
+            ApellidoPaterno: apellidoP,
+            ApellidoMaterno: apellidoM,
             Sexo: Sexo,
             Edad: Edad,
-            NRC: NRC,
             FechaRegistro: FechaRegistro
         }).catch(errr => {
             console.log("Hubo un error al registrarte" + errr.message);
+            new Swal({
+                icon: 'error',
+                title: 'Error en el registro.',
+                text: 'Vuelva a intentarlo más tarde.'
+            });
         })
+         //Add idDocente 
+         const claseRef = doc(firestore, `Docente/${infoUsuario.user.uid}`);
+         await updateDoc(claseRef, {
+             idDocente: infoUsuario.user.uid,
+         }).then(() => {
+             console.log("Docente actualizado con el id", infoUsuario.user.uid);
+         });
         await setDoc(doc(firestore, `Usuarios/${infoUsuario.user.uid}`), {
             email: email,
             rol: "docente"
         }).then(() => {
-            window.location.href = "usuario/docente";
+            window.location.href = "/inicio-sesion";
         })
+        
     } else {
         new Swal({
             icon: 'error',
@@ -100,18 +113,17 @@ export function submitHandler(e) {
     /// debemos hacer las validaciones
     const Matricula = e.target.elements.matriculaDoc.value;
     const Nombre = e.target.elements.nombreDoc.value;
+    const ApellidoP = e.target.elements.apellidoPDoc.value;
+    const ApellidoM = e.target.elements.apellidoMDoc.value;
     const Sexo = e.target.elements.sexoDoc.value;
-    console.log(Sexo);
     const Edad = e.target.elements.edadDoc.value;
-    const NRC = e.target.elements.nrcDoc.value;
-
     //Datos para crear cuenta
     const email = e.target.elements.emailDoc.value;
     const pass = e.target.elements.passwordDoc.value;
     const pass2 = e.target.elements.passwordDoc2.value;
-    const FechaRegistro = new Date(Date.now());
+    const FechaRegistro = Date.now();
     
-    if (Matricula === "" || Nombre === "" || Sexo === "" || Edad === "" || NRC === ""
+    if (Matricula === "" || Nombre === "" || ApellidoP===''|| ApellidoM==='' || Sexo === "" || Edad === ""
         || email === "" || pass === "" || pass2 === "") {
         new Swal({
             position: 'top-end',
@@ -131,10 +143,10 @@ export function submitHandler(e) {
         })
             .then((respuesta) => {
                 if (respuesta.isConfirmed) {
-                    if (registrarDocente(email, pass, Matricula, Nombre, Sexo, Edad, NRC, FechaRegistro).res.status === 200) {
+                    if (registrarDocente(email, pass, Matricula, Nombre,ApellidoP,ApellidoM, Sexo, Edad, FechaRegistro).res.status === 200) {
                         new Swal({
-                            title: "Registro exitoso",
-                            text: "Está iniciando sesión.¡Favor de esperar!",
+                            title: "Acción exitoso",
+                            text: "El registro fue exitoso.",
                             icon: "success",
                             showConfirmButton: false,
                             timer: 3000

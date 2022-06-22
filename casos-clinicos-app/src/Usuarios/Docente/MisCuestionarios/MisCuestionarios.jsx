@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { collection, query, where, getDocs, getFirestore,onSnapshot } from "firebase/firestore";
+import { collection, query, where, getFirestore,onSnapshot } from "firebase/firestore";
 import firebaseApp from '../../../Firebase/firebase-config';
-import { ListGroup, Card, Button, Container, Col, Row, Form } from 'react-bootstrap'
+import { ListGroup, Button, Container, Col, Row, Form } from 'react-bootstrap'
 import EditarCuestionarioModalDocente from '../../../Componentes/Cuestionario/EditarCuestionarioModalDocente';
 import Swal from 'sweetalert2';
 import { borrarCuestionarioDocente } from '../../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
 import AsignarCuestionarioModal from '../../../Componentes/Cuestionario/AsignarCuestionarioModal';
 import styled from "styled-components";
-import { Redirect , Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 function MisCuestionarios({ user }) {
 
     const db = getFirestore(firebaseApp);
@@ -16,20 +17,46 @@ function MisCuestionarios({ user }) {
     const [NrcAsignado,setNrcAsignado] = useState([0]);  
     function obtenerCuestionario(cuestionario) {
         setCuestionario(cuestionario);
+
+        
+          console.log('this is what it has', cuestionario.refImage)
+          if(cuestionario.refImage === 'none'){
+              //setImageExist(false);
+          }else{
+              //setImageExist(true)
+              const storage = getStorage();
+              getDownloadURL(ref(storage, cuestionario.refImage))
+              .then((url) => {
+                  const xhr = new XMLHttpRequest();
+                  xhr.responseType = 'blob';
+                  xhr.onload = (event) => {
+                  const blob = xhr.response;
+                  };
+                  xhr.open('GET', url);
+                  xhr.send();
+          
+                  // Or inserted into an <img> element
+                  const img = document.getElementById('myimg');
+                  img.setAttribute('src', url);
+              })
+              .catch((error) => {
+                  console.log('Hubo un error al cargar la imagen',error)
+              }); 
+          
+          
+        }
+  
+       
     }
     async function obtenerCuestionariosDocente(docente) {
         console.log("entramos a la función")
         const q = query(collection(db, "Cuestionarios"), where("AutorId", "==", docente.uid));
-        /*const querySnapshot = await getDocs(q);
-        if (querySnapshot.size > 0) {
-            console.log(querySnapshot.docs.map((doc) => doc.data()))
-            setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
-        }*/
         onSnapshot(q, (querySnapshot) => {
             if(querySnapshot.size > 0){
                 console.log(querySnapshot.docs.map((doc) => doc.data()))
                 setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
      } })
+     
     }
 
     function borrarCuestionario(id){
@@ -84,11 +111,16 @@ function MisCuestionarios({ user }) {
                         <Form style={{ width: '100%', height:'400px',overflowY:'auto' }} className="cuestionarioForm">
                         {/*Pregunta 1*/}
                         
+                              
+                        
                         <div className="btn-group">
                             <AsignarCuestionarioModal quiz={cuestionario}/>
-                             <EditarCuestionarioModalDocente data={cuestionario}/>
+                             {<EditarCuestionarioModalDocente data={cuestionario}/>}
                              <Button className='btn_borrar' onClick={()=>borrarCuestionario(cuestionario.idCuestionario)}>Borrar</Button>
                         </div>
+                        <div><h3>{cuestionario.Titulo}</h3></div>
+                        <div><textarea value={cuestionario.Enunciado} rows='4' cols='80' readOnly/></div>
+                        { <img id='myimg' alt=''></img>}
                         <div className='pregunta' style={{ textAlign: 'center', width: '500px', height: '130px' }}>
                           <div className='pregunta-respuesta' style={{ float: 'left', width: '300px' }}>
                             <label htmlFor="pregunta_1">Pregunta 1</label>

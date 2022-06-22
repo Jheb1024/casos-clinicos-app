@@ -1,21 +1,26 @@
-import React, {useState} from "react";
-import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
+import React, { useState, useEffect } from 'react'
+import { Modal, Button } from 'react-bootstrap'
+import firebaseApp, { storage } from "../../Firebase/firebase-config";
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, doc, setDoc,updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
 import Swal from "sweetalert2";
+import { FaUserPlus } from "react-icons/fa";
+import { FaRegSave } from "react-icons/fa";
+import { GrClearOption } from "react-icons/gr";
 
-const auth = getAuth(firebaseApp);
-const firestore = getFirestore(firebaseApp);
+function RegistroAlumnoModal() {
+    const [show, setShow] = useState(false);
 
-
-
-const Registro = () => {
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const auth = getAuth(firebaseApp);
+    const firestore = getFirestore(firebaseApp);
     let history = useHistory();
     const [formularioEnviado, cambiarFormularioEnviado] = useState(false);
 
-    async function registrarUsuario(email, pass, Matricula, Nombre,ApellidoP,ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro) {
+    async function registrarUsuario(email, pass, Matricula, Nombre, ApellidoP, ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro) {
 
         const infoUsuario = await createUserWithEmailAndPassword(auth, email, pass).then((usuarioFirebase) => {
             return usuarioFirebase;
@@ -86,30 +91,29 @@ const Registro = () => {
                 NumVecesTomadoMateria: VecesMateriaTomada,
                 EstudiosPrevios: EstudiosPrevios,
                 FechaRegistro: FechaRegistro,
-                Avance: {CuestionariosCompletos: 0,PromedioGeneral: 0,TemasCompletos: 0}
-            }).catch(errr=>{
-                console.log("Hubo un error al registrarte"+ errr.message);
+                Avance: { CuestionariosCompletos: 0, PromedioGeneral: 0, TemasCompletos: 0 }
+            }).catch(errr => {
+                console.log("Hubo un error al registrarte" + errr.message);
                 new Swal({
                     icon: 'error',
                     title: 'Error en el registro.',
                     text: 'Vuelva a intentarlo más tarde.'
                 });
             })
-             //Add idAlumno 
-             const claseRef = doc(firestore, `Alumno/${infoUsuario.user.uid}`);
-             await updateDoc(claseRef, {
-                 idAlumno: infoUsuario.user.uid,
-             }).then(() => {
-                 console.log("Alumno actualizado con el id", infoUsuario.user.uid);
-             });
             await setDoc(doc(firestore, `Usuarios/${infoUsuario.user.uid}`), {
                 email: email,
                 rol: "alumno"
-            }).then(()=>{
-                history.push('/inicio-sesion')
+            }).then(() => {
+                //history.push('/usuario/alumno')
             })
-            
-        }else{
+            //Add idAlumno 
+            const claseRef = doc(firestore, `Alumno/${infoUsuario.user.uid}`);
+            await updateDoc(claseRef, {
+                idAlumno: infoUsuario.user.uid,
+            }).then(() => {
+                console.log("Alumno actualizado con el id", infoUsuario.user.uid);
+            });
+        } else {
             Swal({
                 icon: 'error',
                 title: 'Correo ya registrado.',
@@ -154,37 +158,40 @@ const Registro = () => {
             })
                 .then((respuesta) => {
                     if (respuesta.isConfirmed) {
-                        if (registrarUsuario(email, pass, Matricula, Nombre,ApellidoP,ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro).res.status===200) {
+                        if (registrarUsuario(email, pass, Matricula, Nombre, ApellidoP, ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro)) {
                             new Swal({
                                 title: "Registro exitoso",
-                                text: "Está iniciando sesión.¡Favor de esperar!",
+                                text: "El usuario ya puede iniciar sesión con su respectivo correo electrónico y contraseña.",
                                 icon: "success",
                                 timer: 3000
                             });
-                        }else{
+                            handleClose();
+                        } else {
                             new Swal({
                                 title: "Registro no exitoso",
                                 text: "Favor de verificar sus datos.",
                                 icon: "error",
                                 timer: 3000
                             });
+                            handleClose();
                         }
                     }
                 });
         }
         console.log("submit", email, pass);
     }
-    return (
-        <div className='container px-lg-2'>
-            <div className="row mx-lg-n2">
-                <div className='col py-3 px-lg-5 border bg-light text-align:center'>
 
-                    <img src="https://us.123rf.com/450wm/stylephotographs/stylephotographs1710/stylephotographs171000262/88557664-mujer-joven-como-estudiante-de-medicina-con-laptop-aprender-en-aprendizaje.jpg?ver=6"
-                        width="550" height="380"></img>
-                    <img src="https://us.123rf.com/450wm/stylephotographs/stylephotographs1710/stylephotographs171000262/88557664-mujer-joven-como-estudiante-de-medicina-con-laptop-aprender-en-aprendizaje.jpg?ver=6"
-                        width="550" height="380"></img>
-                </div>
-                <div className="col py-3 px-lg-2 border bg-light">
+    return (
+        <>
+            <Button variant="info" onClick={handleShow}>
+                <FaUserPlus />Registrar alumno
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title> <h1 className="h1">Registro Alumno</h1></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <Formik
                         initialValues={
                             {
@@ -225,8 +232,8 @@ const Registro = () => {
                             } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(valores.InputApellidoP)) {
                                 errores.InputApellidoP = "El apellido paterno solo puede tener letras y espacios, pueden llevar acentos."
                             }
-                             //Validaciones apellido materno
-                             if (!valores.InputApellidoM) {
+                            //Validaciones apellido materno
+                            if (!valores.InputApellidoM) {
                                 errores.InputApellidoM = "Por favor ingrese su apellido materno."
                             } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(valores.InputApellidoM)) {
                                 errores.InputApellidoM = "El apellido materno solo puede tener letras y espacios, pueden llevar acentos."
@@ -283,14 +290,11 @@ const Registro = () => {
                         onSubmit={(valores, { resetForm }) => {
                             resetForm();
                             console.log('Formulario enviando');
-                            cambiarFormularioEnviado(true);
-                            setTimeout(() => cambiarFormularioEnviado(false), 5000);
                         }}
                     >
                         {({ errors }) => (
                             <Form className="row g-3" onSubmit={submitHandler}>
                                 <fieldset>
-                                    <h1 className="h1">Registro Alumno</h1>
                                     <small id="emailHelp" className="form-text text-muted">No compartiremos tu información</small>
                                     <div className="form-group">
                                         <label for="InputMatricula" className="form-label">Matrícula</label>
@@ -344,7 +348,7 @@ const Registro = () => {
                                     <div className="form-group">
                                         <label for="InputSexo">Sexo</label><br></br>
                                         <Field className="form-select" id="SelectSexo" name="SelectSexo" as="select">
-                                            <option  value="Elige una opción">Elige una opción</option>
+                                            <option value="Elige una opción">Elige una opción</option>
                                             <option value="Mujer">Mujer</option>
                                             <option value="Hombre">Hombre</option>
                                             <option value="Hombre">Otro</option>
@@ -446,20 +450,27 @@ const Registro = () => {
                                     </div>
 
                                 </fieldset>
-                                <br />
-                                <label for="txt">¿Ya tienes una cuenta? <a href="/inicio-sesion">Iniciar Sesión</a></label>
-                                <br />
                                 <div>
-                                    <input type="submit" className="btn btn-success"
-                                        value="Registrarme" />
+                                    <Button variant="success" type="submit">
+                                        <FaRegSave />Guardar
+                                    </Button>
+                                    <Button variant="secondary" type="reset">
+                                        <GrClearOption />Limpiar
+                                    </Button>
+                                    <Button variant="danger" onClick={handleClose}>
+                                        Cancelar
+                                    </Button>
                                 </div>
-                                {formularioEnviado && <p className="text-success">¡Registro exitoso!</p>}
                             </Form>
                         )}
                     </Formik>
-                </div>
-            </div>
-        </div>
-    );
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+            </Modal>
+        </>
+    )
 }
-export default Registro
+
+export default RegistroAlumnoModal

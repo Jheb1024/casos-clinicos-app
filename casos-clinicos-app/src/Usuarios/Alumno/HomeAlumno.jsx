@@ -1,5 +1,5 @@
 //Esto van en HomeAlumno.jsx
-import React, { useState, useEffect } from "react"
+import React from "react"
 import styled from "styled-components";
 import SidebarAD from "../../Componentes/Sidebar/SidebarAD"
 import { BrowserRouter as Router, Route } from "react-router-dom"

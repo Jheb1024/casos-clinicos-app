@@ -5,8 +5,8 @@ import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorA
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { GoSearch } from "react-icons/go";
-
-
+import RegistroAlumnoModal from "../../Componentes/Registro/RegistroAlumnoModal";
+import RegistroDocenteModal from "../../Componentes/Registro/RegistroDocenteModal"
 import { BsArrowReturnLeft } from "react-icons/bs";
 import { AiTwotoneEdit } from "react-icons/ai";
 import Modal from "../../Componentes/Modal/Modal";
@@ -95,11 +95,10 @@ export default function ListaUsuarios() {
   }, []);
   return (
     <Section>
-
-      <button className="btn btn-outline-primary mb-1 p-sm-1 "> Añadir Alumno</button>
-      <button className="btn btn-outline-primary mb-1 p-sm-1 "> Añadir Docente</button>
-
-
+      
+      <RegistroAlumnoModal/>
+      <RegistroDocenteModal/>
+      
       <div class="container-fluid">
         <form className="d-flex" onSubmit={busquedaFormHandler}>
           <input className="form-control me-2" type="search" id="busqueda"

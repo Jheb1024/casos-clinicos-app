@@ -1,16 +1,16 @@
 //HomeDocente.jsx
 import React from "react";
 import SidebarAD from "../../Componentes/Sidebar/SidebarAD"
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom"
+import { BrowserRouter as Router, Route} from "react-router-dom"
 //Páginas para el usuario docente
 import ListaAlumno from "./ListaAlumnos";
 import MiperfilD from "./MiperfilD";
 import AgregarCuestionario from "./AgregarCuestionario";
-import PerfilDocente from "../Administrador/PerfilDocente";
+
 //Iconos
 
 import * as FaIcons from 'react-icons/fa';
-import { MdQuiz } from "react-icons/md";
+
 
 import styled from "styled-components";
 import Cuestionario from "../../Componentes/Cuestionario/Cuestionario";

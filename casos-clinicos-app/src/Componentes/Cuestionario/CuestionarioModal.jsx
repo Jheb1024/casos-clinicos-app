@@ -1,30 +1,35 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form } from 'react-bootstrap'
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-function getImage(refImage) {
-  const storage = getStorage();
-  getDownloadURL(ref(storage, refImage))
-    .then((url) => {
-      // `url` is the download URL for 'images/stars.jpg'
 
-      // This can be downloaded directly:
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = 'blob';
-      xhr.onload = (event) => {
-        const blob = xhr.response;
-      };
-      xhr.open('GET', url);
-      xhr.send();
-
-      // Or inserted into an <img> element
-      const img = document.getElementById('myimg');
-      img.setAttribute('src', url);
-    })
-    .catch((error) => {
-      // Handle any errors
-    });
-}
 function CuestionarioModal({ quiz }) {
+  const [imageExists, setImageExists]=useState(null);
+  function getImage(refImage) {
+    if(refImage !== 'none'){
+      //setImageExists(true)
+      const storage = getStorage();
+      getDownloadURL(ref(storage, refImage))
+      .then((url) => {
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = (event) => {
+          const blob = xhr.response;
+        };
+        xhr.open('GET', url);
+        xhr.send();
+  
+        // Or inserted into an <img> element
+        const img = document.getElementById('myimg');
+        img.setAttribute('src', url);
+      })
+      .catch((error) => {
+        console.log('Hubo un error al cargar la imagen',error)
+      });
+    }else{
+      //setImageExists(false)
+    }
+    
+  }
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -46,9 +51,9 @@ function CuestionarioModal({ quiz }) {
           <Form style={{ width: '100%' }}>
             {/*Pregunta 1*/}
             <div className='enunciado' >
-              <input type='textarea' value={quiz.enunciado} readOnly></input>
+            <div><textarea value={quiz.Enunciado} rows='4' cols='80' readOnly/></div>
             </div>
-            <img id='myimg' alt=''></img>
+            {<img id='myimg' alt=''></img>}
             <div className='pregunta' style={{ textAlign: 'center', width: '500px', height: '130px' }}>
               <div className='pregunta-respuesta' style={{ float: 'left', width: '300px' }}>
                 <label htmlFor="pregunta_1">Pregunta 1</label>

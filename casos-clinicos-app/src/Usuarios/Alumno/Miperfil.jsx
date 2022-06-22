@@ -4,7 +4,7 @@ import scrollreveal from "scrollreveal";
 import Modal from "../../Componentes/Modal/Modal";
 import { getFirestore, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Card, FormControl } from "react-bootstrap";
+import { Card} from "react-bootstrap";
 import './Miperfil.css'
 import Swal from "sweetalert2";
 

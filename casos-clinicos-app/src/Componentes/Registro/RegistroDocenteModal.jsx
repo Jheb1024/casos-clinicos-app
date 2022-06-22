@@ -1,25 +1,197 @@
-import React, { useState } from "react";
-import { submitHandler } from "./funcRegistroDocente";
+import React, { useState, useEffect } from 'react'
+import { Modal, Button } from 'react-bootstrap'
+import firebaseApp, { storage } from "../../Firebase/firebase-config";
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, setDoc,updateDoc } from 'firebase/firestore';
 import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
 import Swal from "sweetalert2";
-import "./registro.css";
-function RegistroDocente() {
+import { FaUserPlus } from "react-icons/fa";
+import { FaRegSave } from "react-icons/fa";
+import { GrClearOption } from "react-icons/gr";
+
+function RegistroDocenteModal() {
+    const auth = getAuth(firebaseApp);
+    const firestore = getFirestore(firebaseApp);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    async function registrarDocente(email, pass, Matricula, Nombre, apellidoP, apellidoM, Sexo, Edad, FechaRegistro) {
+
+        const infoUsuario = await createUserWithEmailAndPassword(auth, email, pass).then((usuarioFirebase) => {
+            return usuarioFirebase;
+        })
+            .catch(error => { //Vemos los errores que pueden ocurrir al crear el usuario en firebase
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        console.log(`Email address ${email} already in use.`);
+                        new Swal({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Este correo electrónico ya esta en uso.',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                        break;
+                    case 'auth/invalid-email':
+                        console.log(`Email address ${email} is invalid.`);
+                        new Swal({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Correo electrónico inválido.',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                        break;
+                    case 'auth/operation-not-allowed':
+                        console.log(`Error during sign up.`);
+                        new Swal({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Operación no exitosa.',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                        break;
+                    case 'auth/weak-password':
+                        console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+                        new Swal({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Contraseña débil.',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                        break;
+                    default:
+                        console.log(error.message);
+                        break;
+                }
+            })
+
+        console.log(infoUsuario);
+
+        if (infoUsuario) {
+            var docuRef = doc(firestore, `Docente/${infoUsuario.user.uid}`);
+
+            await setDoc(docuRef, {
+                correo: email,
+                password: pass,
+                rol: "docente",
+                Matricula: Matricula,
+                Nombre: Nombre,
+                ApellidoPaterno: apellidoP,
+                ApellidoMaterno: apellidoM,
+                Sexo: Sexo,
+                Edad: Edad,
+                FechaRegistro: FechaRegistro
+            }).catch(errr => {
+                console.log("Hubo un error al registrarte" + errr.message);
+                new Swal({
+                    icon: 'error',
+                    title: 'Error en el registro.',
+                    text: 'Vuelva a intentarlo más tarde.'
+                });
+            })
+            //Add idDocente 
+            const claseRef = doc(firestore, `Docente/${infoUsuario.user.uid}`);
+            await updateDoc(claseRef, {
+                idDocente: infoUsuario.user.uid,
+            }).then(() => {
+                console.log("Docente actualizado con el id", infoUsuario.user.uid);
+            });
+            await setDoc(doc(firestore, `Usuarios/${infoUsuario.user.uid}`), {
+                email: email,
+                rol: "docente"
+            }).then(() => {
+                new Swal({
+                    title: "Registro exitoso",
+                    text: "El registro de este docente fue exitoso",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            })
+        } else {
+            new Swal({
+                icon: 'error',
+                title: 'Correo ya registrado.',
+                text: 'El correo electrónico ya esta registrado.Introduzca otro correo.'
+            });
+        }
+    }
+    function submitHandler(e) {
+        e.preventDefault();
+        /// debemos hacer las validaciones
+        const Matricula = e.target.elements.matriculaDoc.value;
+        const Nombre = e.target.elements.nombreDoc.value;
+
+        const ApellidoP = e.target.elements.apellidoPDoc.value;
+        const ApellidoM = e.target.elements.apellidoMDoc.value;
+        const Sexo = e.target.elements.sexoDoc.value;
+        const Edad = e.target.elements.edadDoc.value;
+
+        //Datos para crear cuenta
+        const email = e.target.elements.emailDoc.value;
+        const pass = e.target.elements.passwordDoc.value;
+        const pass2 = e.target.elements.passwordDoc2.value;
+        const FechaRegistro = Date.now();
+
+        if (Matricula === "" || Nombre === "" || ApellidoP === '' || ApellidoM === '' || Sexo === "" || Edad === ""
+            || email === "" || pass === "" || pass2 === "") {
+            new Swal({
+                position: 'top-end',
+                icon: 'info',
+                title: 'Favor de completar todo el formulario de registro!!',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        } else {
+            new Swal({
+                title: 'Registro docente',
+                text: '¿Desea confirmar tu registro?',
+                icon: 'question',
+                showDenyButton: true,
+                confirmButtonText: 'Si',
+                denyButtonText: `No`,
+            })
+                .then((respuesta) => {
+                    if (respuesta.isConfirmed) {
+
+                        if (registrarDocente(email, pass, Matricula, Nombre, ApellidoP, ApellidoM, Sexo, Edad, FechaRegistro)) {
+                            new Swal({
+                                title: "Registro exitoso",
+                                text: "El registro fue exitoso",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                            handleClose();
+                        } else {
+                            new Swal({
+                                title: "Registro no exitoso",
+                                text: "Favor de verificar sus datos.",
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                            handleClose();
+                        }
+                    }
+                });
+        }
+        console.log("submit", email, pass);
+    }
     return (
-        <div className="container px-lg-2">
-            <div className="row mx-lg-n2">
-                <div className="col py-3 px-lg-5 border bg-light text-align:center">
-                    <img
-                        src="https://media.istockphoto.com/photos/doctor-woman-hands-typing-on-laptop-at-the-office-picture-id1216080907?b=1&k=20&m=1216080907&s=170667a&w=0&h=7HKvtHHKTO8T-KhK8GD2qHuxsu-4EOfHLd15gmpyrdg="
-                        width="550"
-                        height="380"
-                    ></img>
-                    <img
-                        src="https://media.istockphoto.com/photos/doctor-woman-hands-typing-on-laptop-at-the-office-picture-id1216080907?b=1&k=20&m=1216080907&s=170667a&w=0&h=7HKvtHHKTO8T-KhK8GD2qHuxsu-4EOfHLd15gmpyrdg="
-                        width="550"
-                        height="380"
-                    ></img>
-                </div>
-                <div className="col py-3 px-lg-2 border bg-light">
+        <>
+            <Button variant="info" onClick={handleShow}> <FaUserPlus /> Registrar docente </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title> <h1 className="h1">Registro Docente</h1></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <Formik
                         initialValues={
                             {
@@ -74,6 +246,7 @@ function RegistroDocente() {
                             } else if (valores.edadDoc < 18) {
                                 errores.edadDoc = "Edad inválida."
                             }
+
                             //Validaciones correo
                             if (!valores.emailDoc) {
                                 errores.emailDoc = "Por favor ingrese un correo."
@@ -106,7 +279,6 @@ function RegistroDocente() {
                             <Form className="row g-3" onSubmit={submitHandler}>
 
                                 <fieldset>
-                                    <h1 className="h1">Registro Docente</h1>
                                     <small id="emailHelp" className="form-text text-muted">
                                         No compartiremos tu información
                                     </small>
@@ -230,25 +402,26 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                 </fieldset>
-                                <br />
-                                <label for="txt">
-                                    ¿Ya tienes una cuenta? <a href="/inicio-sesion">Iniciar Sesión</a>
-                                </label>
-                                <br />
                                 <div>
-                                    <input
-                                        type="submit"
-                                        className="btn btn-success"
-                                        value="Registrarme"
-                                    />
+                                    <Button variant="success" type="submit">
+                                        <FaRegSave />Guardar
+                                    </Button>
+                                    <Button variant="secondary" type="reset">
+                                        <GrClearOption />Limpiar
+                                    </Button>
+                                    <Button variant="danger" onClick={handleClose}>
+                                        Cancelar
+                                    </Button>
                                 </div>
                             </Form>
                         )}
                     </Formik>
-                </div>
-            </div>
-        </div>
-    );
+                </Modal.Body>
+                <Modal.Footer>
+                </Modal.Footer>
+            </Modal>
+        </>
+    )
 }
 
-export default RegistroDocente;
+export default RegistroDocenteModal

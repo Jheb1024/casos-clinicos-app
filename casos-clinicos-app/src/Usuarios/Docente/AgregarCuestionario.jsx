@@ -18,14 +18,14 @@ export default function AgregarCuestionario({user}) {
   const [subtema, setSubtema] = useState(null);
 
   const db = getFirestore(firebaseApp);
-  useEffect(
+  /*useEffect(
     () =>
       onSnapshot(collection(db, 'Temas'), (snapshot) => {
         console.log(snapshot.docs.map((doc) => doc.data()))
         setTemas(snapshot.docs.map((doc) => doc.data()))
       }),
 
-    []);
+    []);*/
   async function getSubtemas(tema) {
     const q = query(collection(db, "Subtemas"), where("Tema", "==", tema));
 
@@ -87,7 +87,11 @@ export default function AgregarCuestionario({user}) {
           opacity: 0,
           interval: 100,
         }
-      );
+      )
+      onSnapshot(collection(db, 'Temas'), (snapshot) => {
+        console.log(snapshot.docs.map((doc) => doc.data()))
+        setTemas(snapshot.docs.map((doc) => doc.data()))
+      })
     }, []);
     return (<Section>
       <Container>

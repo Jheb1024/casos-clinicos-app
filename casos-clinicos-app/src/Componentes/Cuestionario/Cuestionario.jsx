@@ -1,6 +1,6 @@
 import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Link, useLocation, } from 'react-router-dom';
+import {useLocation, } from 'react-router-dom';
 function Cuestionario() {
   const location = useLocation();
   console.log(location, " useLocation Hook");

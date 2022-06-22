@@ -1,33 +1,16 @@
-//Aqui el docente podra visualizar su lista de alumnos
-//y podra cargar nuevo alumno
-
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
-
-import { Link } from "react-router-dom";
-
 import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorAlumno";
-
 import { BsArrowReturnLeft } from "react-icons/bs";
 import { AiTwotoneEdit } from "react-icons/ai";
 import Modal from "../../Componentes/Modal/Modal";
-import {getAuth} from 'firebase/auth'
-import {
-  doc,
-  getDoc,
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  deleteDoc
-} from "firebase/firestore";
+import {getFirestore,} from "firebase/firestore";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { GoSearch } from "react-icons/go";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
-
+import AgregarAlumnoDocModal from "../../Componentes/Registro/AgregarAlumnoDocModal"
 export default function ListaAlumno( {user1} ) {
   //console.log("usuario dntro de mi lista alumnos en opciones DOCENTE: ", user.uid);
   console.log(user1)
@@ -112,7 +95,7 @@ export default function ListaAlumno( {user1} ) {
 
   return (
     <Section>
-      <button className="btn btn-outline-primary mb-1 p-sm-1 "> Añadir Alumno</button>
+      <AgregarAlumnoDocModal />
 
       <div class="container-fluid">
         <form className="d-flex" onSubmit={busquedaFormHandler}>

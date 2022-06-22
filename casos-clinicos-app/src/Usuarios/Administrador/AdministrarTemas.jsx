@@ -183,9 +183,9 @@ export default function AdministrarTemas() {
            
            <>
             <ListGroup.Item>
-              {cuestionario.Titulo}
+              {cuestionario?.Titulo}
             </ListGroup.Item>
-            <CuestionarioModal quiz={cuestionario}/>
+              <CuestionarioModal quiz={cuestionario}/>
             </>
             ))
           

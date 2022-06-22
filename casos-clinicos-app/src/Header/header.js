@@ -14,7 +14,7 @@ import styled from "styled-components";
 import "bootstrap";
 import "./header.css";
 import logo from "./CC_LOGO.png";
-import { Dropdown , Navbar, Nav, Container, NavDropdown, NavLink } from "react-bootstrap";
+import {Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import {LinkContainer} from 'react-router-bootstrap';
 
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { registrarResultadoCuestionario } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios'
 import Swal from "sweetalert2";
 import './CuestionarioModal.css';
@@ -9,7 +10,34 @@ function CuestionarioModalContestar({ quiz }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    function getImage(refImage) {
+        if(refImage !== 'none'){
 
+        const storage = getStorage();
+        getDownloadURL(ref(storage, refImage))
+          .then((url) => {
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = (event) => {
+              const blob = xhr.response;
+            };
+            xhr.open('GET', url);
+            xhr.send();
+      
+            // Or inserted into an <img> element
+            const img = document.getElementById('myimg');
+            img.setAttribute('src', url);
+          })
+          .catch((error) => {
+            console.log('Hubo un error al cargar la imagen',error)
+          });
+        }else{
+            
+        }
+        
+      }
+      
+        getImage(quiz.imageRef);
     return (
         <>
             <Button variant="secondary" onClick={handleShow}>
@@ -73,6 +101,14 @@ function CuestionarioModalContestar({ quiz }) {
                     >
                         {({ isSubmitting }) => (
                             <Form style={{ width: '100%' }}>
+                                <div className='titulo'>
+                                    <h3>{quiz.Titulo}</h3>
+                                </div>
+
+                                <div className='enunciado' >
+                                    <textarea rows='4' cols='40' value={quiz.Enunciado} readOnly></textarea>
+                                </div>
+                                <img id='myimg' alt=''></img>
                                 {/*Pregunta 1*/}
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
@@ -90,6 +126,10 @@ function CuestionarioModalContestar({ quiz }) {
                                             <div className="form-check form-check">
                                                 <Field className="form-check-input" type="radio" name="respuesta1" id="res3" value="respuesta_3" />
                                                 <label className="form-check-label" htmlFor="res1_3">{quiz.respuesta_3}</label>
+                                            </div>
+                                            <div className="form-check form-check">
+                                                <Field className="form-check-input" type="radio" name="respuesta1" id="res4" value="respuesta_4" />
+                                                <label className="form-check-label" htmlFor="res1_4">{quiz.respuesta_4}</label>
                                             </div>
                                         </div>
                                         <ErrorMessage name="respuesta1" component="div" className='errors' />
@@ -115,6 +155,10 @@ function CuestionarioModalContestar({ quiz }) {
                                             <Field className="form-check-input" type="radio" name="respuesta2" id="res3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res2_3">{quiz.respuesta_2_3}</label>
                                         </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta2" id="res4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res2_4">{quiz.respuesta_2_4}</label>
+                                        </div>
                                         <ErrorMessage name="respuesta2" component="div" className='errors' />
 
                                         <br />
@@ -136,6 +180,10 @@ function CuestionarioModalContestar({ quiz }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta3" id="res3_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res3_3">{quiz.respuesta_3_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta3" id="res3_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res3_4">{quiz.respuesta_3_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta3" component="div" className='errors' />
 
@@ -159,6 +207,10 @@ function CuestionarioModalContestar({ quiz }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta4" id="res4_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res4_3">{quiz.respuesta_4_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta4" id="res4_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res4_4">{quiz.respuesta_4_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta4" component="div" className='errors' />
 
@@ -184,6 +236,10 @@ function CuestionarioModalContestar({ quiz }) {
                                             <Field className="form-check-input" type="radio" name="respuesta5" id="res5_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res5_3">{quiz.respuesta_5_3}</label>
                                         </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta5" id="res5_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res5_4">{quiz.respuesta_5_4}</label>
+                                        </div>
                                         <ErrorMessage name="respuesta5" component="div" className='errors' />
 
                                         <br />
@@ -206,6 +262,10 @@ function CuestionarioModalContestar({ quiz }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta6" id="res6_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res6_3">{quiz.respuesta_6_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta6" id="res6_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res6_4">{quiz.respuesta_6_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta6" component="div" className='errors' />
 
@@ -230,6 +290,10 @@ function CuestionarioModalContestar({ quiz }) {
                                             <Field className="form-check-input" type="radio" name="respuesta7" id="res7_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res7_3">{quiz.respuesta_7_3}</label>
                                         </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta7" id="res7_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res7_4">{quiz.respuesta_7_4}</label>
+                                        </div>
                                         <ErrorMessage name="respuesta7" component="div" className='errors' />
 
                                         <br />
@@ -252,6 +316,10 @@ function CuestionarioModalContestar({ quiz }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta8" id="res8_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res8_3">{quiz.respuesta_8_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta8" id="res8_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res8_4">{quiz.respuesta_8_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta8" component="div" className='errors' />
 
@@ -276,6 +344,10 @@ function CuestionarioModalContestar({ quiz }) {
                                             <Field className="form-check-input" type="radio" name="respuesta9" id="res9_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res9_3">{quiz.respuesta_9_3}</label>
                                         </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta9" id="res9_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res9_4">{quiz.respuesta_9_4}</label>
+                                        </div>
                                         <ErrorMessage name="respuesta9" component="div" className='errors' />
 
                                         <br />
@@ -298,6 +370,10 @@ function CuestionarioModalContestar({ quiz }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta10" id="res10_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res10_3">{quiz.respuesta_10_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta10" id="res10_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res10_4">{quiz.respuesta_10_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta10" component="div" className='errors' />
 

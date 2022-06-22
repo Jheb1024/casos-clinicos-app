@@ -2,10 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {Modal, Button, Form} from 'react-bootstrap'
 import { asignarCuestionario} from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
 import firebaseApp,{ storage} from "../../Firebase/firebase-config";
-import {
-  addDoc, collection, getFirestore, doc, getDoc, updateDoc,
-  deleteDoc, getDocs, runTransaction, query, where, arrayUnion, onSnapshot, setDoc, orderBy
-} from "firebase/firestore";
+import {collection, getFirestore,query, where, onSnapshot} from "firebase/firestore";
 const db = getFirestore(firebaseApp);
 
 function AsignarCuestionarioModal({quiz}) {

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Modal, Button, Form} from 'react-bootstrap'
-import { registrarTema, registrarSubtema } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
+import { registrarTema } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
 
 function TemaModal() {
     const [show, setShow] = useState(false);
