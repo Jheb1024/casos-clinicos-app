@@ -1,4 +1,5 @@
 import firebaseApp,{ storage} from "../../Firebase/firebase-config";
+import react,{useState} from "react";
 import {
   addDoc, collection, getFirestore, doc, getDoc, updateDoc,
   deleteDoc, getDocs, runTransaction, query, where, arrayUnion, onSnapshot, setDoc, orderBy
@@ -278,7 +279,7 @@ const docenteConverter = {
 };
 
 //Para registrar un nuevo cuestionario. Datos: preguntas, respuestas, tema, subtmea, usuario
-export async function registrarNuevoCuestionario(cuestionario, data, user,imageUpload) {
+export function registrarNuevoCuestionario(cuestionario, data, user,imageUpload) {
   //Para obtener información del docente que crea el custionario
   var imageRef;
   if(imageUpload !== null){
@@ -296,9 +297,13 @@ export async function registrarNuevoCuestionario(cuestionario, data, user,imageU
 }
 
 async function  registrarCuestionarioSinImagen(cuestionario, data, user){
+
+ 
   const refDocente = doc(db, "Docente", user.uid).withConverter(
     docenteConverter
   );
+
+  let registrado = null;
 
   const docSnapDocente = await getDoc(refDocente);
   if (docSnapDocente.exists()) {
@@ -373,14 +378,19 @@ async function  registrarCuestionarioSinImagen(cuestionario, data, user){
       respuesta_10_3: cuestionario.respuesta_10_3,
       respuesta_10_4: cuestionario.respuesta_10_4,
       respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
-    }).then(() => {
+    }).then((cuestionario) => {
       console.log("Cuestionario registrado");
+      registrado = cuestionario;
+      
     });
 
-    if (cuestionarioAgregado) {
-      const cuestionarioRef = doc(db, "Cuestionarios", cuestionarioAgregado.id);
+    
+//necesitamos hacer una nueva consulta  a la base de datos para poder obtener su id una doble consulta
+    if (registrado) {
+      console.log(registrado)
+      const cuestionarioRef = doc(db, "Cuestionarios", registrado.id);
       await updateDoc(cuestionarioRef, {
-        idCuestionario: cuestionarioAgregado.id,
+        idCuestionario: registrado.id,
       }).then(() => {
         console.log("Cuestionario actualizado con el id");
       });
@@ -388,6 +398,7 @@ async function  registrarCuestionarioSinImagen(cuestionario, data, user){
   } else {
     console.log("No such document!");
   }
+  console.log('Ahora vamos a actualizar el cuestionario con su id')
 }
 async function registrarCuestionarioConImagen(cuestionario, data, user,imageRef){
   const refDocente = doc(db, "Docente", user.uid).withConverter(

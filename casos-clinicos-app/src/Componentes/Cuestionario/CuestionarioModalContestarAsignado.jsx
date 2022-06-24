@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { collection, getDocs, getFirestore, onSnapshot, query, where } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
 import { registrarResultadoCuestionarioAsignado } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios'
@@ -15,6 +15,34 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
 
     const handleClose = () => setShow(false, setShowresp(false));
     const handleShow = () => setShow(true);
+    function getImage(refImage) {
+        if(refImage !== 'none'){
+
+        const storage = getStorage();
+        getDownloadURL(ref(storage, refImage))
+          .then((url) => {
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = (event) => {
+              const blob = xhr.response;
+            };
+            xhr.open('GET', url);
+            xhr.send();
+      
+            // Or inserted into an <img> element
+            const img = document.getElementById('myimg');
+            img.setAttribute('src', url);
+          })
+          .catch((error) => {
+            console.log('Hubo un error al cargar la imagen',error)
+          });
+        }else{
+            
+        }
+        
+      }
+      getImage(quiz.imageRef);
+
     async function getIntento() {
         let intento = 0;
         const cuestionarioRef = collection(db, "Resultado");
@@ -140,6 +168,12 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                     >
                         {({ isSubmitting }) => (
                             <Form style={{ width: '100%' }}>
+                                
+
+                                <div className='enunciado' >
+                                    <textarea rows='4' cols='40' value={quiz.Enunciado} readOnly></textarea>
+                                </div>
+                                <img id='myimg' alt=''></img>
                                 {/*Pregunta 1*/}
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>

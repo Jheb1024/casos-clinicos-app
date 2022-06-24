@@ -101,9 +101,7 @@ function CuestionarioModalContestar({ quiz }) {
                     >
                         {({ isSubmitting }) => (
                             <Form style={{ width: '100%' }}>
-                                <div className='titulo'>
-                                    <h3>{quiz.Titulo}</h3>
-                                </div>
+                                
 
                                 <div className='enunciado' >
                                     <textarea rows='4' cols='40' value={quiz.Enunciado} readOnly></textarea>
