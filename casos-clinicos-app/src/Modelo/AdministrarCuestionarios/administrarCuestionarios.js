@@ -670,7 +670,7 @@ export async function asignarCuestionario(id, nrc) {
   if (nrc.length === 5) {
 
     console.log("nrc Admi", nrc);
-    console.log("id Admni:", id);
+    console.log("id cuestionario:", id);
     const cuestionarioRef = doc(db, "Cuestionarios", id);
     const docRef = doc(db, "Cuestionarios", id);
     const docSnap = await getDoc(docRef);
@@ -692,7 +692,7 @@ export async function asignarCuestionario(id, nrc) {
       let idCObte = doc.data().idCuestionario;
       console.log('Id cuest con arreglo::', idCObte);
 
-      if (idCObte == id) {
+      if (idCObte === id) {
         //En este cuestionario ya esta creado el array
         bandera = 1;
       };

@@ -5,12 +5,14 @@ import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorA
 import { BsArrowReturnLeft } from "react-icons/bs";
 import { AiTwotoneEdit } from "react-icons/ai";
 import Modal from "../../Componentes/Modal/Modal";
-import {getFirestore,} from "firebase/firestore";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { GoSearch } from "react-icons/go";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import AgregarAlumnoDocModal from "../../Componentes/Registro/AgregarAlumnoDocModal"
+import {collection,getFirestore, query, where, onSnapshot } from "firebase/firestore";
+import Swal from "sweetalert2";
+import EditarAlumnoModal from "../../Usuarios/Docente/EditarAlumnoModal";
 export default function ListaAlumno( {user1} ) {
   //console.log("usuario dntro de mi lista alumnos en opciones DOCENTE: ", user.uid);
   console.log(user1)
@@ -31,44 +33,49 @@ export default function ListaAlumno( {user1} ) {
   }
 
   async function actualizarEstadoAlumnos(user) {
-    
-    admiAl.getNRCDocenteLogeado().then((nrc) => {
-      setNrc(nrc);
-      console.log("dddddddddddddddddddddddddddddddd");
-      console.log(nrc);
-    
-    const nrcd = "11111";
-    admiAl.getAlumnosFiltroNRC("13451").then((alumnos) => {
-      setAlumnos(alumnos);
-      console.log("DAtos de alumno en funcion actualizas....");
-      console.log(alumnos);
-    });
-  });/*
-  const auth = getAuth();
-    
-    if (user !== null) {
+    console.log("Id del docente:::", user.uid);
+    const q = query(collection(db, "Clase"), where("idDocente", "==", user.uid));
+    onSnapshot(q, (querySnapshot) => {
+      const nrcA = [];
+      querySnapshot.forEach((doc) => {
+        nrcA.push(doc.data().NRC);
+        setNrc(doc.data().NRC);
+        const q1 = query(collection(db, "Alumno"), where("NRC", "==", doc.data().NRC));
+        onSnapshot(q1, (querySnapshot) => {
+          if (querySnapshot.size > 0) {
+            console.log(querySnapshot.docs.map((doc) => doc.data()))
+            setAlumnos(querySnapshot.docs.map((doc) => doc.data()))
+            console.log("DAtos de alumno en funcion actualizas....");
+            console.log(alumnos);
+          }
+        })
+        console.log("Nrc en Clase con el uid del docente logueadoo: ", nrcA.join(", "));
+      });
 
-      //const nrcD = user1.NRC;
-      console.log(user)
-      const uid = user.uid
+    })
 
-      console.log("ID del docente logeado" + uid);
-      const docRef = doc(db, "Docente", uid);
-      let nrc=""
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-        //nrc=docSnap.data().NRC
-        //console.log("NRC docente:", nrc);
-
-
+  }
+  function borrarAlumno(id){
+    console.log("id dentro de la funcion borrarClase()",id)
+    new Swal({
+      title: "Está seguro?",
+      text: "El alumno se borrara del registro de Alumnos.",
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: 'Si',
+      denyButtonText: `No`,
+    })
+    .then((respuesta) => {
+      if (respuesta.isConfirmed) {
+        admiAl.borrarAlumnoAd(id).then(()=>Swal("El alumno se ha eliminado!", {
+          icon: "success",
+        }))
+        
       } else {
-        // doc.data() will be undefined in this case
-        console.log("Sin docente con ese id!");
+       new Swal("El alumno no se borró!");
       }
-    }*/
-
+    });
+    
   }
 
 
@@ -145,50 +152,9 @@ export default function ListaAlumno( {user1} ) {
                 <td>{alumno.Avance.PromedioGeneral}</td>
                 <td>
                   <div className="btn-group btn-group-sm" role="group">
-                    <button className="btn btn-danger m-1"><RiDeleteBin6Line /></button>
-                    <button className="btn btn-info m-1 p-1" onClick={() => cambiarEstadoModalE(!estadoModalE)}><AiOutlineFileSearch /></button>
-                    <Modal
-                      estado={estadoModalE}
-                      cambiarEstado={cambiarEstadoModalE}
-                      titulo="Visualizar información alumno"
-                      mostrarHeader={true}
-                    >
-                      <Contenido>
-                        <form className="" method="POST" action="">
-                          <fieldset>
-                            <h1>Información alumno</h1>
-
-                            <div className="form-group">
-                              <label htmlfor="InputMatricula">Matrícula</label>
-                              <input type="txt" class="form-control" id="InputMatricula" value={alumno.Matricula} onChange={(e) => this.setState(e.target.value)} />
-                            </div>
-                            <div className="form-group">
-                              <label htmlfor="InputNombre">Nombres</label>
-                              <input type="txt" class="form-control" id="InputNombre" value={alumno.Nombre} onChange={(e) => this.setState(e.target.value)} />
-                            </div>
-                            <div className="form-group">
-                              <label htmlfor="InputApellidoP">Apellido paterno</label>
-                              <input type="txt" class="form-control" id="InputApellidoP" value={alumno.ApellidoPaterno} onChange={(e) => this.setState(e.target.value)} />
-                            </div>
-                            <div className="form-group">
-                              <label htmlfor="InputApellidoM">Apellido materno</label>
-                              <input type="txt" class="form-control" id="InputApellidoM" value={alumno.ApellidoMaterno} onChange={(e) => this.setState(e.target.value)} />
-                            </div>
-                            <div className="form-group">
-                              <label htmlfor="InputNRC">NRC</label>
-                              <input type="txt" class="form-control" id="InputNRC" value={alumno.NRC} onChange={(e) => this.setState(e.target.value)} />
-                            </div>
-
-                          </fieldset>
-
-                          <div className="btn-group btn-group-sm" role="group">
-                            <button className="btn btn-secondary m-1" onClick={() => cambiarEstadoModalE(!estadoModalE)}> Regresar<BsArrowReturnLeft /></button>
-                            <button className="btn btn-success m-1 p-1" >Editar<AiTwotoneEdit /></button>
-                          </div>
-                        </form>
-                      </Contenido>
-                    </Modal>
+                  <button className="btn btn-danger m-1" onClick={()=>borrarAlumno(alumno.id)}><RiDeleteBin6Line /></button>
                   </div>
+                  <EditarAlumnoModal alumno={alumno}/>
                 </td>
               </tr>
             ))}

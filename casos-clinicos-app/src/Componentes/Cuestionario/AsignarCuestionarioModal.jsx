@@ -20,31 +20,12 @@ function AsignarCuestionarioModal({quiz}) {
         console.log("idC",idC)
         asignarCuestionario(idC,nrc);
     }
-    const [NrcAsignado,setNrcAsignado] = useState([0]);  
+  
 
-useEffect(() => {
-    console.log("Cuestionario en resultado:::", quiz.idCuestionario);
-    const cuestionarioRef = collection(db, "Cuestionarios");
-    const q = query(cuestionarioRef, where("idCuestionario", "==", quiz.idCuestionario));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const cities = [];
-        querySnapshot.forEach((doc) => {
-            cities.push(doc.data().nrcClase);
-            setNrcAsignado(cities.join());
 
-        });
-        console.log("NRC`s de las clases a las que ya se les asigno el cuestionario: ", cities.join());
-    });
-
-    return () => {
-        unsubscribe();
-    }
-
-}, []);
 
 function cerrar(){
   setShow(false);
-  setNrcAsignado(null)
 }
 
   return (
@@ -58,7 +39,7 @@ function cerrar(){
         <Modal.Title>Asignar cuestionario</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {NrcAsignado && <p><strong>NRC`s asignado:</strong> <u>{NrcAsignado}</u></p>}
+        {<p><strong>NRC`s asignado:</strong> <u></u></p>}
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label>Nrc de la clase</Form.Label>

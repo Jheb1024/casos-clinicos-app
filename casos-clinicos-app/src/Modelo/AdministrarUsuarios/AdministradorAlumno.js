@@ -9,10 +9,12 @@ import {
   query,
   where,
   getDocs,
-  deleteDoc
+  deleteDoc,
+  updateDoc
 } from "firebase/firestore";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import Swal from "sweetalert2";
 
 export default class AdministradorAlumno extends AdministradorUsuario {
   listaAlumnos = [];
@@ -202,6 +204,169 @@ export default class AdministradorAlumno extends AdministradorUsuario {
 
 
     return alumnos;
+  }
+
+  async borrarUsuarioAd(id) {
+    const coleccionRef = collection(this.db, "Alumno");
+    const docuRef = doc(coleccionRef, id);
+    if (docuRef.exists) {
+      console.log("Es alumno");
+      await deleteDoc(doc(this.db, "Alumno", id)).then(() => {
+        console.log("El alumno ha sido eliminado");
+        new Swal({
+          position: 'top',
+          icon: 'success',
+          title: 'Alumno eliminado.',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      }).catch((error) => {
+        console.error(error);
+        new Swal({
+          position: 'top',
+          icon: 'error',
+          title: 'A ocurrido un error.',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      });
+      //Tambien se tiene que eliminar en usuarios
+      await deleteDoc(doc(this.db, "Usuarios", id)).then(() => {
+        console.log("El alumno ha sido eliminado de Usuarios");
+      });
+    } else {
+      console.log("Es docente");
+      await deleteDoc(doc(this.db, "Docente", id)).then(() => {
+        console.log("El docente ha sido eliminado");
+        new Swal({
+          position: 'top',
+          icon: 'success',
+          title: 'Docente eliminado.',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      }).catch((error) => {
+        console.error(error);
+        new Swal({
+          position: 'top',
+          icon: 'error',
+          title: 'A ocurrido un error.',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      });
+      //Tambien se tiene que eliminar en usuarios
+      await deleteDoc(doc(this.db, "Usuarios", id)).then(() => {
+        console.log("El docente ha sido eliminado de Usuarios");
+      });
+    }
+  }
+  async borrarAlumnoAd(id) {
+    console.log("id del alumno que se eliminara:", id);
+    await deleteDoc(doc(this.db, "Alumno", id)).then(() => {
+      console.log("El alumno ha sido eliminado");
+      new Swal({
+        position: 'top',
+        icon: 'success',
+        title: 'Alumno eliminado.',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    }).catch((error) => {
+      console.error(error);
+      new Swal({
+        position: 'top',
+        icon: 'error',
+        title: 'A ocurrido un error.',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    });
+    //Tambien se tiene que eliminar en usuarios
+    await deleteDoc(doc(this.db, "Usuarios", id)).then(() => {
+      console.log("El alumno ha sido eliminado de Usuarios");
+    });
+  }
+  //Para editar datos del alumno
+  async editarAlumno(MatriculaN, NombreN, ApellidoPN, ApellidoMN, NRCN, idN) {
+    console.log("id del alumno a editar editarAlumno()::", idN);
+    console.log("matricula:", MatriculaN);
+    console.log("nombre:", NombreN);
+    console.log("ApellidoP:", ApellidoPN);
+    console.log("ApellidoM:", ApellidoMN);
+    console.log("NRC:", NRCN);
+    const claseRef = doc(this.db, "Alumno", idN);
+    ///
+    //const docRef = doc(this.db, "Alumno", idN);
+    //const docSnap = await getDoc(docRef);
+
+    /*if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+    ///*/
+
+    await updateDoc(claseRef, {
+      Nombre: NombreN,
+      ApellidoPaterno: ApellidoPN,
+      ApellidoMaterno: ApellidoMN,
+      Matricula: MatriculaN,
+      NRC: NRCN
+    })
+      .then(() => {
+        console.log("El alumno ha sido actualizado");
+      })
+      .catch((error) => {
+        console.log("Error en catch");
+        console.error(error);
+      });
+  }
+  //Para editar datos del usuario
+  async editarUsuario(MatriculaN, NombreN, ApellidoPN, ApellidoMN, idN) {
+
+    console.log("id del alumno a editar editarAlumno()::", idN);
+    console.log("matricula:", MatriculaN);
+    console.log("nombre:", NombreN);
+    console.log("ApellidoP:", ApellidoPN);
+    console.log("ApellidoM:", ApellidoMN);
+    
+    const docRef = doc(this.db, "Alumno", idN);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data Alumno:", docSnap.data());
+      const claseRef = doc(this.db, "Alumno", idN);
+      await updateDoc(claseRef, {
+        Nombre: NombreN,
+        ApellidoPaterno: ApellidoPN,
+        ApellidoMaterno: ApellidoMN,
+        Matricula: MatriculaN,
+      })
+        .then(() => {
+          console.log("El alumno ha sido actualizado");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("Es docente");
+      const claseRef = doc(this.db, "Docente", idN);
+      await updateDoc(claseRef, {
+        Nombre: NombreN,
+        ApellidoPaterno: ApellidoPN,
+        ApellidoMaterno: ApellidoMN,
+        Matricula: MatriculaN,
+      })
+        .then(() => {
+          console.log("El docente ha sido actualizado");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }
 
   async getAllUsuarios() {

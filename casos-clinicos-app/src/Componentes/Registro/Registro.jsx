@@ -98,7 +98,7 @@ const Registro = () => {
              //Add idAlumno 
              const claseRef = doc(firestore, `Alumno/${infoUsuario.user.uid}`);
              await updateDoc(claseRef, {
-                 idAlumno: infoUsuario.user.uid,
+                 id: infoUsuario.user.uid,
              }).then(() => {
                  console.log("Alumno actualizado con el id", infoUsuario.user.uid);
              });
