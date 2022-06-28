@@ -29,7 +29,7 @@ const HomeDocente = ({usuario}) => {
                            DosT="Mis cuestionarios" DosR="/usuario/docente/mis-cuestionarios" iconoS={<FaIcons.FaAddressBook/>}
                 />
                 <div className="content w-100">
-                    <Route path="/usuario/docente/lista-alumno" >{<ListaAlumno user1={usuario.user}/>}</Route>
+                    <Route path="/usuario/docente/lista-alumno" >{<ListaAlumno user={usuario.user}/>}</Route>
                     {/*<Route path="/usuario/docente/lista-alumno" 
                         render={(props) =>
                             {userRol ? <ListaAlumno user1={usuario}/> : <Redirect to="/inicio-sesion" />}

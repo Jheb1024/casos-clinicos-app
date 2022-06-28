@@ -7,17 +7,16 @@ import { FaRegSave } from "react-icons/fa";
 import { GrClearOption } from "react-icons/gr";
 import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorAlumno";
 
-const EditarAlumnoModal = ({ alumno, id }) => {
-    console.log("id del alumno a edita=>");
-    console.log(id);
+const EditarUsuarioModal = ({ usuario, id }) => {
+    console.log("Rol del usuario a editar=>");
+    console.log(usuario.rol);
     const admiAl = new AdministradorAlumno();
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+    const handleClose = () => setShow(false);;
     const handleShow = () => setShow(true);
-
     function submitHandler(e) {
         e.preventDefault();
-        const idN = alumno.id;
+        const rolU = usuario.rol;
         const MatriculaN = e.target.elements.InputMatricula.value;
         const NombreN = e.target.elements.InputNombre.value;
         const ApellidoPN = e.target.elements.InputApellidoP.value;
@@ -33,7 +32,7 @@ const EditarAlumnoModal = ({ alumno, id }) => {
             });
         } else {
             new Swal({
-                title: 'Actualizar alumno',
+                title: 'Actualizar usuario',
                 text: '¿Desea confirmar la actualización?',
                 icon: 'question',
                 showDenyButton: true,
@@ -42,16 +41,16 @@ const EditarAlumnoModal = ({ alumno, id }) => {
             })
                 .then((respuesta) => {
                     if (respuesta.isConfirmed) {
-                        if (admiAl.editarAlumno(MatriculaN, NombreN, ApellidoPN, ApellidoMN, NRCN, id)) {
+
+                        if (admiAl.editarUsuario(MatriculaN, NombreN, ApellidoPN, ApellidoMN, id,rolU)) {
                             new Swal({
                                 position: 'center',
                                 icon: 'success',
-                                title: 'Actualización de datos exitosa.',
-                                showConfirmButton: false,
-                                timer: 3000
+                                title: "Actualización de datos exitosa.",
+                                text: "Para visualizar sus cambios de CLICK en el boton 'Resetear'.",
+                                showConfirmButton: true
                             });
                         }
-
                     } else if (respuesta.isDenied) {
                         new Swal('Sin cambios guardados.', '¡Verificar su información!', 'info')
                     }
@@ -67,18 +66,18 @@ const EditarAlumnoModal = ({ alumno, id }) => {
 
             <Modal show={show} onHide={handleClose} animation={false} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Información alumno</Modal.Title>
+                    <Modal.Title>Información {usuario.rol}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
                     <Formik
                         initialValues={
                             {
-                                InputMatricula: alumno.Matricula,
-                                InputNombre: alumno.Nombre,
-                                InputApellidoP: alumno.ApellidoPaterno,
-                                InputApellidoM: alumno.ApellidoMaterno,
-                                InputNRC: alumno.NRC,
+                                InputMatricula: usuario.Matricula,
+                                InputNombre: usuario.Nombre,
+                                InputApellidoP: usuario.ApellidoPaterno,
+                                InputApellidoM: usuario.ApellidoMaterno,
+                                InputNRC: usuario.NRC,
                             }
                         }
                         validate={values => {
@@ -209,4 +208,4 @@ const EditarAlumnoModal = ({ alumno, id }) => {
         </>
     )
 }
-export default EditarAlumnoModal;
+export default EditarUsuarioModal;

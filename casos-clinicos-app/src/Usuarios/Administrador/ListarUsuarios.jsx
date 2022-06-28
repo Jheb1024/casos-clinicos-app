@@ -3,13 +3,11 @@ import styled from "styled-components";
 import scrollreveal from "scrollreveal";
 import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorAlumno";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { AiOutlineFileSearch } from "react-icons/ai";
 import { GoSearch } from "react-icons/go";
 import RegistroAlumnoModal from "../../Componentes/Registro/RegistroAlumnoModal";
 import RegistroDocenteModal from "../../Componentes/Registro/RegistroDocenteModal"
 import { BsArrowReturnLeft } from "react-icons/bs";
-import { AiTwotoneEdit } from "react-icons/ai";
-import Modal from "../../Componentes/Modal/Modal";
+import EditarUsuarioModal from "./EditarUsuarioModal";
 import Swal from "sweetalert2";
 import moment from 'moment'
 import 'moment/locale/es'
@@ -17,10 +15,7 @@ import 'moment/locale/es'
 export default function ListaUsuarios() {
   const admiAl = new AdministradorAlumno();
   let i = 0;
-
-  const [usuariosEliminar, setUsuariosEliminar] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
-  const [estadoModalE, cambiarEstadoModalE] = useState(false);
 
   function actualizarEstadoUsuarios() {
     admiAl.getAllUsuarios().then((usuarios) => {
@@ -29,41 +24,32 @@ export default function ListaUsuarios() {
       console.log(usuarios);
     });
   }
-  ///Checar---------------------------------
-  function actualizarEstadoUsuariosE(usuario) {
+  function borrarUsuario(id, rol) {
+    console.log("id dentro de la funcion borrarClase()", id);
     new Swal({
-      title: 'Eliminar usuario',
-      text: '¿Desea confirmar la eliminación?',
-      icon: 'question',
-      buttons: ['No', 'Si']
+      title: "Está seguro?",
+      text: "El usuario se borrara del registro de Alumnos/Docentes.",
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: 'Si',
+      denyButtonText: `No`,
     })
       .then((respuesta) => {
-        if (respuesta) {
-          admiAl.eliminarUsuario(usuario).then((usuariosEliminar) => {
-            setUsuariosEliminar(usuariosEliminar);
-            console.log("DAtos de usuarios Eliminado");
-            console.log(usuariosEliminar);
-          });
-
-          if (admiAl.eliminarUsuario(usuario).res.status === 200) {
+        if (respuesta.isConfirmed) {
+          if (admiAl.borrarUsuarioAd(id, rol)) {
             new Swal({
-              title: "Eliminación exitoso",
-              text: "Usuario eliminado",
-              icon: "success",
-              timer: 3000
-            });
-          } else {
-            new Swal({
-              title: "Eliminación no exitoso",
-              text: "Volver a intentarlo!",
-              icon: "error",
+              position: 'center',
+              icon: 'success',
+              title: 'Eliminación exitosa.',
+              showConfirmButton: false,
               timer: 3000
             });
           }
-
-
+        } else if (respuesta.isDenied) {
+          new Swal("El usuario no se borró!");
         }
       });
+
   }
 
   async function busquedaFormHandler(e) {
@@ -95,27 +81,21 @@ export default function ListaUsuarios() {
   }, []);
   return (
     <Section>
-      
-      <RegistroAlumnoModal/>
-      <RegistroDocenteModal/>
-      
+
+      <RegistroAlumnoModal />
+      <RegistroDocenteModal />
+      <br></br>
       <div class="container-fluid">
         <form className="d-flex" onSubmit={busquedaFormHandler}>
-          <input className="form-control me-2" type="search" id="busqueda"
-            placeholder="Buscar por nombre, apellido paterno o rol" />
+          <input className="form-control me-2" type="search" id="busqueda" placeholder="Buscar por nombre, apellido paterno o rol" />
           <button className="btn btn-outline-success" type="submit"><GoSearch /></button>
-
         </form>
-        <button
-          className="btn btn-secondary"
+        <button className="btn btn-secondary"
           onClick={() => {
             const input = document.getElementById("busqueda");
             input.value = "";
             actualizarEstadoUsuarios();
-          }}
-        >
-          Resetear
-        </button>
+          }}>Resetear </button>
       </div>
       <br></br>
 
@@ -145,48 +125,12 @@ export default function ListaUsuarios() {
                 <td>
                   <div className="btn-group btn-group-sm" role="group">
                     <button className="btn btn-danger m-1" onClick={() => {
-                      actualizarEstadoUsuariosE(usuarior);
+                      borrarUsuario(usuarior.id, usuarior.rol);
                       actualizarEstadoUsuarios();
                     }}><RiDeleteBin6Line /></button>
-                    <button className="btn btn-info m-1 p-1" onClick={() => cambiarEstadoModalE(!estadoModalE)}><AiOutlineFileSearch /></button>
+                    <EditarUsuarioModal usuario={usuarior} id={usuarior.id} />
                   </div>
                 </td>
-                <Modal
-                  estado={estadoModalE}
-                  cambiarEstado={cambiarEstadoModalE}
-                  titulo="Detalles del usuario"
-                  mostrarHeader={true}
-                >
-                  <Contenido>
-                    {usuarior ? <form className="" method="POST" action="">
-                      <fieldset>
-                        <br></br>
-                        <h1>Información del usuario</h1>
-                        <div className="form-group">
-                          <label htmlfor="InputMatricula">NRC</label>
-                          <input type="txt" class="form-control" id="InputMatricula" value={usuarior.Matricula} onChange={(e) => this.setState(e.target.value)} />
-                        </div>
-                        <div className="form-group">
-                          <label htmlfor="InputNombre">Correo electrónico</label>
-                          <input type="txt" class="form-control" id="InputNombre" value={usuarior.correo} onChange={(e) => this.setState(e.target.value)} />
-                        </div>
-                        <div className="form-group">
-                          <label htmlfor="InputApellidoP">Edad</label>
-                          <input type="txt" class="form-control" id="InputApellidoP" value={usuarior.Edad} onChange={(e) => this.setState(e.target.value)} />
-                        </div>
-                        <div className="form-group">
-                          <label htmlfor="InputApellidoM">Matricula</label>
-                          <input type="txt" class="form-control" id="InputApellidoM" value={usuarior.Matricula} onChange={(e) => this.setState(e.target.value)} />
-                        </div>
-                      </fieldset>
-
-                      <div className="btn-group btn-group-sm" role="group">
-                        <button className="btn btn-secondary m-1" onClick={() => cambiarEstadoModalE(!estadoModalE)}> Regresar<BsArrowReturnLeft /></button>
-                        <button className="btn btn-success m-1 p-1" >Editar<AiTwotoneEdit /></button>
-                      </div>
-                    </form> : null}
-                  </Contenido>
-                </Modal>
               </tr>
 
             ))}

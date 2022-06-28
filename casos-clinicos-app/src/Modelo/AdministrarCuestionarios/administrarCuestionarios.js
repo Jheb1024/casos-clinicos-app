@@ -313,7 +313,7 @@ async function  registrarCuestionarioSinImagen(cuestionario, data, user){
       Autor: docente.name + " " + docente.apellidoPaterno,
       AutorMatricula: docente.matricula,
       AutorId: user.uid,
-      imageRef: "none",
+      imageRef: "images/noMoreInformation.png",
       Tema: data.Tema,
       Subtema: data.Subtema,
       Titulo: cuestionario.Titulo,
@@ -405,6 +405,7 @@ async function registrarCuestionarioConImagen(cuestionario, data, user,imageRef)
     docenteConverter
   );
 
+  let registrado = null;
   const docSnapDocente = await getDoc(refDocente);
   if (docSnapDocente.exists()) {
     const docente = docSnapDocente.data();
@@ -478,14 +479,16 @@ async function registrarCuestionarioConImagen(cuestionario, data, user,imageRef)
       respuesta_10_3: cuestionario.respuesta_10_3,
       respuesta_10_4: cuestionario.respuesta_10_4,
       respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
-    }).then(() => {
+    }).then((cuestionario) => {
       console.log("Cuestionario registrado");
+      registrado = cuestionario;
     });
 
-    if (cuestionarioAgregado) {
-      const cuestionarioRef = doc(db, "Cuestionarios", cuestionarioAgregado.id);
+    if (registrado) {
+      console.log(registrado)
+      const cuestionarioRef = doc(db, "Cuestionarios", registrado.id);
       await updateDoc(cuestionarioRef, {
-        idCuestionario: cuestionarioAgregado.id,
+        idCuestionario: registrado.id,
       }).then(() => {
         console.log("Cuestionario actualizado con el id");
       });

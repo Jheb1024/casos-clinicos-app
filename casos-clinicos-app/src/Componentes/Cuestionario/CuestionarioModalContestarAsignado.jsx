@@ -192,6 +192,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                                 <Field className="form-check-input" type="radio" name="respuesta1" id="res3" value="respuesta_3" />
                                                 <label className="form-check-label" htmlFor="res1_3">{quiz.respuesta_3}</label>
                                             </div>
+                                            <div className="form-check form-check">
+                                                <Field className="form-check-input" type="radio" name="respuesta1" id="res4" value="respuesta_4" />
+                                                <label className="form-check-label" htmlFor="res1_4">{quiz.respuesta_4}</label>
+                                            </div>
                                         </div>
                                         <ErrorMessage name="respuesta1" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP1}</mark></p>}
@@ -216,6 +220,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                             <Field className="form-check-input" type="radio" name="respuesta2" id="res3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res2_3">{quiz.respuesta_2_3}</label>
                                         </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta2" id="res4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res2_4">{quiz.respuesta_2_4}</label>
+                                        </div>
                                         <ErrorMessage name="respuesta2" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP2}</mark></p>}
                                         <br />
@@ -237,6 +245,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta3" id="res3_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res3_3">{quiz.respuesta_3_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta3" id="res3_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res3_4">{quiz.respuesta_3_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta3" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP3}</mark></p>}
@@ -260,6 +272,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta4" id="res4_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res4_3">{quiz.respuesta_4_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta4" id="res4_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res4_4">{quiz.respuesta_4_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta4" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP4}</mark></p>}
@@ -285,6 +301,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                             <Field className="form-check-input" type="radio" name="respuesta5" id="res5_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res5_3">{quiz.respuesta_5_3}</label>
                                         </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta5" id="res5_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res5_4">{quiz.respuesta_5_4}</label>
+                                        </div>
                                         <ErrorMessage name="respuesta5" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP5}</mark></p>}
                                         <br />
@@ -307,6 +327,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta6" id="res6_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res6_3">{quiz.respuesta_6_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta6" id="res6_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res6_4">{quiz.respuesta_6_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta6" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP6}</mark></p>}
@@ -331,6 +355,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                             <Field className="form-check-input" type="radio" name="respuesta7" id="res7_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res7_3">{quiz.respuesta_7_3}</label>
                                         </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta7" id="res7_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res7_4">{quiz.respuesta_7_4}</label>
+                                        </div>
                                         <ErrorMessage name="respuesta7" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP7}</mark></p>}
                                         <br />
@@ -353,6 +381,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta8" id="res8_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res8_3">{quiz.respuesta_8_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta8" id="res8_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res8_4">{quiz.respuesta_8_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta8" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP8}</mark></p>}
@@ -377,6 +409,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                             <Field className="form-check-input" type="radio" name="respuesta9" id="res9_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res9_3">{quiz.respuesta_9_3}</label>
                                         </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta9" id="res9_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res9_4">{quiz.respuesta_9_4}</label>
+                                        </div>
                                         <ErrorMessage name="respuesta9" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP9}</mark></p>}
                                         <br />
@@ -399,6 +435,10 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta10" id="res10_3" value="respuesta_3" />
                                             <label className="form-check-label" htmlFor="res10_3">{quiz.respuesta_10_3}</label>
+                                        </div>
+                                        <div className="form-check form-check">
+                                            <Field className="form-check-input" type="radio" name="respuesta10" id="res10_4" value="respuesta_4" />
+                                            <label className="form-check-label" htmlFor="res10_4">{quiz.respuesta_10_4}</label>
                                         </div>
                                         <ErrorMessage name="respuesta10" component="div" className='errors' />
                                         {showresp && <p><mark className='respuestaCorr'><b>Respuesta correcta:</b> {quiz.respuestaCorrectaP10}</mark></p>}

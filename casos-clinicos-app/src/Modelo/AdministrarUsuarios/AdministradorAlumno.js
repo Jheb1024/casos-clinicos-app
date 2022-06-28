@@ -206,102 +206,71 @@ export default class AdministradorAlumno extends AdministradorUsuario {
     return alumnos;
   }
 
-  async borrarUsuarioAd(id) {
-    const coleccionRef = collection(this.db, "Alumno");
-    const docuRef = doc(coleccionRef, id);
-    if (docuRef.exists) {
+ 
+  async borrarUsuarioAd(id, rol) {
+    if (rol == "alumno") {
       console.log("Es alumno");
-      await deleteDoc(doc(this.db, "Alumno", id)).then(() => {
+      const collectionRef = collection(this.db, "Alumno");
+      const docRef = doc(collectionRef, id);
+      await deleteDoc(docRef).then(() => {
         console.log("El alumno ha sido eliminado");
-        new Swal({
-          position: 'top',
-          icon: 'success',
-          title: 'Alumno eliminado.',
-          showConfirmButton: false,
-          timer: 3000
-        });
+        return "1";
       }).catch((error) => {
         console.error(error);
-        new Swal({
-          position: 'top',
-          icon: 'error',
-          title: 'A ocurrido un error.',
-          showConfirmButton: false,
-          timer: 3000
-        });
+        return error;
       });
       //Tambien se tiene que eliminar en usuarios
-      await deleteDoc(doc(this.db, "Usuarios", id)).then(() => {
+      const collectionRefU = collection(this.db, "Usuarios");
+      const docRefU = doc(collectionRefU, id);
+      await deleteDoc(docRefU).then(() => {
         console.log("El alumno ha sido eliminado de Usuarios");
       });
-    } else {
+    } else if (rol == "docente") {
       console.log("Es docente");
-      await deleteDoc(doc(this.db, "Docente", id)).then(() => {
+      const collectionRefD = collection(this.db, "Docente");
+      const docRefD = doc(collectionRefD, id);
+      await deleteDoc(docRefD).then(() => {
         console.log("El docente ha sido eliminado");
-        new Swal({
-          position: 'top',
-          icon: 'success',
-          title: 'Docente eliminado.',
-          showConfirmButton: false,
-          timer: 3000
-        });
+        return "1";
       }).catch((error) => {
         console.error(error);
-        new Swal({
-          position: 'top',
-          icon: 'error',
-          title: 'A ocurrido un error.',
-          showConfirmButton: false,
-          timer: 3000
-        });
+        return error;
       });
       //Tambien se tiene que eliminar en usuarios
-      await deleteDoc(doc(this.db, "Usuarios", id)).then(() => {
-        console.log("El docente ha sido eliminado de Usuarios");
+      const collectionRefU = collection(this.db, "Usuarios");
+      const docRefU = doc(collectionRefU, id);
+      await deleteDoc(docRefU).then(() => {
+        console.log("El alumno ha sido eliminado de Usuarios");
       });
     }
   }
   async borrarAlumnoAd(id) {
     console.log("id del alumno que se eliminara:", id);
-    await deleteDoc(doc(this.db, "Alumno", id)).then(() => {
-      console.log("El alumno ha sido eliminado");
-      new Swal({
-        position: 'top',
-        icon: 'success',
-        title: 'Alumno eliminado.',
-        showConfirmButton: false,
-        timer: 3000
+    console.log("Es alumno");
+      const collectionRef = collection(this.db, "Alumno");
+      const docRef = doc(collectionRef, id);
+      await deleteDoc(docRef).then(() => {
+        console.log("El alumno ha sido eliminado");
+        return "1";
+      }).catch((error) => {
+        console.error(error);
+        return error;
       });
-    }).catch((error) => {
-      console.error(error);
-      new Swal({
-        position: 'top',
-        icon: 'error',
-        title: 'A ocurrido un error.',
-        showConfirmButton: false,
-        timer: 3000
+      //Tambien se tiene que eliminar en usuarios
+      const collectionRefU = collection(this.db, "Usuarios");
+      const docRefU = doc(collectionRefU, id);
+      await deleteDoc(docRefU).then(() => {
+        console.log("El alumno ha sido eliminado de Usuarios");
       });
-    });
-    //Tambien se tiene que eliminar en usuarios
-    await deleteDoc(doc(this.db, "Usuarios", id)).then(() => {
-      console.log("El alumno ha sido eliminado de Usuarios");
-    });
   }
   //Para editar datos del alumno
-  async editarAlumno(MatriculaN, NombreN, ApellidoPN, ApellidoMN, NRCN, idN) {
-    const db =getFirestore(firebaseApp);
-    console.log("id del alumno a editar editarAlumno()::", idN);
-    console.log("matricula:", MatriculaN);
-    console.log("nombre:", NombreN);
-    console.log("ApellidoP:", ApellidoPN);
-    console.log("ApellidoM:", ApellidoMN);
-    console.log("NRC:", NRCN);
-    //const claseRef = doc(this.db, "Alumno", "6MOYgoNCK4VvousvsZHFM97QqN7");
+  async editarAlumno(MatriculaN, NombreN, ApellidoPN, ApellidoMN, NRCN, idA) {
 
-    const coleccionRef = collection(db, "Alumno");
-    const docuRef = doc(coleccionRef, idN);
-    console.log("esto es la referencia del alumno",coleccionRef)
-    await updateDoc(docuRef, {
+    console.log("id del alumno a editar editarAlumno()::", idA);
+    const collectionRef = collection(this.db, "Alumno");
+    const docRef = doc(collectionRef, idA);
+
+    await updateDoc(docRef, {
       Nombre: NombreN,
       ApellidoPaterno: ApellidoPN,
       ApellidoMaterno: ApellidoMN,
@@ -310,29 +279,30 @@ export default class AdministradorAlumno extends AdministradorUsuario {
     })
       .then(() => {
         console.log("El alumno ha sido actualizado");
+        return "1";
       })
       .catch((error) => {
         console.log("Error en catch");
         console.error(error);
+        return error;
       });
   }
   //Para editar datos del usuario
-   async  editarUsuario(MatriculaN, NombreN, ApellidoPN, ApellidoMN, idN) {
+  async editarUsuario(MatriculaN, NombreN, ApellidoPN, ApellidoMN, idN, rolU) {
 
-    
-    console.log("id del alumno a editar editarAlumno()::", idN);
+    console.log("id del usuaio a editar editarUsuario()::", idN);
+    console.log("rol del usuario", rolU);
     console.log("matricula:", MatriculaN);
     console.log("nombre:", NombreN);
     console.log("ApellidoP:", ApellidoPN);
     console.log("ApellidoM:", ApellidoMN);
-    
-    const docRef = doc(this.db, "Alumno", idN);
-    const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      console.log("Document data Alumno:", docSnap.data());
-      const claseRef = doc(this.db, "Alumno", idN);
-      await updateDoc(claseRef, {
+    if (rolU == "alumno") {
+      console.log("Se va a editar un Alumno:");
+
+      const collectionRef = collection(this.db, "Alumno");
+      const docRef = doc(collectionRef, idN);
+      await updateDoc(docRef, {
         Nombre: NombreN,
         ApellidoPaterno: ApellidoPN,
         ApellidoMaterno: ApellidoMN,
@@ -340,27 +310,32 @@ export default class AdministradorAlumno extends AdministradorUsuario {
       })
         .then(() => {
           console.log("El alumno ha sido actualizado");
+          return "1";
         })
         .catch((error) => {
           console.error(error);
+          return error;
         });
-    } else {
-      // doc.data() will be undefined in this case
+
+    };
+    if (rolU == "docente") {
       console.log("Es docente");
-      const claseRef = doc(this.db, "Docente", idN);
-      await updateDoc(claseRef, {
+      const collectionRefD = collection(this.db, "Docente");
+      const docRefD = doc(collectionRefD, idN);
+      await updateDoc(docRefD, {
         Nombre: NombreN,
         ApellidoPaterno: ApellidoPN,
         ApellidoMaterno: ApellidoMN,
         Matricula: MatriculaN,
       })
         .then(() => {
-          console.log("El docente ha sido actualizado");
+          return "1";
         })
         .catch((error) => {
           console.error(error);
+          return error;
         });
-    }
+    };
   }
 
   async getAllUsuarios() {
@@ -385,7 +360,7 @@ export default class AdministradorAlumno extends AdministradorUsuario {
   }
 //Falta por checar bien 
   async eliminarUsuario(usuario) {
-    if(usuario.rol=="Alumno")
+    if(usuario.rol==="Alumno")
     {
       const coleccionRef = collection(this.db, "Alumno");
       const docuRef = doc(coleccionRef, usuario.uid);
