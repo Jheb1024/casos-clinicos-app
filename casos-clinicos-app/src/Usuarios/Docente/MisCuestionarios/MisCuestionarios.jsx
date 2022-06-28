@@ -10,12 +10,13 @@ import styled from "styled-components";
 import { Link } from 'react-router-dom';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 function MisCuestionarios({ user }) {
-
+  
   const db = getFirestore(firebaseApp);
   const [cuestionarios, setCuestionarios] = useState(null);
   const [cuestionario, setCuestionario] = useState(null);
   const [NrcAsignado, setNrcAsignado] = useState([0]);
   function obtenerNRC(cuestionario) {
+    
     if (cuestionario === null || cuestionario.idCuestionario==null) {
       console.log("Sin datos del cuestionario");
     } else {
@@ -34,16 +35,18 @@ function MisCuestionarios({ user }) {
 
   }
   function obtenerCuestionario(cuestionario) {
+    
+
     obtenerNRC(cuestionario);
     setCuestionario(cuestionario);
-
-
-    console.log('this is what it has', cuestionario.refImage)
-    if (cuestionario.refImage === 'none') {
+    //console.log('this is what it has', cuestionario.refImage)
+    
+    if (JSON.stringify(cuestionario.refImage) === 'none'|| cuestionario.refImage ===null ) {
       const img = document.getElementById('myimg');
-          img.setAttribute('src', null);
+      img.style.display = 'none';
     } else {
-      //setImageExist(true)
+      if(JSON.stringify(cuestionario.refImage) !== 'none'){
+        
       const storage = getStorage();
       getDownloadURL(ref(storage, cuestionario.refImage))
         .then((url) => {
@@ -58,12 +61,14 @@ function MisCuestionarios({ user }) {
           // Or inserted into an <img> element
           const img = document.getElementById('myimg');
           img.setAttribute('src', url);
+          img.style.display = 'contents';
         })
         .catch((error) => {
           console.log('Hubo un error al cargar la imagen', error)
-          const img = document.getElementById('myimg');
-          img.setAttribute('src', null);
         });
+        
+      }
+      
 
     }
 
@@ -157,7 +162,8 @@ function MisCuestionarios({ user }) {
 
                       <br />
                       <input className="respuesta_field" type="text" name="respuesta_3" placeholder="Respuesta 3" value={cuestionario.respuesta_3} readOnly />
-
+                      <br />
+                      <input className="respuesta_field" type="text" name="respuesta_4" placeholder="Respuesta 4" value={cuestionario.respuesta_4} readOnly />
                     </div>
                     <br />
 
@@ -177,7 +183,9 @@ function MisCuestionarios({ user }) {
 
                       <br />
                       <input className="respuesta_field" type="text" name="respuesta_2_3" placeholder="Respuesta 3" value={cuestionario.respuesta_2_3} readOnly />
-
+                      <br />
+                      <input className="respuesta_field" ty4e="text" name="respuesta_2_4" placeholder="Respuesta 4" value={cuestionario.respuesta_2_4} readOnly />
+                      
                       <br />
                     </div>
 
@@ -192,10 +200,12 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_3_1" placeholder="Respuesta 1" value={cuestionario.respuesta_3_1} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_3_2" placeholder="Respuesta 2" value={cuestionario.respuesta_3_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_3_2" placeholder="Respuesta 2" value={cuestionario.respuesta_3_2} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_3_3" placeholder="Respuesta 3" value={cuestionario.respuesta_3_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_3_3" placeholder="Respuesta 3" value={cuestionario.respuesta_3_3} readOnly />
+                      <br />
+                      <input className="respuesta_field" type="text" name="respuesta_3_4" placeholder="Respuesta 4" value={cuestionario.respuesta_3_4} readOnly />
 
                     </div>
 
@@ -211,10 +221,12 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_4_1" placeholder="Respuesta 1" value={cuestionario.respuesta_4_1} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_4_2" placeholder="Respuesta 2" value={cuestionario.respuesta_4_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_4_2" placeholder="Respuesta 2" value={cuestionario.respuesta_4_2} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_4_3" placeholder="Respuesta 3" value={cuestionario.respuesta_4_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_4_3" placeholder="Respuesta 3" value={cuestionario.respuesta_4_3} readOnly />
+                      <br />
+                      <input className="respuesta_field" type="text" name="respuesta_4_4" placeholder="Respuesta 4" value={cuestionario.respuesta_4_4} readOnly />
 
                     </div>
 
@@ -231,10 +243,13 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_5_1" placeholder="Respuesta 1" value={cuestionario.respuesta_5_1} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_5_2" placeholder="Respuesta 2" value={cuestionario.respuesta_5_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_5_2" placeholder="Respuesta 2" value={cuestionario.respuesta_5_2} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_5_3" placeholder="Respuesta 3" value={cuestionario.respuesta_5_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_5_3" placeholder="Respuesta 3" value={cuestionario.respuesta_5_3} readOnly />
+                      <br />
+                      <input className="respuesta_field" ty4e="text" name="respuesta_5_4" placeholder="Respuesta 4" value={cuestionario.respuesta_5_4} readOnly />
+                      
 
                     </div>
 
@@ -250,10 +265,12 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_6_1" placeholder="Respuesta 1" value={cuestionario.respuesta_6_1} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_6_2" placeholder="Respuesta 2" value={cuestionario.respuesta_6_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_6_2" placeholder="Respuesta 2" value={cuestionario.respuesta_6_2} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_6_3" placeholder="Respuesta 3" value={cuestionario.respuesta_6_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_6_3" placeholder="Respuesta 3" value={cuestionario.respuesta_6_3} readOnly />
+                      <br />
+                      <input className="respuesta_field" type="text" name="respuesta_6_4" placeholder="Respuesta 4" value={cuestionario.respuesta_6_4} readOnly />
 
                     </div>
 
@@ -269,10 +286,12 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_7_1" placeholder="Respuesta 1" value={cuestionario.respuesta_7_1} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_7_2" placeholder="Respuesta 2" value={cuestionario.respuesta_7_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_7_2" placeholder="Respuesta 2" value={cuestionario.respuesta_7_2} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_7_3" placeholder="Respuesta 3" value={cuestionario.respuesta_7_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_7_3" placeholder="Respuesta 3" value={cuestionario.respuesta_7_3} readOnly />
+                      <br />
+                      <input className="respuesta_field" type="text" name="respuesta_7_4" placeholder="Respuesta 4" value={cuestionario.respuesta_7_4} readOnly />
 
                     </div>
 
@@ -288,10 +307,12 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_8_1" placeholder="Respuesta 1" value={cuestionario.respuesta_8_1} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_8_2" placeholder="Respuesta 2" value={cuestionario.respuesta_8_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_8_2" placeholder="Respuesta 2" value={cuestionario.respuesta_8_2} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_8_3" placeholder="Respuesta 3" value={cuestionario.respuesta_8_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_8_3" placeholder="Respuesta 3" value={cuestionario.respuesta_8_3} readOnly />
+                      <br />
+                      <input className="respuesta_field" type="text" name="respuesta_8_4" placeholder="Respuesta 4" value={cuestionario.respuesta_8_4} readOnly />
 
                     </div>
 
@@ -307,10 +328,12 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_9_1" placeholder="Respuesta 1" value={cuestionario.respuesta_9_1} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_9_2" placeholder="Respuesta 2" value={cuestionario.respuesta_9_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_9_2" placeholder="Respuesta 2" value={cuestionario.respuesta_9_2} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_9_3" placeholder="Respuesta 3" value={cuestionario.respuesta_9_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_9_3" placeholder="Respuesta 3" value={cuestionario.respuesta_9_3} readOnly />
+                      <br />
+                      <input className="respuesta_field" type="text" name="respuesta_9_4" placeholder="Respuesta 4" value={cuestionario.respuesta_9_4} readOnly />
 
                     </div>
 
@@ -326,11 +349,12 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_10_1" placeholder="Respuesta 1" value={cuestionario.respuesta_10_1} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_10_2" placeholder="Respuesta 2" value={cuestionario.respuesta_10_1} readOnly />
+                      <input className="respuesta_field" type="text" name="respuesta_10_2" placeholder="Respuesta 2" value={cuestionario.respuesta_10_2} readOnly />
 
                       <br />
-                      <input className="respuesta_field" type="text" name="respuesta_10_3" placeholder="Respuesta 3" value={cuestionario.respuesta_10_1} readOnly />
-
+                      <input className="respuesta_field" type="text" name="respuesta_10_3" placeholder="Respuesta 3" value={cuestionario.respuesta_10_3} readOnly />
+                      <br />
+                      <input className="respuesta_field" type="text" name="respuesta_10_4" placeholder="Respuesta 4" value={cuestionario.respuesta_10_4} readOnly />
                     </div>
 
                   </div>

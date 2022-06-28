@@ -41,9 +41,10 @@ const EditarAlumnoModal = ({alumno}) => {
             })
                 .then((respuesta) => {
                     if (respuesta.isConfirmed) {
-                        admiAl.editarAlumno(MatriculaN, NombreN,ApellidoPN,ApellidoMN,NRCN,idN).then(() => Swal("El alumno se ha modificado!", {
+                        admiAl.editarAlumno(MatriculaN, NombreN,ApellidoPN,ApellidoMN,NRCN,idN)
+                        /*.then(() => Swal("El alumno se ha modificado!", {
                             icon: "success",
-                        }))
+                        }))*/
                         handleClose();
                     } else {
                         handleClose();

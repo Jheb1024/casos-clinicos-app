@@ -289,26 +289,19 @@ export default class AdministradorAlumno extends AdministradorUsuario {
   }
   //Para editar datos del alumno
   async editarAlumno(MatriculaN, NombreN, ApellidoPN, ApellidoMN, NRCN, idN) {
+    const db =getFirestore(firebaseApp);
     console.log("id del alumno a editar editarAlumno()::", idN);
     console.log("matricula:", MatriculaN);
     console.log("nombre:", NombreN);
     console.log("ApellidoP:", ApellidoPN);
     console.log("ApellidoM:", ApellidoMN);
     console.log("NRC:", NRCN);
-    const claseRef = doc(this.db, "Alumno", idN);
-    ///
-    //const docRef = doc(this.db, "Alumno", idN);
-    //const docSnap = await getDoc(docRef);
+    //const claseRef = doc(this.db, "Alumno", "6MOYgoNCK4VvousvsZHFM97QqN7");
 
-    /*if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-    ///*/
-
-    await updateDoc(claseRef, {
+    const coleccionRef = collection(db, "Alumno");
+    const docuRef = doc(coleccionRef, idN);
+    console.log("esto es la referencia del alumno",coleccionRef)
+    await updateDoc(docuRef, {
       Nombre: NombreN,
       ApellidoPaterno: ApellidoPN,
       ApellidoMaterno: ApellidoMN,
@@ -324,8 +317,9 @@ export default class AdministradorAlumno extends AdministradorUsuario {
       });
   }
   //Para editar datos del usuario
-  async editarUsuario(MatriculaN, NombreN, ApellidoPN, ApellidoMN, idN) {
+   async  editarUsuario(MatriculaN, NombreN, ApellidoPN, ApellidoMN, idN) {
 
+    
     console.log("id del alumno a editar editarAlumno()::", idN);
     console.log("matricula:", MatriculaN);
     console.log("nombre:", NombreN);
