@@ -1,26 +1,21 @@
 //Aqui el docente podra agregar nuevo cuestionario
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
-import { collection, getDocs, getFirestore, onSnapshot, query, where,doc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, onSnapshot, query, where, doc } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
-import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row } from 'react-bootstrap'
+import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row, AccordionContext,Badge} from 'react-bootstrap'
 import CuestionarioModalContestar from "../../Componentes/Cuestionario/CuestionarioModalContestar";
 import CuestionarioModalContestarAsignado from "../../Componentes/Cuestionario/CuestionarioModalContestarAsignado";
-export default function AgregarCuestionario({user}) {
+export default function AgregarCuestionario({ user }) {
 
   const [temas, setTemas] = useState(null);
   const [subtemas, setSubtemas] = useState(null);
   const [cuestionarios, setCuestionarios] = useState(null);
   const [cuestionariosA, setCuestionariosA] = useState(null);
   const [temaCompuesto, setTemaCompuesto] = useState(null);
-  const [subtema, setSubtema] = useState(null);
   const [alumno, setAlumno] = useState(null);
-
-
   const db = getFirestore(firebaseApp);
-
-
   useEffect(() => {
 
     const docRef = doc(db, `Alumno/${user.user.uid}`);
@@ -34,6 +29,7 @@ export default function AgregarCuestionario({user}) {
       unsubscribe();
     }
   }, []);
+
   useEffect(
     () =>
       onSnapshot(collection(db, 'Temas'), (snapshot) => {
@@ -41,7 +37,11 @@ export default function AgregarCuestionario({user}) {
         setTemas(snapshot.docs.map((doc) => doc.data()))
       }),
     []);
+
   async function getSubtemas(tema) {
+
+    console.log("Entro función getSubtemas()");
+    console.log("Tema en getSubtemas", tema);
     const q = query(collection(db, "Subtemas"), where("Tema", "==", tema));
 
     const querySnapshot = await getDocs(q);
@@ -50,10 +50,9 @@ export default function AgregarCuestionario({user}) {
     }
   }
 
-  function CustomToggle({ children, eventKey }) {
-    const decoratedOnClick = useAccordionButton(eventKey, () =>
-      //console.log(children),
-      getSubtemas(children)
+  function CustomToggle({ children, eventKey, tema }) {
+    const decoratedOnClick = useAccordionButton(eventKey,
+      () => getSubtemas(tema),
     );
 
     return (
@@ -66,131 +65,154 @@ export default function AgregarCuestionario({user}) {
       </button>
     );
   }
+  function ContextAwareToggle({ children, eventKey, callback, tema }) {
+    const { activeEventKey } = useContext(AccordionContext);
 
-  async function getCuestionarios(tema,subtema) {
-    const nrc=alumno.NRC;
-console.log("NRC_Alumno=>",nrc);
-    const temaCompuesto ={
-      Tema:tema,
-      Subtema:subtema
+    const decoratedOnClick = useAccordionButton(
+      eventKey,
+      () => getSubtemas(tema),
+    );
+    const isCurrentEventKey = activeEventKey === eventKey;
+    return (
+      <button
+        type="button"
+        style={{ backgroundColor: isCurrentEventKey ? 'pink' : 'lavender' }}
+        onClick={decoratedOnClick}
+      >
+        {children}
+      </button>
+    );
+  }
+
+  async function getCuestionarios(tema, subtema) {
+    console.log("Entro a getCuestionarios()");
+    const nrc = alumno.NRC;
+    console.log("NRC_Alumno=>", nrc);
+    const temaCompuesto = {
+      Tema: tema,
+      Subtema: subtema
     }
     setTemaCompuesto(temaCompuesto)
-    //Cuestionarios generales
-   // const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", subtema));
-   const q = query(collection(db, "Cuestionarios"),where("nrcClase","not-in",[nrc]));
-
+    //Cuestionarios generales-----------------------------------------------
+    const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", subtema));
     const querySnapshot = await getDocs(q);
-    if ((querySnapshot.size > 0) && tema!== null){
+    if ((querySnapshot.size > 0) && tema !== null) {
       console.log(querySnapshot.docs.map((doc) => doc.data()))
       setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
+    } else {
+      setCuestionarios(null);
     }
-//Cuestionarios Asignados
-
-const qA = query(collection(db, "Cuestionarios"),where("nrcClase","array-contains",nrc));
-
-
+    //Cuestionarios Asignados----------------------------------------------
+    //const qA = query(collection(db, "Cuestionarios"), where("nrcClase", "array-contains", nrc));
+    const qA = query(collection(db, "Cuestionarios"), where("Subtema", "==", subtema), where("nrcClase", "array-contains", nrc));
     const querySnapshotA = await getDocs(qA);
-    if ((querySnapshotA.size > 0) && tema!== null){
+    if ((querySnapshotA.size > 0) && tema !== null) {
       console.log(querySnapshotA.docs.map((doc) => doc.data()))
       setCuestionariosA(querySnapshotA.docs.map((doc) => doc.data()))
+    } else {
+      setCuestionariosA(null);
     }
-
-
     console.log(temaCompuesto)
   }
 
-    useEffect(() => {
-      const sr = scrollreveal({
-        origin: "bottom",
-        distance: "80px",
-        duration: 2000,
-        reset: false,
-      });
-      sr.reveal(
-        `
+  useEffect(() => {
+    const sr = scrollreveal({
+      origin: "bottom",
+      distance: "80px",
+      duration: 2000,
+      reset: false,
+    });
+    sr.reveal(
+      `
           nav,
           .row__one,
           .row__two
       `,
-        {
-          opacity: 0,
-          interval: 100,
-        }
-      );
-    }, []);
-    return (
-      <Container>
+      {
+        opacity: 0,
+        interval: 100,
+      }
+    );
+  }, []);
+  return (
+    <Section>
       <Row>
-        <Col>
-          <Section>
-            <h3>Temas</h3>
-            {temas?.map((tema) => (
-              <div>
-                <Accordion>
-                  <Card>
-                    <Card.Header>
-                      <CustomToggle eventKey="0">{tema.Tema}</CustomToggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey="0">
-                      <ListGroup variant="flush">
-                        {subtemas?.map((subtema) => (
-                          <ListGroup.Item action onClick={() => getCuestionarios(tema.Tema,subtema.Subtema)}>{subtema.Subtema}</ListGroup.Item>
-                        ))}
-                       
-                      </ListGroup>
-                    </Accordion.Collapse>
+        <Col xs={4}>
 
-                  </Card>
-                </Accordion>
-              </div>
+          <h3>Temas</h3>
+
+          <Accordion defaultActiveKey="0">
+            {temas?.map((tema, index) => (
+              <Card>
+                <Card.Header>
+                  <ContextAwareToggle eventKey={index} tema={tema.Tema}><b>{index + 1}.{tema.Tema}</b></ContextAwareToggle>
+                  <Badge bg="primary" pill>
+                  {tema.TotalSubtemas}
+                  </Badge>
+                </Card.Header>
+                <Accordion.Collapse eventKey={index}>
+                  <Card.Body>
+                    <ListGroup variant="flush" as="ol" numbered>
+                      {subtemas?.map((subtema) => (
+                        <ListGroup.Item as="li"
+                          action onClick={() => getCuestionarios(tema.Tema, subtema.Subtema)}>
+                          {subtema.Subtema}
+                        </ListGroup.Item>
+                      ))}
+
+                    </ListGroup>
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
             ))}
-            
-          </Section>
+          </Accordion>
         </Col>
-       
-        <Col xs={3}>
-         <h3>Cuestionarios</h3>
-          <ListGroup defaultActiveKey="#link1">
-           {cuestionarios?.map((cuestionario)=>( 
-           
-           <>
-            <ListGroup.Item>
-              {cuestionario.Titulo}
-            </ListGroup.Item>
 
-            <CuestionarioModalContestar quiz={cuestionario}/>
-            </>
+        <Col xs={4}>
+          <h3>Cuestionarios</h3>
+          {cuestionarios == null && <p>Sin cuestionarios</p>}
+          <ListGroup defaultActiveKey="#link1">
+            {cuestionarios?.map((cuestionario) => (
+
+              <>
+                <ListGroup.Item>
+                  {cuestionario.Titulo}
+                </ListGroup.Item>
+
+                <CuestionarioModalContestar quiz={cuestionario} />
+              </>
             ))
-      
-          
-        }
+
+
+            }
           </ListGroup>
-        
+
         </Col>
-        
-        <Col xs={3}>
-        <h3>Cuestionarios asignados</h3>
-          <ListGroup defaultActiveKey="#link1">
-           {cuestionariosA?.map((cuestionarioA)=>( 
-           
-           <>
-            <ListGroup.Item>
-              {cuestionarioA.Titulo}
-            </ListGroup.Item>
-            <CuestionarioModalContestarAsignado quiz={cuestionarioA} user={user.user}/>
 
-            </>
+        <Col xs={4}>
+          <h3>Cuestionarios asignados</h3>
+          {cuestionariosA == null && <p>Sin cuestionarios asignados.</p>}
+          <ListGroup defaultActiveKey="#link1">
+            {cuestionariosA?.map((cuestionarioA) => (
+
+              <>
+                <ListGroup.Item>
+                  {cuestionarioA.Titulo}
+                </ListGroup.Item>
+                <CuestionarioModalContestarAsignado quiz={cuestionarioA} user={user.user} />
+
+              </>
             ))
-      
-          
-        }
+
+
+            }
           </ListGroup>
-        
+
         </Col>
       </Row>
-    </Container>
-    );
-  }
+    </Section>
+  );
+}
 const Section = styled.section`
   margin-left: 18vw;
   padding: 2rem;

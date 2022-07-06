@@ -8,6 +8,7 @@ import styled from "styled-components";
 import AdministrarCuestionarios from "./AdministrarCuestionarios"
 import AdministrarTemas from "./AdministrarTemas"
 import ListaUsuarios from "./ListarUsuarios"
+import ListaAlumnos from "./ListaAlumnos"
 //iconos
 import * as FaIcons from 'react-icons/fa';
 import { MdQuiz } from "react-icons/md";
@@ -64,6 +65,10 @@ const HomeAdmin = ({user1}) => {
             <Route path="/usuario/admin/lista-usuarios"
               render={(props) =>
                 userRol ? <ListaUsuarios user1={user}/> : <Redirect to={window.location} />
+            }/>
+            <Route path="/usuario/admin/ListaAlumnos"
+              render={(props) =>
+                userRol ? <ListaAlumnos user1={user}/> : <Redirect to={window.location} />
             }/>
             
             {/*<AdminProtectedRoutes path="/usuario/admin/administrar-cuestionarios" component={AdministrarCuestionarios} user={user}/>

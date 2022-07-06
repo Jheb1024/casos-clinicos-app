@@ -51,7 +51,7 @@ export default function AdministrarTemas() {
     return (
       <button
         type="button"
-        style={{ backgroundColor: 'pink' }}
+        style={{ backgroundColor: '#2dc889', border:'none', fontSize:'20px', color:'black', paddingRight:'10px', marginRight:'10px'}}
         onClick={decoratedOnClick}
       >
         {children}
@@ -89,7 +89,7 @@ export default function AdministrarTemas() {
     
   }
 
-  function borrarSubtema(subtema, id){
+  function borrarSubtema(subtema, id, tema){
     new Swal({
       title: "Está seguro?",
       text: "Al eliminar un subtema se borrarán todos los cuestionarios pertenecientes al tema!",
@@ -99,7 +99,7 @@ export default function AdministrarTemas() {
     })
     .then((willDelete) => {
       if (willDelete) {
-        borrarSubtemaAdmin(subtema, id).then(()=>Swal("El subtema y cuesitonarios que eran parte de él han sido borrados!", {
+        borrarSubtemaAdmin(subtema, id, tema).then(()=>Swal("El subtema y cuesitonarios que eran parte de él han sido borrados!", {
           icon: "success",
         }))
         
@@ -109,7 +109,7 @@ export default function AdministrarTemas() {
     });
     
   }
-
+var count = 0;
 
 
 
@@ -143,24 +143,25 @@ export default function AdministrarTemas() {
           <Section>
             <p>aqui el admi podra tener todas las opciones para administrar los temas</p>
             Crear Temas
-            {temas?.map((tema) => (
-              <div>
+            {temas?.map((tema, index) => (
+              
+              <div>{count = index}
 
                 <Accordion>
                   <Card>
                     <Card.Header style={{textAlign:'left'}}>
                       
-                      <CustomToggle eventKey="0" >{tema.Tema}</CustomToggle>
+                      <CustomToggle eventKey={0} >{tema.Tema}</CustomToggle>
                       <button style={{float:'right'}} onClick={()=>borrarTema(tema.Tema ,tema.idTema)}>Borrar</button>
                       <EditarTemaModal tema={tema.Tema } idTema={tema.idTema} />
                     </Card.Header>
-                    <Accordion.Collapse eventKey="0">
+                    <Accordion.Collapse eventKey={0}>
                       <ListGroup variant="flush">
-                        {subtemas?.map((subtema) => (
+                        {subtemas?.map((subtema, index) => (
                           <div>
                           <ListGroup.Item action onClick={() => getCuestionarios(subtema.Subtema)}>{subtema.Subtema} </ListGroup.Item>
                             <div className="btns-actions">
-                              <button style={{float:'right'}} onClick={()=>borrarSubtema(subtema.Subtema, subtema.idSubtema)}>Borrar</button></div>
+                              <button style={{float:'right'}} onClick={()=>borrarSubtema(subtema.Subtema, subtema.idSubtema, subtema.Tema)}>Borrar</button></div>
                               <EditarSubtemaModal subtema={subtema.Subtema} idSubtema={subtema.idSubtema}/>
                             </div>
                             

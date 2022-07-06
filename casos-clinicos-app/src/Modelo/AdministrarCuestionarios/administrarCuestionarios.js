@@ -1,31 +1,32 @@
-import firebaseApp,{ storage} from "../../Firebase/firebase-config";
-import react,{useState} from "react";
+import firebaseApp, { storage } from "../../Firebase/firebase-config";
+import react, { useState } from "react";
 import {
   addDoc, collection, getFirestore, doc, getDoc, updateDoc,
-  deleteDoc, getDocs, runTransaction, query, where, arrayUnion, onSnapshot, setDoc, orderBy
+  deleteDoc, getDocs, runTransaction, query, where, arrayUnion, onSnapshot, setDoc, orderBy, increment
 } from "firebase/firestore";
-  import Swal from "sweetalert2";
-  import { ref, uploadBytes } from "firebase/storage";
+import Swal from "sweetalert2";
+import { ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 
 const db = getFirestore(firebaseApp);
 
 //Para registrar tema
 export async function registrarTema(tema) {
- const temaRegistrado = await addDoc(collection(db, "Temas"), {
+  const temaRegistrado = await addDoc(collection(db, "Temas"), {
     Tema: tema,
+    TotalSubtemas: 0,
   }).then((tema) => {
     const temaDoc = doc(db, "Temas", tema.id);
-   updateDoc(temaDoc,{
-      idTema : tema.id
-    }).then(()=>{
+    updateDoc(temaDoc, {
+      idTema: tema.id
+    }).then(() => {
       console.log("idTema actualizado");
     })
     console.log("Tema registrado");
   });
 
-    
-  
+
+
 }
 //Para editar tema
 //Al editar un tema, los cambios repercuten en el subtema
@@ -105,7 +106,7 @@ async function actualizarTemaCuestionario(id, nuevoTema) {
       } else {
         transaction.update(sfDocRef, { Tema: nuevoTema });
         console.log("Cuestionarios actualizados con el tema");
-        
+
       }
     });
   } catch (e) {
@@ -114,47 +115,47 @@ async function actualizarTemaCuestionario(id, nuevoTema) {
 }
 
 //Para borrar Tema ... existen advertencias al eliminar un tema
-export async function borrarTemaAdmin(tema, id){
+export async function borrarTemaAdmin(tema, id) {
   let subtemaBorrado;
   //Borramos el tema
-  const temaBorrado = await deleteDoc(doc(db, "Temas", id)).then(()=>{
+  const temaBorrado = await deleteDoc(doc(db, "Temas", id)).then(() => {
     console.log("El tema ha sido eliminado");
   })
-  
+
   //Borramos los subtemas del tema
-  if(temaBorrado !== null){
-    const q = query(collection(db, "Subtemas"),where("Tema", "==", tema));
+  if (temaBorrado !== null) {
+    const q = query(collection(db, "Subtemas"), where("Tema", "==", tema));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       //console.log(doc.id, " => ", doc.data());
-     borrarTemaSubtema(doc.id);
+      borrarTemaSubtema(doc.id);
     });
     subtemaBorrado = true;
   }
 
   //Borramos los cuestionarios del tema
-  if(subtemaBorrado === true){
-    const q = query(collection(db, "Cuestionarios"),where("Tema", "==", tema));
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    //console.log(doc.id, " => ", doc.data());
-    eliminarCuestionarioTema(doc.id);
-  });
+  if (subtemaBorrado === true) {
+    const q = query(collection(db, "Cuestionarios"), where("Tema", "==", tema));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      //console.log(doc.id, " => ", doc.data());
+      eliminarCuestionarioTema(doc.id);
+    });
   }
 }
 //Borramos cada subtema que contenga el tema
-async function borrarTemaSubtema(id){
- await deleteDoc(doc(db, "Subtemas", id)).then(()=>{
+async function borrarTemaSubtema(id) {
+  await deleteDoc(doc(db, "Subtemas", id)).then(() => {
     console.log("El subtema ha sido eliminado que era parte del tema");
   })
 }
 
 //Elimino todos los cuestionarios que tiene el mismo tema
-async function eliminarCuestionarioTema(id){
-  await deleteDoc(doc(db, "Cuestionarios", id)).then(()=>{
+async function eliminarCuestionarioTema(id) {
+  await deleteDoc(doc(db, "Cuestionarios", id)).then(() => {
     console.log("El cuesitonario que contiene el tema han sido eliminados");
   })
-  
+
 }
 
 
@@ -165,18 +166,32 @@ async function eliminarCuestionarioTema(id){
 // * @param {*} subtema 
 // */
 export async function registrarSubtema(tema, subtema) {
- const subtemaRegistrado =  await addDoc(collection(db, "Subtemas"), {
+  const subtemaRegistrado = await addDoc(collection(db, "Subtemas"), {
     Tema: tema,
     Subtema: subtema,
   }).then((subtema) => {
-   const subtemaDoc= doc(db, "Subtemas", subtema.id);
-     updateDoc(subtemaDoc,{
-      idSubtema : subtema.id
-    }).then(()=>{
+    const subtemaDoc = doc(db, "Subtemas", subtema.id);
+    updateDoc(subtemaDoc, {
+      idSubtema: subtema.id
+    }).then(() => {
       console.log("idSubtema actualizado");
     })
     console.log("Subtema registrado");
   });
+
+  const ref = collection(db, "Temas");
+  const q = query(ref, where("Tema", "==", tema));
+  const querySnapshot = await getDocs(q);
+  let idT="";
+  querySnapshot.forEach((doc) => {
+    console.log("idTema::", doc.id);
+    idT = doc.id;
+  });
+  const temaDoc = doc(db,"Temas",idT);
+     updateDoc(temaDoc, {
+      TotalSubtemas: increment(1),
+    });
+
 }
 
 //Para editar un subtema
@@ -188,7 +203,7 @@ export async function editarSubtema(subtema, subtemaNuevo, idSubtema) {
   await updateDoc(cuestionarioRef, {
     Subtema: subtemaNuevo,
   })
-    .then(async() => {
+    .then(async () => {
       console.log("El subtema ha sido actualizado");
       const q = query(
         collection(db, "Cuestionarios"),
@@ -206,7 +221,7 @@ export async function editarSubtema(subtema, subtemaNuevo, idSubtema) {
     });
 }
 //para actualizar cada subtema en cada cuestionario
-async function actualizarSubtemaCuestionario(id, nuevoSubtema){
+async function actualizarSubtemaCuestionario(id, nuevoSubtema) {
   const sfDocRef = doc(db, "Cuestionarios", id);
 
   try {
@@ -225,22 +240,34 @@ async function actualizarSubtemaCuestionario(id, nuevoSubtema){
 }
 
 //Para borrar un subtema, advertencias si se borra
-export async function borrarSubtemaAdmin(subtema, id){
-  const temaBorrado = await deleteDoc(doc(db, "Subtemas", id)).then(()=>{
+export async function borrarSubtemaAdmin(subtema, id,tema) {
+  const temaBorrado = await deleteDoc(doc(db, "Subtemas", id)).then(() => {
     console.log("El subtema ha sido eliminado");
   })
-  if(temaBorrado !== null){
-    const q = query(collection(db, "Cuestionarios"),where("Subtema", "==", subtema));
+  if (temaBorrado !== null) {
+    const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", subtema));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       console.log(doc.id, " => ", doc.data());
       borrarCuestionarioSubtema(doc.id)
     });
   }
+  const ref = collection(db, "Temas");
+  const q = query(ref, where("Tema", "==", tema));
+  const querySnapshot = await getDocs(q);
+  let idT="";
+  querySnapshot.forEach((doc) => {
+    console.log("idTema::", doc.id);
+    idT = doc.id;
+  });
+  const temaDoc = doc(db,"Temas",idT);
+     updateDoc(temaDoc, {
+      TotalSubtemas: increment(-1),
+    });
 }
 //para borrar Cuestionario del subtema
-async function borrarCuestionarioSubtema(id){
-  await deleteDoc(doc(db, "Cuestionarios",id)).then(()=>{
+async function borrarCuestionarioSubtema(id) {
+  await deleteDoc(doc(db, "Cuestionarios", id)).then(() => {
     console.log("El cuestionario ha sido eliminado pertenenciente al tema");
   })
 }
@@ -279,26 +306,26 @@ const docenteConverter = {
 };
 
 //Para registrar un nuevo cuestionario. Datos: preguntas, respuestas, tema, subtmea, usuario
-export function registrarNuevoCuestionario(cuestionario, data, user,imageUpload) {
+export function registrarNuevoCuestionario(cuestionario, data, user, imageUpload) {
   //Para obtener información del docente que crea el custionario
   var imageRef;
-  if(imageUpload !== null){
-    imageRef= ref(storage, `images/${imageUpload.name + v4()}`);
-  uploadBytes(imageRef, imageUpload).then(() => {
-    //alert("uploaded");
-  });
-  registrarCuestionarioConImagen(cuestionario, data,user,imageRef)
+  if (imageUpload !== null) {
+    imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+    uploadBytes(imageRef, imageUpload).then(() => {
+      //alert("uploaded");
+    });
+    registrarCuestionarioConImagen(cuestionario, data, user, imageRef)
 
-  }else{
+  } else {
     registrarCuestionarioSinImagen(cuestionario, data, user)
   }
-  
-  
+
+
 }
 
-async function  registrarCuestionarioSinImagen(cuestionario, data, user){
+async function registrarCuestionarioSinImagen(cuestionario, data, user) {
 
- 
+
   const refDocente = doc(db, "Docente", user.uid).withConverter(
     docenteConverter
   );
@@ -317,7 +344,7 @@ async function  registrarCuestionarioSinImagen(cuestionario, data, user){
       Tema: data.Tema,
       Subtema: data.Subtema,
       Titulo: cuestionario.Titulo,
-      Enunciado : cuestionario.Enunciado,
+      Enunciado: cuestionario.Enunciado,
       pregunta_1: cuestionario.pregunta_1,
       respuesta_1: cuestionario.respuesta_1,
       respuesta_2: cuestionario.respuesta_2,
@@ -381,11 +408,11 @@ async function  registrarCuestionarioSinImagen(cuestionario, data, user){
     }).then((cuestionario) => {
       console.log("Cuestionario registrado");
       registrado = cuestionario;
-      
+
     });
 
-    
-//necesitamos hacer una nueva consulta  a la base de datos para poder obtener su id una doble consulta
+
+    //necesitamos hacer una nueva consulta  a la base de datos para poder obtener su id una doble consulta
     if (registrado) {
       console.log(registrado)
       const cuestionarioRef = doc(db, "Cuestionarios", registrado.id);
@@ -400,7 +427,7 @@ async function  registrarCuestionarioSinImagen(cuestionario, data, user){
   }
   console.log('Ahora vamos a actualizar el cuestionario con su id')
 }
-async function registrarCuestionarioConImagen(cuestionario, data, user,imageRef){
+async function registrarCuestionarioConImagen(cuestionario, data, user, imageRef) {
   const refDocente = doc(db, "Docente", user.uid).withConverter(
     docenteConverter
   );
@@ -498,23 +525,23 @@ async function registrarCuestionarioConImagen(cuestionario, data, user,imageRef)
   }
 }
 //Editar un cuestionario
-export function actualizarCuestionario(cuestionario, data,imageUpload) {
-  
-  var imageRef;
-  if(imageUpload !== null){
-    imageRef= ref(storage, `images/${imageUpload.name + v4()}`);
-  uploadBytes(imageRef, imageUpload).then(() => {
-    //alert("uploaded");
-  });
-  actualizarCuestionarioConImagen(cuestionario, data,imageRef)
+export function actualizarCuestionario(cuestionario, data, imageUpload) {
 
-  }else{
+  var imageRef;
+  if (imageUpload !== null) {
+    imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+    uploadBytes(imageRef, imageUpload).then(() => {
+      //alert("uploaded");
+    });
+    actualizarCuestionarioConImagen(cuestionario, data, imageRef)
+
+  } else {
     actualizarCuestionarioSinImagen(cuestionario, data)
   }
-  
+
 }
 
-async function actualizarCuestionarioSinImagen(cuestionario, data){
+async function actualizarCuestionarioSinImagen(cuestionario, data) {
   if (cuestionario !== null) {
     const cuestionarioRef = doc(db, "Cuestionarios", data.idCuestionario);
     await updateDoc(cuestionarioRef, {
@@ -585,7 +612,7 @@ async function actualizarCuestionarioSinImagen(cuestionario, data){
     });
   }
 }
-async function actualizarCuestionarioConImagen(cuestionario, data,imageRef){
+async function actualizarCuestionarioConImagen(cuestionario, data, imageRef) {
   if (cuestionario !== null) {
     const cuestionarioRef = doc(db, "Cuestionarios", data.idCuestionario);
     await updateDoc(cuestionarioRef, {
@@ -713,9 +740,9 @@ export async function asignarCuestionario(id, nrc) {
         title: 'Cuestionario Asignado',
         showConfirmButton: false,
         timer: 3000
-    });
-    
-    document.getElementById('nrc').value="";
+      });
+
+      document.getElementById('nrc').value = "";
     } else {
       console.log("agregar el arreglo al cuestionario");
       await updateDoc(cuestionarioRef, {
@@ -727,9 +754,9 @@ export async function asignarCuestionario(id, nrc) {
         title: 'Cuestionario Asignado',
         showConfirmButton: false,
         timer: 3000
-    });
-    
-    document.getElementById('nrc').value="";
+      });
+
+      document.getElementById('nrc').value = "";
     }
 
 
@@ -740,14 +767,14 @@ export async function asignarCuestionario(id, nrc) {
       title: 'Falta ingresar el NRC o no tiene la longitud requerida (5 caracteres).',
       showConfirmButton: false,
       timer: 3000
-  });
+    });
 
   }
 }
 
 //Verificar Resultados resultado cuestionario
 export async function registrarResultadoCuestionario(values, quiz) {
- var calificacion=0;
+  var calificacion = 0;
   console.log("Entro a la funcion de guardar los resultados valor entrada", values.respuesta1);
   console.log("respuesta incorrecta quiz", quiz.respuestaCorrectaP1);
   if (values.respuesta1 == quiz.respuestaCorrectaP1) {
@@ -759,7 +786,7 @@ export async function registrarResultadoCuestionario(values, quiz) {
     console.log("Respuesta correcta2", values.respuesta2);
     calificacion++;
   }
-  
+
 
   if (values.respuesta3 == quiz.respuestaCorrectaP3) {
     console.log("Respuesta correcta2", values.respuesta3);
@@ -789,7 +816,7 @@ export async function registrarResultadoCuestionario(values, quiz) {
   if (values.respuesta8 == quiz.respuestaCorrectaP8) {
     console.log("Respuesta correcta2", values.respuesta8);
     calificacion++;
-  } 
+  }
 
 
   if (values.respuesta9 == quiz.respuestaCorrectaP9) {
@@ -802,22 +829,22 @@ export async function registrarResultadoCuestionario(values, quiz) {
     calificacion++;
   }
 
- return calificacion;
+  return calificacion;
 }
 
 //Registrar resultado cuestionario
 export async function registrarResultadoCuestionarioAsignado(values, quiz, user) {
   var cal = 0;
   var intento = 1;
-  var contIgualAlum=0;
-  var calSub=0;
+  var contIgualAlum = 0;
+  var calSub = 0;
 
   console.log("Entro a la funcion de guardar los resultados valor entrada", values.respuesta1);
   console.log("respuesta incorrecta quiz", quiz.respuestaCorrectaP1);
   if (values.respuesta1 === quiz.respuestaCorrectaP1) {
     console.log("Respuesta correcta", values.respuesta1);
     cal++;
-  } 
+  }
 
   if (values.respuesta2 === quiz.respuestaCorrectaP2) {
     console.log("Respuesta correcta2", values.respuesta2);
@@ -874,7 +901,7 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
   querySnapshot.forEach((doc) => {
     console.log(doc.id, ' => ', doc.data());
   });
-  
+
   if (querySnapshot.size > 0) {
     let idRes;
     console.log("Hay al menos un registro con esa informacion");
@@ -895,23 +922,23 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
       });
       //Obtener el total de cuestionarios con al menos un intento
       const cuestionarioRef = collection(db, "Resultado");
-  const museums2 = query(cuestionarioRef, where("intento", "<=", 3));
-  const querySnapshot2 = await getDocs(museums2);
-  
-  querySnapshot2.forEach((doc) => {
-    console.log(doc.id, ' => ', doc.data());
-    console.log(user.uid);
-    console.log(doc.data().idAlumno);
-    if(doc.data().idAlumno==user.uid){
-      contIgualAlum++;
-      calSub=calSub+doc.data().calificacion;
-    }
-  });
-  var prom=calSub/contIgualAlum;
-      console.log("Datos encontradoos",contIgualAlum);
-      console.log("Promdio::",prom);
-//Acceder al doc del alumno que esta contestando para actualizar su avance 
-      const alumnoRef=doc(db,"Alumno",user.uid);
+      const museums2 = query(cuestionarioRef, where("intento", "<=", 3));
+      const querySnapshot2 = await getDocs(museums2);
+
+      querySnapshot2.forEach((doc) => {
+        console.log(doc.id, ' => ', doc.data());
+        console.log(user.uid);
+        console.log(doc.data().idAlumno);
+        if (doc.data().idAlumno == user.uid) {
+          contIgualAlum++;
+          calSub = calSub + doc.data().calificacion;
+        }
+      });
+      var prom = calSub / contIgualAlum;
+      console.log("Datos encontradoos", contIgualAlum);
+      console.log("Promdio::", prom);
+      //Acceder al doc del alumno que esta contestando para actualizar su avance 
+      const alumnoRef = doc(db, "Alumno", user.uid);
       await updateDoc(alumnoRef, {
         "Avance.CuestionariosCompletos": contIgualAlum,
         "Avance.PromedioGeneral": prom,
@@ -928,6 +955,8 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
       idAlumno: user.uid,
       idCuestionario: quiz.idCuestionario,
       intento: intento,
+      temaCuestionario: quiz.Tema,
+      subTemaCuestionario: quiz.Subtema
     });
     console.log("Document written with ID: ", docRef.id);
     const resultadoRef = doc(db, "Resultado", docRef.id);
@@ -936,7 +965,7 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
       idResultado: docRef.id
     });
     //Checar porque aqui tambien se tiene que actualizar la tabla de Alumno para el promedio y cuestionarios resueltos
-    
+
   }
 
   return cal;

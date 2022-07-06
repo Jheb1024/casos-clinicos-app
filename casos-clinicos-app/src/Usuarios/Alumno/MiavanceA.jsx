@@ -6,7 +6,7 @@ import { FcList } from "react-icons/fc";
 import { FcRatings } from "react-icons/fc";
 import { FcTimeline } from "react-icons/fc";
 import { FcButtingIn } from "react-icons/fc";
-
+import ProgressBar from 'react-bootstrap/ProgressBar'
 import { collection, getDocs, getFirestore, onSnapshot, query, doc } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
 
@@ -14,6 +14,7 @@ export default function MiavanceA({ user }) {
   const [alumno, setAlumno] = useState(null);
   const [temasNum, settemasNum] = useState(0);
   const [cuesNum, setCuesNum] = useState(0);
+  const [barra,setBarra]=useState(0);
 
   const db = getFirestore(firebaseApp);
 
@@ -134,6 +135,7 @@ export default function MiavanceA({ user }) {
                   </div>
                   <div className="media-body text-right">
                     <h3>Cuestionarios completos</h3>
+                    <ProgressBar animated now={((alumno.Avance.CuestionariosCompletos)*100)/cuesNum} />
                     <span>{alumno.Avance.CuestionariosCompletos} / {cuesNum}</span>
                   </div>
                 </div>

@@ -107,13 +107,14 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                 Contestar
             </Button>
 
-            <Modal show={show} onHide={handleClose} style={{ width: '100%' }}>
+            <Modal show={show} onHide={handleClose} style={{ width: '100%' }} size="lg" scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title>{quiz.Titulo}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Número de intento: {intento}</p>
-                    <p>Calificación:{calificacion}</p>
+                    <p><strong>Número de intento:<mark>{intento}</mark></strong></p>
+                    {calificacion>5 && <p><strong>Calificación: <mark style={{color:'green'}}>{calificacion}</mark></strong></p>}
+                    {calificacion<6 && <p><strong>Calificación: <mark style={{color:'red'}}>{calificacion}</mark></strong></p>}
                     <Formik
                         initialValues={{
                             respuesta1: '',
@@ -168,12 +169,11 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                     >
                         {({ isSubmitting }) => (
                             <Form style={{ width: '100%' }}>
-                                
-
-                                <div className='enunciado' >
-                                    <textarea rows='4' cols='40' value={quiz.Enunciado} readOnly></textarea>
+                                 <div className='enunciado' >
+                                    <textarea rows='6' cols='80' value={quiz.Enunciado} readOnly></textarea>
                                 </div>
-                                <img id='myimg' alt=''></img>
+                                <img id='myimg' alt='' style={{ width: '75%',height: '75%',align:'center'}}></img>
+                               
                                 {/*Pregunta 1*/}
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>

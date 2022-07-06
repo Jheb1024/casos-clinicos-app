@@ -18,26 +18,26 @@ import { Link } from 'react-router-dom';
 export default function ListaUsuarios() {
   const db = getFirestore(firebaseApp);
   const admiAl = new AdministradorAlumno();
-  const [docentes, setDocentes] = useState([]);
+  const [alumnos, setAlumnos] = useState([]);
+
   useEffect(() => {
-    const collecionRefD = collection(db, "Docente");
-    const queryDocente = query(collecionRefD);
-    onSnapshot(queryDocente, (querySnapshot) => {
+    const collecionRefA = collection(db, "Alumno");
+    const queryAlumno = query(collecionRefA);
+    onSnapshot(queryAlumno, (querySnapshot) => {
       if (querySnapshot.size > 0) {
-        setDocentes(querySnapshot.docs.map((doc) => doc.data()));
+        setAlumnos(querySnapshot.docs.map((doc) => doc.data()));
       }
     });
-    console.log("Current docentes: ", docentes);
-
+    console.log("Current alumnos: ", alumnos);
   }, []);
 
 
   function actualizarEstadoUsuarios() {
-    const collecionRefD = collection(db, "Docente");
-    const queryDocente = query(collecionRefD);
-    onSnapshot(queryDocente, (querySnapshot) => {
+    const collecionRefD = collection(db, "Alumno");
+    const queryAlumno = query(collecionRefD);
+    onSnapshot(queryAlumno, (querySnapshot) => {
       if (querySnapshot.size > 0) {
-        setDocentes(querySnapshot.docs.map((doc) => doc.data()));
+        setAlumnos(querySnapshot.docs.map((doc) => doc.data()));
       }
     });
   }
@@ -73,8 +73,8 @@ export default function ListaUsuarios() {
   async function busquedaFormHandler(e) {
     e.preventDefault();
     const busqueda = e.target.busqueda.value;
-    const nvosDocus = await admiAl.filtrarDatosU(busqueda);
-    setDocentes(nvosDocus);
+    const nvosDocus = await admiAl.filtrarDatosAlumno(busqueda);
+    setAlumnos(nvosDocus);
   }
   useEffect(() => {
     const sr = scrollreveal({
@@ -97,74 +97,74 @@ export default function ListaUsuarios() {
   }, []);
   return (
     <Section>
-    <div class="row g-0">
-      <div class="col-sm-6 col-md-8">
-        <div class="btn-group" role="group" aria-label="Basic example">
-        <Link to="/usuario/admin/lista-usuarios" className="btn btn-info" active>Lista de docentes</Link>
-        <Link to="/usuario/admin/ListaAlumnos" className="btn btn-outline-info">Lista de alumnos</Link>
+      <div class="row g-0">
+        <div class="col-sm-6 col-md-8">
+          <div class="btn-group" role="group" aria-label="Basic example">
+          <Link to="/usuario/admin/lista-usuarios" className="btn btn-outline-info">Lista de docentes</Link>
+          <Link to="/usuario/admin/ListaAlumnos" className="btn btn-info" >Lista de alumnos</Link>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <RegistroAlumnoModal />
+          <RegistroDocenteModal />
         </div>
       </div>
-      <div class="col-6 col-md-4">
-        <RegistroAlumnoModal />
-        <RegistroDocenteModal />
+      <br></br>
+      <h1>Lista de alumnos</h1>
+      <div class="container-fluid">
+        <form className="d-flex" onSubmit={busquedaFormHandler}>
+          <input className="form-control me-2" type="search" id="busqueda" placeholder="Buscar por nombre, apellido paterno o matrícula." />
+          <button className="btn btn-outline-success" type="submit"><GoSearch /></button>
+        </form>
+        <button className="btn btn-secondary"
+          onClick={() => {
+            const input = document.getElementById("busqueda");
+            input.value = "";
+            actualizarEstadoUsuarios();
+          }}>Resetear </button>
       </div>
-    </div>
-    <br></br>
-    <h1>Lista de docentes</h1>
-    <div class="container-fluid">
-      <form className="d-flex" onSubmit={busquedaFormHandler}>
-        <input className="form-control me-2" type="search" id="busqueda" placeholder="Buscar por nombre o apellido paterno " />
-        <button className="btn btn-outline-success" type="submit"><GoSearch /></button>
-      </form>
-      <button className="btn btn-secondary"
-        onClick={() => {
-          const input = document.getElementById("busqueda");
-          input.value = "";
-         actualizarEstadoUsuarios();
-        }}>Resetear </button>
-    </div>
-    <br></br>
+      <br></br>
 
-    <div className="table-responsive border bg-light px-4">
-      <table className=" WIDTH=50% table table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">ApellidoPaterno</th>
-            <th scope="col">ApellidoMaterno</th>
-            <th scope="col">Rol</th>
-            <th scope="col">FechaRegistro</th>
-            <th scope="col">Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          {docentes && docentes.map((docente, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{docente.Nombre}</td>
-              <td>{docente.ApellidoPaterno}</td>
-              <td>{docente.ApellidoMaterno}</td>
-              <td>{docente.rol}</td>
-              <td>{moment(docente.FechaRegistro).format('MMMM Do YYYY, h:mm:ss a')}</td>
-              <td>
-                <div className="btn-group btn-group-sm" role="group">
-                  <button className="btn btn-danger m-1" onClick={() => {
-                    borrarUsuario(docente.id, docente.rol);
-                    //  actualizarEstadoUsuarios();
-                  }}><RiDeleteBin6Line /></button>
-                  <EditarUsuarioModal usuario={docente} id={docente.id} />
-                </div>
-              </td>
+      <div className="table-responsive border bg-light px-4">
+        <table className=" WIDTH=50% table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">ApellidoPaterno</th>
+              <th scope="col">ApellidoMaterno</th>
+              <th scope="col">Rol</th>
+              <th scope="col">FechaRegistro</th>
+              <th scope="col">Acción</th>
             </tr>
+          </thead>
+          <tbody>
+            {alumnos && alumnos.map((alumno, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{alumno.Nombre}</td>
+                <td>{alumno.ApellidoPaterno}</td>
+                <td>{alumno.ApellidoMaterno}</td>
+                <td>{alumno.rol}</td>
+                <td>{moment(alumno.FechaRegistro).format('MMMM Do YYYY, h:mm:ss a')}</td>
+                <td>
+                  <div className="btn-group btn-group-sm" role="group">
+                    <button className="btn btn-danger m-1" onClick={() => {
+                      borrarUsuario(alumno.id, alumno.rol);
+                      //  actualizarEstadoUsuarios();
+                    }}><RiDeleteBin6Line /></button>
+                    <EditarUsuarioModal usuario={alumno} id={alumno.id} />
+                  </div>
+                </td>
+              </tr>
 
-          ))}
+            ))}
 
-        </tbody>
-      </table>
-    </div>
+          </tbody>
+        </table>
+      </div>
 
-  </Section>
+    </Section>
   );
 }
 const Contenido = styled.div`
