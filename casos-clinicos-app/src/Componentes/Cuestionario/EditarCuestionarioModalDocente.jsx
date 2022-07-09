@@ -52,7 +52,7 @@ function EditarCuestionarioModalDocente({data}) {
             <Button variant="primary" onClick={() => openModal()}>
                 Editar
             </Button>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} size="lg" scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title>Editar Cuestionario</Modal.Title>
                 </Modal.Header>
@@ -204,9 +204,9 @@ function EditarCuestionarioModalDocente({data}) {
                     >
                         {({ isSubmitting }) => (
                             <Form style={{ width: '700px' }}>
-                                <Field className="titulo" type="text" name="Titulo" style={{ width: '300px' }} placeholder="Título" />
+                                <Field className="titulo" type="text" name="Titulo" style={{ width: '500px' }} placeholder="Título" />
                                 <ErrorMessage name="Titulo" component="div" className='errors' />
-                                <Field component='textarea' className="Enunciado" type="text" name="Enunciado" style={{width:'300px'}}  placeholder="Enunciado"/>
+                                <Field component='textarea' rows='5' className="Enunciado" type="text" name="Enunciado" style={{width:'700px'}}  placeholder="Enunciado"/>
                                 <ErrorMessage name="Enunciado" component="div" className='errors'/>
                                 { <img id='myimg' alt=''></img>}
                                 <div className='image' >
@@ -547,6 +547,10 @@ function EditarCuestionarioModalDocente({data}) {
                                         <br />
                                         <Field className="respuesta_field" type="text" name="respuesta_10_3" placeholder="Respuesta 3" />
                                         <ErrorMessage name="respuesta_10_3" component="div" className='errors' />
+                                        <br />
+                                        <Field className="respuesta_field" type="text" name="respuesta_10_4" placeholder="Respuesta 4" />
+                                        <ErrorMessage name="respuesta_10_4" component="div" className='errors' />
+                                        <br/>
                                     </div>
                                     <div className='select-respuesta'>
                                         <label htmlFor="location">Respuesta correcta</label>

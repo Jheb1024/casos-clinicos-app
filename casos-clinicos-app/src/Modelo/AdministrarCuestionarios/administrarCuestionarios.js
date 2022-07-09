@@ -182,15 +182,15 @@ export async function registrarSubtema(tema, subtema) {
   const ref = collection(db, "Temas");
   const q = query(ref, where("Tema", "==", tema));
   const querySnapshot = await getDocs(q);
-  let idT="";
+  let idT = "";
   querySnapshot.forEach((doc) => {
     console.log("idTema::", doc.id);
     idT = doc.id;
   });
-  const temaDoc = doc(db,"Temas",idT);
-     updateDoc(temaDoc, {
-      TotalSubtemas: increment(1),
-    });
+  const temaDoc = doc(db, "Temas", idT);
+  updateDoc(temaDoc, {
+    TotalSubtemas: increment(1),
+  });
 
 }
 
@@ -240,7 +240,7 @@ async function actualizarSubtemaCuestionario(id, nuevoSubtema) {
 }
 
 //Para borrar un subtema, advertencias si se borra
-export async function borrarSubtemaAdmin(subtema, id,tema) {
+export async function borrarSubtemaAdmin(subtema, id, tema) {
   const temaBorrado = await deleteDoc(doc(db, "Subtemas", id)).then(() => {
     console.log("El subtema ha sido eliminado");
   })
@@ -255,15 +255,15 @@ export async function borrarSubtemaAdmin(subtema, id,tema) {
   const ref = collection(db, "Temas");
   const q = query(ref, where("Tema", "==", tema));
   const querySnapshot = await getDocs(q);
-  let idT="";
+  let idT = "";
   querySnapshot.forEach((doc) => {
     console.log("idTema::", doc.id);
     idT = doc.id;
   });
-  const temaDoc = doc(db,"Temas",idT);
-     updateDoc(temaDoc, {
-      TotalSubtemas: increment(-1),
-    });
+  const temaDoc = doc(db, "Temas", idT);
+  updateDoc(temaDoc, {
+    TotalSubtemas: increment(-1),
+  });
 }
 //para borrar Cuestionario del subtema
 async function borrarCuestionarioSubtema(id) {
@@ -942,8 +942,67 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
       await updateDoc(alumnoRef, {
         "Avance.CuestionariosCompletos": contIgualAlum,
         "Avance.PromedioGeneral": prom,
-        "Avance.TemasCompletos": contIgualAlum,
       });
+      //Actualizar temascompletos
+            //Actualizar el avance.TemasCompletos
+      //1.Saber el total de temas existentes
+      const qTemas = query(collection(db, "Temas"));
+      var countTemas = 0;
+      onSnapshot(qTemas, (querySnapshotT) => {
+        querySnapshotT.forEach((doc) => {
+          countTemas = countTemas + 1;
+        });
+        console.log("Total de temas ", countTemas);
+      });
+      //2.Conocer lo cuestionarios que tiene resuelto el usuario por tema PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+      var countS = 0;
+    var countT = 0;
+    let avanceT=0;
+    const querySnapshotTemas = await getDocs(qTemas);
+    querySnapshotTemas.forEach(async (doc) => {
+      console.log(doc.id, " => ", doc.data());
+      let tema = "";
+      tema = doc.data().Tema;
+      console.log("Tema:::::-------", tema);
+      const qSub = query(collection(db, "Subtemas"), where("Tema", "==", tema));
+      const querySnapshotSub = await getDocs(qSub);
+      querySnapshotSub.forEach(async (docSub) => {
+        console.log(docSub.id, " => ", docSub.data());
+        let Subtema = "";
+        Subtema = docSub.data().Subtema;
+        console.log("SubTema:::::--------", Subtema);
+        const refR = collection(db, "Resultado");
+
+        const qRes = query(refR, where("idAlumno", "==", user.uid),
+          where("subTemaCuestionario", "==", Subtema), where("temaCuestionario", "==", tema));
+        const querySnapshotRes = await getDocs(qRes);
+        querySnapshotRes.forEach(async (docRes) => {
+          console.log("Resultado");
+          console.log(docSub.id, " => ", docRes.data());
+        })
+        if (querySnapshotRes.size > 0) {
+          countS = countS + 1;
+          console.log("countS en if::::", countS);
+        }else{
+          //countS=0;
+          console.log(":::en else countS en if::::", countS);
+
+        }
+        if (countS == doc.data().TotalSubtemas) {
+          console.log(":::Entro if de countS==doc.data().TotalSubtemas::");
+          countT = countT + 1;
+          console.log("countT en if:::::",countT);
+         avanceT=(countT*100)/countTemas;
+          console.log("Avance Tema",avanceT);
+          await updateDoc(alumnoRef, {
+            "Avance.TemasCompletos": countT,
+          });
+        }else{
+          console.log("countT en if:::::",countT);
+        }
+      });
+
+    });
 
     }
   } else {
@@ -969,4 +1028,84 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
   }
 
   return cal;
+}
+
+export async function buscarCuestionario(criterioBusqueda, claveBusqueda){
+  console.log(criterioBusqueda,'criterio')
+  let cuestionariosEncontrados;
+  if(criterioBusqueda === '1'){
+    const q = query(collection(db, "Cuestionarios"), where("Titulo", "==", claveBusqueda));
+  const docusFiltrado = [];
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    docusFiltrado.push(doc.data())
+  });
+  if(docusFiltrado.size > 0){
+    cuestionariosEncontrados = docusFiltrado;
+  }
+      
+  }else{
+    cuestionariosEncontrados = null;
+  }
+  return cuestionariosEncontrados;
+  /*
+  switch (criterioBusqueda) {
+    case '1':
+      
+      break;
+    case '2':
+      buscarCuestionarioPorTema(claveBusqueda)
+    break;
+    case '3':
+      buscarCuestionarioPorSubtema(claveBusqueda)
+      break;
+    case '4':
+      buscarCuestionarioPorAutor(claveBusqueda)
+      break;
+    default:
+      break;
+  }*/
+
+}
+
+async function buscarCuestionarioPorTitulo(claveBusqueda) {
+  const q = query(collection(db, "Cuestionarios"), where("Titulo", "==", claveBusqueda));
+  const docusFiltrado = [];
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    docusFiltrado.push(doc.data())
+  });
+  return docusFiltrado;
+}
+async function buscarCuestionarioPorTema(claveBusqueda) {
+  const q = query(collection(db, "Cuestionarios"), where("Tema", "==", claveBusqueda));
+  const docusFiltrado = [];
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    docusFiltrado.push(doc.data())
+  });
+  return docusFiltrado;
+}
+async function buscarCuestionarioPorSubtema(claveBusqueda) {
+  const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", claveBusqueda));
+  const docusFiltrado = [];
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    docusFiltrado.push(doc.data())
+  });
+  return docusFiltrado;
+}
+async function buscarCuestionarioPorAutor(claveBusqueda) {
+  const q = query(collection(db, "Cuestionarios"), where("Autor", "==", claveBusqueda));
+  const docusFiltrado = [];
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    docusFiltrado.push(doc.data())
+  });
+  return docusFiltrado;
 }

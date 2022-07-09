@@ -10,7 +10,8 @@ import {
   where,
   getDocs,
   deleteDoc,
-  updateDoc
+  updateDoc,
+  deleteUser 
 } from "firebase/firestore";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -418,3 +419,7 @@ const alumnoConverter = {
   },
 
 }
+
+
+
+

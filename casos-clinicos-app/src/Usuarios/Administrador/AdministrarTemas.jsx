@@ -1,11 +1,11 @@
 //Aquí el admi podra ver la lista de temas junto con la de subtemas y poderlos editar,
 //eliminar o agregar nuevo tema o subtema
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
 import { collection, getDocs, getFirestore, onSnapshot, query, where } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
-import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row } from 'react-bootstrap'
+import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row, AccordionContext } from 'react-bootstrap'
 import CuestionarioModal from "../../Componentes/Cuestionario/CuestionarioModal";
 import TemaModal from "../../Componentes/Cuestionario/TemaModal";
 import SubtemaModal from "../../Componentes/Cuestionario/SubtemaModal";
@@ -13,7 +13,7 @@ import { borrarSubtemaAdmin, borrarTemaAdmin } from "../../Modelo/AdministrarCue
 import Swal from "sweetalert2";
 import EditarTemaModal from "../../Componentes/Cuestionario/EditarTemaModal";
 import EditarSubtemaModal from "../../Componentes/Cuestionario/EditarSubtemaModal";
-
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 
 export default function AdministrarTemas() {
@@ -37,21 +37,22 @@ export default function AdministrarTemas() {
     const querySnapshot = await getDocs(q);
     if (querySnapshot.size > 0) {
       setSubtemas(querySnapshot.docs.map((doc) => doc.data()))
+    }else{
+      setSubtemas(null);
     }
   }
+  function ContextAwareToggle({ children, eventKey, callback, tema }) {
+    const { activeEventKey } = useContext(AccordionContext);
 
-  function CustomToggle({ children, eventKey }) {
-    const decoratedOnClick = useAccordionButton(eventKey, () =>
-      //console.log(children),
-      getSubtemas(children)
+    const decoratedOnClick = useAccordionButton(
+      eventKey,
+      () => getSubtemas(tema),
     );
-
-    
-
+    const isCurrentEventKey = activeEventKey === eventKey;
     return (
       <button
         type="button"
-        style={{ backgroundColor: '#2dc889', border:'none', fontSize:'20px', color:'black', paddingRight:'10px', marginRight:'10px'}}
+        style={{ backgroundColor: isCurrentEventKey ? 'pink' : 'lavender' }}
         onClick={decoratedOnClick}
       >
         {children}
@@ -66,50 +67,53 @@ export default function AdministrarTemas() {
     if (querySnapshot.size > 0) {
       console.log(querySnapshot.docs.map((doc) => doc.data()))
       setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
+    }else{
+      setCuestionarios(null);
     }
   }
-  function borrarTema(tema, id){
+  function borrarTema(tema, id) {
     new Swal({
       title: "Está seguro?",
       text: "Al eliminar un tema se borrarán todos los subtemas provenientes del tema así como los cuestionarios!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: 'Si',
+      denyButtonText: `No`,
     })
-    .then((willDelete) => {
-      if (willDelete) {
-        borrarTemaAdmin(tema,id).then(()=>Swal("El tema y los subtemas y cuesitonarios que eran parte de él han sido borrados!", {
-          icon: "success",
-        }))
-        
-      } else {
-        Swal("El tema no se borró!");
-      }
-    });
-    
+      .then((respuesta) => {
+        if (respuesta.isConfirmed) {
+          borrarTemaAdmin(tema, id).then(() => Swal("El tema y los subtemas y cuesitonarios que eran parte de él han sido borrados!", {
+            icon: "success",
+          }))
+
+        } else {
+          Swal("El tema no se borró!");
+        }
+      });
+
   }
 
-  function borrarSubtema(subtema, id, tema){
+  function borrarSubtema(subtema, id, tema) {
     new Swal({
       title: "Está seguro?",
       text: "Al eliminar un subtema se borrarán todos los cuestionarios pertenecientes al tema!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: 'Si',
+      denyButtonText: `No`,
     })
-    .then((willDelete) => {
-      if (willDelete) {
-        borrarSubtemaAdmin(subtema, id, tema).then(()=>Swal("El subtema y cuesitonarios que eran parte de él han sido borrados!", {
-          icon: "success",
-        }))
-        
-      } else {
-        Swal("El subtema no se borró!");
-      }
-    });
-    
+      .then((respuesta) => {
+        if (respuesta.isConfirmed) {
+          borrarSubtemaAdmin(subtema, id, tema).then(() => Swal("El subtema y cuesitonarios que eran parte de él han sido borrados!", {
+            icon: "success",
+          }))
+        } else {
+          Swal("El subtema no se borró!");
+        }
+      });
+
   }
-var count = 0;
+
 
 
 
@@ -137,65 +141,59 @@ var count = 0;
     }
   }, []);
   return (
-    <Container>
+    <Section>
       <Row>
-        <Col>
-          <Section>
-            <p>aqui el admi podra tener todas las opciones para administrar los temas</p>
-            Crear Temas
+        <h1>Administrar temas y subtemas</h1>
+        <Col x={8}>
+        <TemaModal />
+          <Accordion>
             {temas?.map((tema, index) => (
-              
-              <div>{count = index}
-
-                <Accordion>
-                  <Card>
-                    <Card.Header style={{textAlign:'left'}}>
-                      
-                      <CustomToggle eventKey={0} >{tema.Tema}</CustomToggle>
-                      <button style={{float:'right'}} onClick={()=>borrarTema(tema.Tema ,tema.idTema)}>Borrar</button>
-                      <EditarTemaModal tema={tema.Tema } idTema={tema.idTema} />
-                    </Card.Header>
-                    <Accordion.Collapse eventKey={0}>
-                      <ListGroup variant="flush">
-                        {subtemas?.map((subtema, index) => (
-                          <div>
+              <Card>
+                <Card.Header style={{ textAlign: 'left' }}>
+                  <ContextAwareToggle className="p-2"eventKey={index} tema={tema.Tema}><b>{index + 1}.{tema.Tema}&nbsp;</b>&nbsp;&nbsp; </ContextAwareToggle>
+                  <button className="btn btn-danger" style={{ float: 'right' }} onClick={() => borrarTema(tema.Tema, tema.idTema)}><RiDeleteBin6Line />Borrar tema</button>
+                  <EditarTemaModal tema={tema.Tema} idTema={tema.idTema} />
+                </Card.Header>
+                <Accordion.Collapse eventKey={index}>
+                  <Card.Body>
+                    {subtemas==null && <p><b>Sin subtemas</b></p>}
+                    <ListGroup variant="flush">
+                      {subtemas?.map((subtema) => (
+                        <div>
                           <ListGroup.Item action onClick={() => getCuestionarios(subtema.Subtema)}>{subtema.Subtema} </ListGroup.Item>
-                            <div className="btns-actions">
-                              <button style={{float:'right'}} onClick={()=>borrarSubtema(subtema.Subtema, subtema.idSubtema, subtema.Tema)}>Borrar</button></div>
-                              <EditarSubtemaModal subtema={subtema.Subtema} idSubtema={subtema.idSubtema}/>
-                            </div>
-                            
-                        ))}
-                        <ListGroup.Item><SubtemaModal tema={tema.Tema}/></ListGroup.Item>
-                      </ListGroup>
-                    </Accordion.Collapse>
-
-                  </Card>
-                </Accordion>
-              </div>
+                          <div className="btns-actions">
+                            <button className="btn btn-danger" style={{ float: 'right' }} onClick={() => borrarSubtema(subtema.Subtema, subtema.idSubtema, subtema.Tema)}><RiDeleteBin6Line /></button></div>
+                          <EditarSubtemaModal  subtema={subtema.Subtema} idSubtema={subtema.idSubtema} />
+                        </div>
+                      ))}
+                      <ListGroup.Item ><SubtemaModal tema={tema.Tema} /></ListGroup.Item>
+                    </ListGroup>
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
             ))}
-           <TemaModal/>
-          </Section>
+          </Accordion>
         </Col>
-        <Col xs={3}>
-        
+        <Col xs={4}>
+          <h3>Cuestionarios</h3>
+{cuestionarios==null && <p >Sin cuestionarios</p>}
           <ListGroup defaultActiveKey="#link1">
-           {cuestionarios?.map((cuestionario)=>( 
-           
-           <>
-            <ListGroup.Item>
-              {cuestionario?.Titulo}
-            </ListGroup.Item>
-              <CuestionarioModal quiz={cuestionario}/>
-            </>
+            {cuestionarios?.map((cuestionario) => (
+
+              <>
+                <ListGroup.Item>
+                  {cuestionario?.Titulo}
+                </ListGroup.Item>
+                <CuestionarioModal quiz={cuestionario} />
+              </>
             ))
-          
-        }
+
+            }
           </ListGroup>
-        
+
         </Col>
       </Row>
-    </Container>
+    </Section>
 
   );
 }

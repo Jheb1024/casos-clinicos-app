@@ -15,6 +15,7 @@ import firebaseApp from "../../../src/Firebase/firebase-config.js";
 import { collection, getFirestore, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 import { Link } from 'react-router-dom';
+import { deleteUser } from "firebase/auth";
 export default function ListaUsuarios() {
   const db = getFirestore(firebaseApp);
   const admiAl = new AdministradorAlumno();
@@ -41,8 +42,9 @@ export default function ListaUsuarios() {
       }
     });
   }
-  function borrarUsuario(id, rol) {
+  function borrarUsuario(id, rol, user) {
     console.log("id dentro de la funcion borrarClase()", id);
+    console.log(user)
     new Swal({
       title: "Está seguro?",
       text: "El usuario se borrara del registro de Alumnos/Docentes.",
@@ -54,13 +56,18 @@ export default function ListaUsuarios() {
       .then((respuesta) => {
         if (respuesta.isConfirmed) {
           if (admiAl.borrarUsuarioAd(id, rol)) {
-            new Swal({
+            deleteUser(user).then(()=>{
+              new Swal({
               position: 'center',
               icon: 'success',
               title: 'Eliminación exitosa.',
               showConfirmButton: false,
               timer: 3000
             });
+            }).catch((error)=>{
+              console.error(error);
+            })
+            
             //  actualizarEstadoUsuarios();
           }
         } else if (respuesta.isDenied) {
@@ -150,7 +157,7 @@ export default function ListaUsuarios() {
               <td>
                 <div className="btn-group btn-group-sm" role="group">
                   <button className="btn btn-danger m-1" onClick={() => {
-                    borrarUsuario(docente.id, docente.rol);
+                    borrarUsuario(docente.id, docente.rol, docente);
                     //  actualizarEstadoUsuarios();
                   }}><RiDeleteBin6Line /></button>
                   <EditarUsuarioModal usuario={docente} id={docente.id} />

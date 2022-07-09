@@ -118,6 +118,7 @@ export default function MiavanceA({ user }) {
                   </div>
                   <div className="media-body text-right">
                     <h3>Temas completos</h3>
+                    <ProgressBar animated now={((alumno.Avance.TemasCompletos)*100)/temasNum} />
                     <span>{alumno.Avance.TemasCompletos} / {temasNum}</span>
                   </div>
                 </div>

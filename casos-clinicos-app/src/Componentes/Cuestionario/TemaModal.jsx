@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {Modal, Button, Form} from 'react-bootstrap'
 import { registrarTema } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
-
+import { MdPlaylistAdd } from "react-icons/md";
 function TemaModal() {
     const [show, setShow] = useState(false);
 
@@ -11,12 +11,14 @@ function TemaModal() {
         e.preventDefault();
         const tema=e.target.elements.tema.value; 
         console.log("tema",tema)
-        registrarTema(tema);
+        registrarTema(tema).then(()=>{
+          setShow(false);
+        });
     }
   return (
     <>
-    <Button variant="primary" onClick={handleShow}>
-      Agregar tema
+    <Button variant="outline-success" onClick={handleShow}>
+      <MdPlaylistAdd/>Tema
     </Button>
 
     <Modal show={show} onHide={handleClose}>

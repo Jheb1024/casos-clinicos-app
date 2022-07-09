@@ -4,9 +4,10 @@ import styled from "styled-components";
 import scrollreveal from "scrollreveal";
 import { collection, getDocs, getFirestore, onSnapshot, query, where, doc } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
-import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row, AccordionContext,Badge} from 'react-bootstrap'
+import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row, AccordionContext, Badge } from 'react-bootstrap'
 import CuestionarioModalContestar from "../../Componentes/Cuestionario/CuestionarioModalContestar";
 import CuestionarioModalContestarAsignado from "../../Componentes/Cuestionario/CuestionarioModalContestarAsignado";
+import ProgressBar from 'react-bootstrap/ProgressBar'
 export default function AgregarCuestionario({ user }) {
 
   const [temas, setTemas] = useState(null);
@@ -15,6 +16,8 @@ export default function AgregarCuestionario({ user }) {
   const [cuestionariosA, setCuestionariosA] = useState(null);
   const [temaCompuesto, setTemaCompuesto] = useState(null);
   const [alumno, setAlumno] = useState(null);
+  const [avance, setAvanceT] = useState(0);
+
   const db = getFirestore(firebaseApp);
   useEffect(() => {
 
@@ -39,7 +42,8 @@ export default function AgregarCuestionario({ user }) {
     []);
 
   async function getSubtemas(tema) {
-
+    setSubtemas(null)
+    setAvanceT(0);
     console.log("Entro función getSubtemas()");
     console.log("Tema en getSubtemas", tema);
     const q = query(collection(db, "Subtemas"), where("Tema", "==", tema));
@@ -48,23 +52,29 @@ export default function AgregarCuestionario({ user }) {
     if (querySnapshot.size > 0) {
       setSubtemas(querySnapshot.docs.map((doc) => doc.data()))
     }
+
+    const refR = collection(db, "Resultado");
+    const qR = query(refR, where("temaCuestionario", "==", tema), where("idAlumno", "==", user.user.uid));
+    const querySnapshotR = await getDocs(qR);
+    var counR = 0;
+    querySnapshotR.forEach((doc) => {
+      console.log("idResultado::", doc.id);
+      counR = counR + 1;
+    });
+    console.log("Numero de cuestionarios resueltos", counR);
+    const qA = query(collection(db, "Cuestionarios"), where("Tema", "==", tema), where("nrcClase", "array-contains", alumno.NRC));
+    const querySnapshotA = await getDocs(qA);
+    var counA = 0;
+    querySnapshotA.forEach((doc) => {
+      console.log("idCuestionarios asignado::", doc.id);
+      counA = counA + 1;
+    });
+    console.log("Numero de cuestionarios asignados", counA);
+    const avance = (counR * 100) / counA;
+    setAvanceT(avance);
+    console.log("Avance del tema", avance);
   }
 
-  function CustomToggle({ children, eventKey, tema }) {
-    const decoratedOnClick = useAccordionButton(eventKey,
-      () => getSubtemas(tema),
-    );
-
-    return (
-      <button
-        type="button"
-        style={{ backgroundColor: 'pink' }}
-        onClick={decoratedOnClick}
-      >
-        {children}
-      </button>
-    );
-  }
   function ContextAwareToggle({ children, eventKey, callback, tema }) {
     const { activeEventKey } = useContext(AccordionContext);
 
@@ -138,28 +148,26 @@ export default function AgregarCuestionario({ user }) {
     <Section>
       <Row>
         <Col xs={4}>
-
           <h3>Temas</h3>
-
           <Accordion defaultActiveKey="0">
             {temas?.map((tema, index) => (
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey={index} tema={tema.Tema}><b>{index + 1}.{tema.Tema}</b></ContextAwareToggle>
                   <Badge bg="primary" pill>
-                  {tema.TotalSubtemas}
+                    {tema.TotalSubtemas}
                   </Badge>
                 </Card.Header>
                 <Accordion.Collapse eventKey={index}>
                   <Card.Body>
+                    <ProgressBar striped variant="success" now={avance} label={`${avance}%`} />
                     <ListGroup variant="flush" as="ol" numbered>
-                      {subtemas?.map((subtema) => (
+                      { subtemas ? subtemas?.map((subtema) => (
                         <ListGroup.Item as="li"
                           action onClick={() => getCuestionarios(tema.Tema, subtema.Subtema)}>
                           {subtema.Subtema}
                         </ListGroup.Item>
-                      ))}
-
+                      )) : <p>No hay subtemas</p>}
                     </ListGroup>
                   </Card.Body>
                 </Accordion.Collapse>
@@ -173,12 +181,10 @@ export default function AgregarCuestionario({ user }) {
           {cuestionarios == null && <p>Sin cuestionarios</p>}
           <ListGroup defaultActiveKey="#link1">
             {cuestionarios?.map((cuestionario) => (
-
               <>
                 <ListGroup.Item>
                   {cuestionario.Titulo}
                 </ListGroup.Item>
-
                 <CuestionarioModalContestar quiz={cuestionario} />
               </>
             ))

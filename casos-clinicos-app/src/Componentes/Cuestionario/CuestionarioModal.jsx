@@ -42,7 +42,7 @@ function CuestionarioModal({ quiz }) {
         Visualizar
       </Button>
 
-      <Modal show={show} onHide={handleClose} style={{ width: '100%' }}>
+      <Modal show={show} onHide={handleClose} style={{ width: '100%' }} size="lg" scrollable={true}>
         <Modal.Header closeButton>
           <Modal.Title>{quiz.Titulo}</Modal.Title>
         </Modal.Header>

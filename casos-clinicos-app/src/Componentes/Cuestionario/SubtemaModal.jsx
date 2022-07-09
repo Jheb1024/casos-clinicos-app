@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {Modal, Button, Form} from 'react-bootstrap'
 import { registrarSubtema } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios';
+import { MdPlaylistAdd } from "react-icons/md";
 
 function SubtemaModal({tema}) {
     const [show, setShow] = useState(false);
@@ -15,8 +16,8 @@ function SubtemaModal({tema}) {
     }
   return (
       <>
-    <Button variant="primary" onClick={handleShow}>
-    Agregar subtema
+    <Button variant="outline-success" onClick={handleShow}>
+    <MdPlaylistAdd/>Subtema
   </Button>
 
   <Modal show={show} onHide={handleClose}>

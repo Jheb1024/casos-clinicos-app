@@ -44,7 +44,7 @@ function CuestionarioModalContestar({ quiz }) {
                 Practicar
             </Button>
 
-            <Modal show={show} onHide={handleClose} style={{ width: '100%' }}>
+            <Modal show={show} onHide={handleClose} size="lg" scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title>{quiz.Titulo}</Modal.Title>
                 </Modal.Header>
@@ -104,9 +104,9 @@ function CuestionarioModalContestar({ quiz }) {
                                 
 
                                 <div className='enunciado' >
-                                    <textarea rows='4' cols='40' value={quiz.Enunciado} readOnly></textarea>
+                                    <textarea rows='6' cols='80' value={quiz.Enunciado} readOnly></textarea>
                                 </div>
-                                <img id='myimg' alt=''></img>
+                                <img id='myimg' alt='' style={{ width: '75%',height: '75%',align:'center'}}></img>
                                 {/*Pregunta 1*/}
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
@@ -377,7 +377,6 @@ function CuestionarioModalContestar({ quiz }) {
 
                                         <br />
                                     </div>
-
                                 </div>
                                 <br />
                                 <div className="btn-group">

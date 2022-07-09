@@ -57,6 +57,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
 
     function openModal() {
         getIntento().then(res => {
+            setIntento(res);
             console.log("Resultado de intento", res);
 
             if (res.valueOf() >= 3) {

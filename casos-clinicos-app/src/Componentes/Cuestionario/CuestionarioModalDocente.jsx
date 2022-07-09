@@ -4,7 +4,7 @@ import { Modal, Button } from 'react-bootstrap'
 import { registrarNuevoCuestionario } from '../../Modelo/AdministrarCuestionarios/administrarCuestionarios'
 import Swal from "sweetalert2";
 import './CuestionarioModal.css';
-
+import { FaRegPlusSquare} from "react-icons/fa";
 function CuestionarioModalDocente({ data, user}) {
 
     console.log(data)
@@ -29,10 +29,10 @@ function CuestionarioModalDocente({ data, user}) {
 
     return (
         <div>
-            <Button variant="primary" onClick={()=>openModal()}>
-                Crear nuevo cuestionario
+            <Button variant="outline-success" onClick={()=>openModal()}>
+                <FaRegPlusSquare/>cuestionario
             </Button>
-            <Modal show={show} onHide={handleClose} >
+            <Modal show={show} onHide={handleClose} size="lg" scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title>Nuevo Cuestionario</Modal.Title>
                 </Modal.Header>
