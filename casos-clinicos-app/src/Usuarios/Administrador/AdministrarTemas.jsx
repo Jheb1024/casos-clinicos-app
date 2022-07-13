@@ -52,7 +52,7 @@ export default function AdministrarTemas() {
     return (
       <button
         type="button"
-        style={{ backgroundColor: isCurrentEventKey ? 'pink' : 'lavender' }}
+        style={{ backgroundColor: isCurrentEventKey ? 'pink' : 'lavender', outline: 'none',border:'0', fontSize:'20px'}}
         onClick={decoratedOnClick}
       >
         {children}
@@ -150,8 +150,8 @@ export default function AdministrarTemas() {
             {temas?.map((tema, index) => (
               <Card>
                 <Card.Header style={{ textAlign: 'left' }}>
-                  <ContextAwareToggle className="p-2"eventKey={index} tema={tema.Tema}><b>{index + 1}.{tema.Tema}&nbsp;</b>&nbsp;&nbsp; </ContextAwareToggle>
-                  <button className="btn btn-danger" style={{ float: 'right' }} onClick={() => borrarTema(tema.Tema, tema.idTema)}><RiDeleteBin6Line />Borrar tema</button>
+                  <ContextAwareToggle eventKey={index} tema={tema.Tema} style={{ }}><b>{index + 1}.{tema.Tema}&nbsp;</b>&nbsp;&nbsp; </ContextAwareToggle>
+                  <button className="btn btn-danger" style={{ float: 'right' }} onClick={() => borrarTema(tema.Tema, tema.idTema)}><RiDeleteBin6Line /></button>
                   <EditarTemaModal tema={tema.Tema} idTema={tema.idTema} />
                 </Card.Header>
                 <Accordion.Collapse eventKey={index}>
@@ -174,15 +174,15 @@ export default function AdministrarTemas() {
             ))}
           </Accordion>
         </Col>
-        <Col xs={4}>
+        <Col xs={4} className='p-3 mb-2 bg-light text-dark'>
           <h3>Cuestionarios</h3>
 {cuestionarios==null && <p >Sin cuestionarios</p>}
-          <ListGroup defaultActiveKey="#link1">
+          <ListGroup defaultActiveKey="#link1" >
             {cuestionarios?.map((cuestionario) => (
 
               <>
-                <ListGroup.Item>
-                  {cuestionario?.Titulo}
+                <ListGroup.Item variant='light'>
+                  <p style={{fontSize:'18px'}}><b >{cuestionario?.Titulo}</b></p>
                 </ListGroup.Item>
                 <CuestionarioModal quiz={cuestionario} />
               </>

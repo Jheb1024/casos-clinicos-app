@@ -2,9 +2,10 @@
     color: grey;
     background-color: white;
     padding-top: 1em;
-    position: relative;
-    bottom: 0;
     width: 100%;
-    position: fixed;
+    margin-top: 20px;
+    position: relative;
+  
+    height: 2.5rem;
 
 }

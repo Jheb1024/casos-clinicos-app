@@ -191,9 +191,6 @@ const EditarUsuarioModal = ({ usuario, id }) => {
                                 <Button variant="success" type="submit">
                                     <FaRegSave />Guardar
                                 </Button>
-                                <Button variant="secondary" type="reset">
-                                    <GrClearOption />Limpiar
-                                </Button>
                                 <Button variant="danger" onClick={handleClose}>
                                     Cancelar
                                 </Button>

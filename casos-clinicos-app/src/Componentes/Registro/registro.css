@@ -1,3 +1,12 @@
 .h1{
     color: #00707D;
 }
+.image{
+    background: #A8C7D6;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+}
+img{
+    text-align: center;
+}

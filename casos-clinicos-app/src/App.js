@@ -17,19 +17,7 @@ import { useState,useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import firebaseApp from "./Firebase/firebase-config";
 import ReiniciarPasswordUI from "./Componentes/ReiniciarPassword/ReiniciarPasswordUI";
-//Paginas AlUMNO
-import ListaAlumno from "./Usuarios/Docente/ListaAlumnos";
-import MiperfilD from "./Usuarios/Docente/MiperfilD";
-import AgregarCuestionario from "./Usuarios/Docente/AgregarCuestionario";
-import CuestionariosA from "./Usuarios/Alumno/CuestionariosA";
-import MiavanceA from "./Usuarios/Alumno/MiavanceA";
-import Miperfil from "./Usuarios/Alumno/Miperfil";
 
-//Páginas admi
-import AdministrarCuestionarios from "./Usuarios/Administrador/AdministrarCuestionarios";
-import AdministrarTemas from "./Usuarios/Administrador/AdministrarTemas";
-import ListaUsuarios from "./Usuarios/Administrador/ListarUsuarios";
-import Cuestionario from "./Componentes/Cuestionario/Cuestionario";
 import RoutesProtected from "./ProtectedRoutes";
 import AdminProtectedRoutes from "./ProtectedRoutes/AdminProtectedRoutes";
 import DocenteProtectedRoutes from "./ProtectedRoutes/DocenteProtectedRoutes";
@@ -122,8 +110,9 @@ function App() {
           */}
           </Switch>
         </Router>
+        </div>
         <Footer></Footer>
-      </div>
+      
     </div>
   );
 }

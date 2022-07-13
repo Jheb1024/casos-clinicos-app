@@ -209,7 +209,7 @@ export default class AdministradorAlumno extends AdministradorUsuario {
 
  
   async borrarUsuarioAd(id, rol) {
-    if (rol == "alumno") {
+    if (rol === "alumno") {
       console.log("Es alumno");
       const collectionRef = collection(this.db, "Alumno");
       const docRef = doc(collectionRef, id);
@@ -226,7 +226,7 @@ export default class AdministradorAlumno extends AdministradorUsuario {
       await deleteDoc(docRefU).then(() => {
         console.log("El alumno ha sido eliminado de Usuarios");
       });
-    } else if (rol == "docente") {
+    } else if (rol === "docente") {
       console.log("Es docente");
       const collectionRefD = collection(this.db, "Docente");
       const docRefD = doc(collectionRefD, id);

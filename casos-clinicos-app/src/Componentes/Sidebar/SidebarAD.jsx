@@ -1,9 +1,7 @@
-//Esto va en la carpeta Sidebar en componentes
-
 import React, {useState, useEffect } from "react";
 import { NavLink} from "react-router-dom";
 import styled from "styled-components";
-import { AiOutlineUserAdd } from "react-icons/ai";
+
 
 import { GiHamburgerMenu } from "react-icons/gi";
 import { VscChromeClose } from "react-icons/vsc";
@@ -137,13 +135,14 @@ const Section = styled.section`
   top : 0px;
   background-color: #009480;
   height: 100vh;
-  width: 18vw;
+  max-width: 18vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 2rem 0;
   gap: 2rem;
+  
   .top {
     display: flex;
     flex-direction: column;

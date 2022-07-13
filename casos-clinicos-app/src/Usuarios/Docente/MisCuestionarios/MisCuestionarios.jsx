@@ -9,6 +9,7 @@ import AsignarCuestionarioModal from '../../../Componentes/Cuestionario/AsignarC
 import styled from "styled-components";
 import { Link } from 'react-router-dom';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import './MisCuestionarios.css'
 function MisCuestionarios({ user }) {
   
   const db = getFirestore(firebaseApp);
@@ -116,26 +117,30 @@ function MisCuestionarios({ user }) {
 
 
   return (
-    <Section>
-      <div>MisCuestionarios
+    <Section >
+      <div>
+        MisCuestionarios
+        <div className='newCuestionario'>
         <Link to="/usuario/docente/agregarcuestionario-docente" className="btn btn-success">Agregar Cuestionario</Link>
 
-        <Container>
+        </div>
+
+        <Container >
           <Row>
             <Col xs={3}>
-              <ListGroup defaultActiveKey="#link1">
+              <ListGroup defaultActiveKey="#link1" >
                 {cuestionarios?.map((cuestionario) => (
-                  <ListGroup.Item action onClick={() => obtenerCuestionario(cuestionario)}>
+                  <ListGroup.Item action onClick={() => obtenerCuestionario(cuestionario)} >
                     {cuestionario.Titulo}
                   </ListGroup.Item>
                 ))
                 }
               </ListGroup>
             </Col>
-            <Col>
+            <Col style={{background:'white', height:'100%'}} className='shadow' >
               {cuestionario &&
 
-                <Form style={{ width: '100%', height: '400px', overflowY: 'auto' }} className="cuestionarioForm">
+                <Form style={{ width: '100%', height: '700px', overflowY: 'auto' }} className="cuestionarioForm">
                   {/*Pregunta 1*/}
                   <p><strong>NRC asignados:</strong>{NrcAsignado}</p>
 

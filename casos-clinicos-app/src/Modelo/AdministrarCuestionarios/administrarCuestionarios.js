@@ -1030,82 +1030,80 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
   return cal;
 }
 
-export async function buscarCuestionario(criterioBusqueda, claveBusqueda){
-  console.log(criterioBusqueda,'criterio')
-  let cuestionariosEncontrados;
-  if(criterioBusqueda === '1'){
-    const q = query(collection(db, "Cuestionarios"), where("Titulo", "==", claveBusqueda));
-  const docusFiltrado = [];
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
-    docusFiltrado.push(doc.data())
-  });
-  if(docusFiltrado.size > 0){
-    cuestionariosEncontrados = docusFiltrado;
-  }
-      
-  }else{
-    cuestionariosEncontrados = null;
-  }
-  return cuestionariosEncontrados;
-  /*
+export async function buscarCuestionario(criterioBusqueda, claveBusqueda) {
+  let docusFiltradoF = [];
   switch (criterioBusqueda) {
-    case '1':
-      
+    case "1":
+      docusFiltradoF = await buscarCuestionarioPorTitulo(claveBusqueda);
       break;
-    case '2':
-      buscarCuestionarioPorTema(claveBusqueda)
-    break;
-    case '3':
-      buscarCuestionarioPorSubtema(claveBusqueda)
+    case "2":
+      docusFiltradoF = await buscarCuestionarioPorTema(claveBusqueda);
       break;
-    case '4':
-      buscarCuestionarioPorAutor(claveBusqueda)
+    case "3":
+      docusFiltradoF = await buscarCuestionarioPorSubtema(claveBusqueda);
+      break;
+    case "4":
+      docusFiltradoF = await buscarCuestionarioPorAutor(claveBusqueda);
       break;
     default:
       break;
-  }*/
-
+  }
+  return docusFiltradoF;
 }
 
 async function buscarCuestionarioPorTitulo(claveBusqueda) {
-  const q = query(collection(db, "Cuestionarios"), where("Titulo", "==", claveBusqueda));
-  const docusFiltrado = [];
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
-    docusFiltrado.push(doc.data())
+  let docusFiltrado = [];
+  const q = query(
+    collection(db, "Cuestionarios"),
+    where("Titulo", "==", claveBusqueda)
+  );
+  const querySnapshot = await Promise.all([getDocs(q)]);
+  querySnapshot.forEach((snapshot) => {
+    snapshot.forEach((doc) => {
+      docusFiltrado.push(doc.data());
+    });
   });
   return docusFiltrado;
 }
 async function buscarCuestionarioPorTema(claveBusqueda) {
-  const q = query(collection(db, "Cuestionarios"), where("Tema", "==", claveBusqueda));
-  const docusFiltrado = [];
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
-    docusFiltrado.push(doc.data())
+  const q = query(
+    collection(db, "Cuestionarios"),
+    where("Tema", "==", claveBusqueda)
+  );
+  let docusFiltrado = [];
+  const querySnapshot = await Promise.all([getDocs(q)]);
+  querySnapshot.forEach((snapshot) => {
+    snapshot.forEach((doc) => {
+      docusFiltrado.push(doc.data());
+    });
   });
   return docusFiltrado;
 }
 async function buscarCuestionarioPorSubtema(claveBusqueda) {
-  const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", claveBusqueda));
+  let q = query(
+    collection(db, "Cuestionarios"),
+    where("Subtema", "==", claveBusqueda)
+  );
   const docusFiltrado = [];
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
-    docusFiltrado.push(doc.data())
+  const querySnapshot = await Promise.all([getDocs(q)]);
+  querySnapshot.forEach((snapshot) => {
+    snapshot.forEach((doc) => {
+      docusFiltrado.push(doc.data());
+    });
   });
   return docusFiltrado;
 }
 async function buscarCuestionarioPorAutor(claveBusqueda) {
-  const q = query(collection(db, "Cuestionarios"), where("Autor", "==", claveBusqueda));
-  const docusFiltrado = [];
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
-    docusFiltrado.push(doc.data())
+  const q = query(
+    collection(db, "Cuestionarios"),
+    where("Autor", "==", claveBusqueda)
+  );
+  let docusFiltrado = [];
+  const querySnapshot = await Promise.all([getDocs(q)]);
+  querySnapshot.forEach((snapshot) => {
+    snapshot.forEach((doc) => {
+      docusFiltrado.push(doc.data());
+    });
   });
   return docusFiltrado;
 }

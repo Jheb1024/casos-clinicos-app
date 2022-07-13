@@ -60,7 +60,7 @@ function EditarSubtemaModal({ subtema, idSubtema }) {
   }
   return (
     <>
-      <Button variant="info" onClick={handleShow} >
+      <Button variant="info" onClick={handleShow} style={{float: 'right'}}>
         <AiFillEdit />
       </Button>
 

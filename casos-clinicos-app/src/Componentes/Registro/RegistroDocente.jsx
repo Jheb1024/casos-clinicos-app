@@ -7,18 +7,12 @@ function RegistroDocente() {
     return (
         <div className="container px-lg-2">
             <div className="row mx-lg-n2">
-                <div className="col py-3 px-lg-5 border bg-light text-align:center">
-                    <img
+                <div className="image col py-3 px-lg-5 border bg-light">
+                    <img 
                         src="https://media.istockphoto.com/photos/doctor-woman-hands-typing-on-laptop-at-the-office-picture-id1216080907?b=1&k=20&m=1216080907&s=170667a&w=0&h=7HKvtHHKTO8T-KhK8GD2qHuxsu-4EOfHLd15gmpyrdg="
                         width="550"
                         height="380"
                         alt=''
-                    ></img>
-                    <img
-                        src="https://media.istockphoto.com/photos/doctor-woman-hands-typing-on-laptop-at-the-office-picture-id1216080907?b=1&k=20&m=1216080907&s=170667a&w=0&h=7HKvtHHKTO8T-KhK8GD2qHuxsu-4EOfHLd15gmpyrdg="
-                        width="550"
-                        height="380"
-                        alt=""
                     ></img>
                 </div>
                 <div className="col py-3 px-lg-2 border bg-light">

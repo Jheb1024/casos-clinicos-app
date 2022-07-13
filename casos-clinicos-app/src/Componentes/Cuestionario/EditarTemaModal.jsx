@@ -62,8 +62,8 @@ function EditarTemaModal({ tema, idTema }) {
   }
   return (
     <>
-      <Button variant="info" className="ml-3" onClick={handleShow}>
-        <AiFillEdit />Editar tema
+      <Button variant="info" className="ml-3" onClick={handleShow} style={{float:'right'}}>
+        <AiFillEdit />
       </Button>
 
       <Modal show={show} onHide={handleClose}>

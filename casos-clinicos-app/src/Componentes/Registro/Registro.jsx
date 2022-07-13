@@ -5,7 +5,7 @@ import { getFirestore, doc, setDoc,updateDoc } from 'firebase/firestore';
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
 import Swal from "sweetalert2";
-
+import './registro.css'
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
@@ -177,12 +177,10 @@ const Registro = () => {
     return (
         <div className='container px-lg-2'>
             <div className="row mx-lg-n2">
-                <div className='col py-3 px-lg-5 border bg-light text-align:center'>
+                <div className='image col py-3 px-lg-5 border bg-light'>
 
                     <img src="https://us.123rf.com/450wm/stylephotographs/stylephotographs1710/stylephotographs171000262/88557664-mujer-joven-como-estudiante-de-medicina-con-laptop-aprender-en-aprendizaje.jpg?ver=6"
-                        width="550" height="380"></img>
-                    <img src="https://us.123rf.com/450wm/stylephotographs/stylephotographs1710/stylephotographs171000262/88557664-mujer-joven-como-estudiante-de-medicina-con-laptop-aprender-en-aprendizaje.jpg?ver=6"
-                        width="550" height="380"></img>
+                        width="550" height="380" alt=""></img>
                 </div>
                 <div className="col py-3 px-lg-2 border bg-light">
                     <Formik
