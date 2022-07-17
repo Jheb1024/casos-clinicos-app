@@ -5,73 +5,91 @@ import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorA
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { GoSearch } from "react-icons/go";
 import firebaseApp from "../../../src/Firebase/firebase-config.js";
-import AgregarAlumnoDocModal from "../../Componentes/Registro/AgregarAlumnoDocModal"
-import { collection, getFirestore, query, where, onSnapshot, orderBy } from "firebase/firestore";
+import AgregarAlumnoDocModal from "../../Componentes/Registro/AgregarAlumnoDocModal";
+import {
+  collection,
+  getFirestore,
+  query,
+  where,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
 import Swal from "sweetalert2";
 import EditarAlumnoModal from "../../Usuarios/Docente/EditarAlumnoModal";
 import { Button } from "react-bootstrap";
+import Alert from "react-bootstrap/Alert";
 export default function ListaAlumno({ user }) {
-  console.log(user)
+  //console.log(user)
   const admiAl = new AdministradorAlumno();
   const db = getFirestore(firebaseApp);
 
-  const [alumnos, setAlumnos] = useState([]);
-  const [nrc, setNrc] = useState(0);
+  const [alumnos, setAlumnos] = useState(null);
+  const [show, setShow] = useState(false);
 
   async function busquedaFormHandler(e) {
+    console.log("en busqueda form handler");
     e.preventDefault();
     const busqueda = e.target.busqueda.value;
-    const nvosDocus = await admiAl.filtrarDatos(busqueda);
-    setAlumnos(nvosDocus);
+    const criterio = e.target.criterio.value;
+    const nvosDocus = await admiAl.busquedaDocente(
+      user.uid,
+      criterio,
+      busqueda,
+      alumnos
+    );
+    if (nvosDocus.length > 0) {
+      console.log("resulll", alumnos);
+      setAlumnos(nvosDocus);
+      setShow(false);
+    } else {
+      setAlumnos(null);
+      setShow(true);
+    }
   }
-
   async function actualizarEstadoAlumnos(user) {
-    console.log("Id del docente:::", user.uid);
-    const q = query(collection(db, "Clase"), where("idDocente", "==", user.uid));
-    onSnapshot(q, (querySnapshot) => {
-      const nrcA = [];
+    let nrc = [];
+    const collecionRef1 = collection(db, "Clase");
+    const collecionRef = collection(db, "Alumno");
+    const que = query(collecionRef1, where("idDocente", "==", user.uid));
+    onSnapshot(que, async (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        nrcA.push(doc.data().NRC);
-        setNrc(doc.data().NRC);
-        const q1 = query(collection(db, "Alumno"), where("NRC", "==", doc.data().NRC));
-        onSnapshot(q1, (querySnapshot) => {
-          if (querySnapshot.size > 0) {
-            setAlumnos(querySnapshot.docs.map((doc) => doc.data()))
-          }
-        })
+        nrc.push(doc.data().NRC);
       });
-
-    })
-
+      for (let i = 0; i < nrc.length; i++) {
+        const q1 = query(collecionRef, where("NRC", "==", nrc[i]));
+        onSnapshot(q1, (querySnapshot1) => {
+          if (querySnapshot1.size > 0) {
+            setAlumnos(querySnapshot1.docs.map((doc) => doc.data()));
+          }
+        });
+      }
+    });
   }
   function borrarAlumno(id) {
-    console.log("id dentro de la funcion borrarClase()", id)
+    console.log("id dentro de la funcion borrarClase()", id);
     new Swal({
       title: "Está seguro?",
       text: "El alumno se borrara del registro de Alumnos.",
       icon: "question",
       showDenyButton: true,
-      confirmButtonText: 'Si',
+      confirmButtonText: "Si",
       denyButtonText: `No`,
-    })
-      .then((respuesta) => {
-        if (respuesta.isConfirmed) {
-          if (admiAl.borrarAlumnoAd(id)) {
-            new Swal({
-              position: 'center',
-              icon: 'success',
-              title: 'Eliminación exitosa.',
-              showConfirmButton: false,
-              timer: 3000
-            });
-          }
-        } else if (respuesta.isDenied) {
-          new Swal("El alumno no se borró!");
+    }).then((respuesta) => {
+      if (respuesta.isConfirmed) {
+        if (admiAl.borrarAlumnoAd(id)) {
+          new Swal({
+            position: "center",
+            icon: "success",
+            title: "Eliminación exitosa.",
+            showConfirmButton: false,
+            timer: 3000,
+          });
         }
-      });
-
+      } else if (respuesta.isDenied) {
+        new Swal("El alumno no se borró!");
+      }
+    });
   }
-
 
   useEffect(() => {
     const sr = scrollreveal({
@@ -89,9 +107,9 @@ export default function ListaAlumno({ user }) {
       {
         opacity: 0,
         interval: 100,
-      })
-    actualizarEstadoAlumnos(user)
-
+      }
+    );
+    actualizarEstadoAlumnos(user);
   }, []);
 
   return (
@@ -99,60 +117,91 @@ export default function ListaAlumno({ user }) {
       <AgregarAlumnoDocModal />
       <div className="container-fluid">
         <form className="d-flex" onSubmit={busquedaFormHandler}>
-          <input className="form-control me-2" type="search" id="busqueda" placeholder="Buscar por nombre o apellido paterno." />
-
-          <button className="btn btn-outline-success" type="submit"><GoSearch /></button>
-
+          <label for="criterio">Buscar por:</label>
+          <select name="criterio" id="criterio">
+            <option value="1" selected>
+              Apellido paterno
+            </option>
+            <option value="2">Nombre</option>
+            <option value="3">Matrícula</option>
+          </select>
+          <input
+            className="form-control me-2"
+            type="search"
+            id="busqueda"
+            name="busqueda"
+            placeholder="Buscar por nombre o apellido paterno."
+          />
+          <button className="btn btn-outline-success" type="submit">
+            <GoSearch />
+          </button>
         </form>
         <button
           className="btn btn-secondary"
           onClick={() => {
             const input = document.getElementById("busqueda");
             input.value = "";
+            const selectB=document.getElementById("criterio");
+            selectB.value="1";
             actualizarEstadoAlumnos(user);
           }}
         >
           Resetear
         </button>
       </div>
-      <div className="table-responsive border bg-light px-4">
-        <h1>Lista de Alumnos</h1>
-        <table className=" WIDTH=50% table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">ApellidoPaterno</th>
-              <th scope="col">ApellidoMaterno</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">TemasCompletos</th>
-              <th scope="col">CuestionariosCompletos</th>
-              <th scope="col">PromedioGeneral</th>
-              <th scope="col">Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {alumnos && alumnos.map((alumno, index) => (
-              <tr key={index}>
-                <td>{index}</td>
-                <td>{alumno.ApellidoPaterno}</td>
-                <td>{alumno.ApellidoMaterno}</td>
-                <td>{alumno.Nombre}</td>
-                <td>{alumno.Avance.TemasCompletos}</td>
-                <td>{alumno.Avance.CuestionariosCompletos}</td>
-                <td>{alumno.Avance.PromedioGeneral}</td>
-                <td>
-                  <div className="btn-group btn-group-sm" role="group">
-                    <button className="btn btn-danger m-1" onClick={() => borrarAlumno(alumno.id)}><RiDeleteBin6Line /></button>
-                    <EditarAlumnoModal alumno={alumno} id={alumno.id} />
-                  </div>
-
-                </td>
+      {alumnos == null && (
+        <Alert variant="warning">
+          <Alert.Heading>Sin registros!</Alert.Heading>
+          <p>
+            De "Clic" en <b>Resetear</b>
+             para volver a visualizar la lista de alumnos actualizada e intente con otro dato de búsqueda.
+          </p>
+        </Alert>
+      )}
+      {alumnos != null && (
+        <div className="table-responsive border bg-light px-4">
+          <h1>Lista de Alumnos</h1>
+          <table className=" WIDTH=50% table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">ApellidoPaterno</th>
+                <th scope="col">ApellidoMaterno</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">TemasCompletos</th>
+                <th scope="col">CuestionariosCompletos</th>
+                <th scope="col">PromedioGeneral</th>
+                <th scope="col">Acción</th>
               </tr>
-            ))}
-
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {alumnos &&
+                alumnos.map((alumno, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{alumno.ApellidoPaterno}</td>
+                    <td>{alumno.ApellidoMaterno}</td>
+                    <td>{alumno.Nombre}</td>
+                    <td>{alumno.Avance.TemasCompletos}</td>
+                    <td>{alumno.Avance.CuestionariosCompletos}</td>
+                    <td>{alumno.Avance.PromedioGeneral}</td>
+                    <td>
+                      <div className="btn-group btn-group-sm" role="group">
+                        <button
+                          className="btn btn-danger m-1"
+                          onClick={() => borrarAlumno(alumno.id)}
+                        >
+                          <RiDeleteBin6Line />
+                        </button>
+                        <EditarAlumnoModal alumno={alumno} id={alumno.id} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </Section>
   );
 }
