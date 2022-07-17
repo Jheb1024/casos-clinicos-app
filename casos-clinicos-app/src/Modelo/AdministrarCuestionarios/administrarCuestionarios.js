@@ -12,7 +12,7 @@ const db = getFirestore(firebaseApp);
 
 //Para registrar tema
 export async function registrarTema(tema) {
-  const temaRegistrado = await addDoc(collection(db, "Temas"), {
+  await addDoc(collection(db, "Temas"), {
     Tema: tema,
     TotalSubtemas: 0,
   }).then((tema) => {
@@ -120,6 +120,13 @@ export async function borrarTemaAdmin(tema, id) {
   //Borramos el tema
   const temaBorrado = await deleteDoc(doc(db, "Temas", id)).then(() => {
     console.log("El tema ha sido eliminado");
+    new Swal({
+      title: "Acción exitosa",
+      text: "El tema ha sido borrado",
+      icon: "success",
+      showConfirmButton: false,
+      timer: 3000
+    });
   })
 
   //Borramos los subtemas del tema
@@ -147,6 +154,14 @@ export async function borrarTemaAdmin(tema, id) {
 async function borrarTemaSubtema(id) {
   await deleteDoc(doc(db, "Subtemas", id)).then(() => {
     console.log("El subtema ha sido eliminado que era parte del tema");
+  }).then(()=>{
+    new Swal({
+      title: "Acción exitosa",
+      text: "Los subtemas han sido borrados",
+      icon: "success",
+      showConfirmButton: false,
+      timer: 3000
+    });
   })
 }
 
@@ -154,6 +169,14 @@ async function borrarTemaSubtema(id) {
 async function eliminarCuestionarioTema(id) {
   await deleteDoc(doc(db, "Cuestionarios", id)).then(() => {
     console.log("El cuesitonario que contiene el tema han sido eliminados");
+  }).then(()=>{
+      new Swal({
+        title: "Acción exitosa",
+        text: "Los cuestionarios han sido borrados",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 3000
+      });
   })
 
 }
@@ -166,7 +189,7 @@ async function eliminarCuestionarioTema(id) {
 // * @param {*} subtema 
 // */
 export async function registrarSubtema(tema, subtema) {
-  const subtemaRegistrado = await addDoc(collection(db, "Subtemas"), {
+   await addDoc(collection(db, "Subtemas"), {
     Tema: tema,
     Subtema: subtema,
   }).then((subtema) => {
@@ -197,7 +220,7 @@ export async function registrarSubtema(tema, subtema) {
 //Para editar un subtema
 //Al editar un subtema existen cambios en un cuestionario
 export async function editarSubtema(subtema, subtemaNuevo, idSubtema) {
-  const subtemaTemp = subtema;
+  
 
   const cuestionarioRef = doc(db, "Subtemas", idSubtema);
   await updateDoc(cuestionarioRef, {
@@ -243,6 +266,7 @@ async function actualizarSubtemaCuestionario(id, nuevoSubtema) {
 export async function borrarSubtemaAdmin(subtema, id, tema) {
   const temaBorrado = await deleteDoc(doc(db, "Subtemas", id)).then(() => {
     console.log("El subtema ha sido eliminado");
+    
   })
   if (temaBorrado !== null) {
     const q = query(collection(db, "Cuestionarios"), where("Subtema", "==", subtema));
@@ -263,12 +287,28 @@ export async function borrarSubtemaAdmin(subtema, id, tema) {
   const temaDoc = doc(db, "Temas", idT);
   updateDoc(temaDoc, {
     TotalSubtemas: increment(-1),
-  });
+  }).then(()=>{
+    new Swal({
+      title: "Acción exitosa",
+      text: "El subtema ha sido borrado. Seleccione el tema para ver los cambios",
+      icon: "success",
+      showConfirmButton: false,
+      timer: 3000
+    });
+  })
 }
 //para borrar Cuestionario del subtema
 async function borrarCuestionarioSubtema(id) {
   await deleteDoc(doc(db, "Cuestionarios", id)).then(() => {
     console.log("El cuestionario ha sido eliminado pertenenciente al tema");
+  }).then(()=>{
+    new Swal({
+      title: "Acción exitosa",
+      text: "Los cuestionarios han sido borrados. Seleccione el tema para ver los cambios",
+      icon: "success",
+      showConfirmButton: false,
+      timer: 3000
+    });
   })
 }
 
@@ -308,19 +348,20 @@ const docenteConverter = {
 //Para registrar un nuevo cuestionario. Datos: preguntas, respuestas, tema, subtmea, usuario
 export function registrarNuevoCuestionario(cuestionario, data, user, imageUpload) {
   //Para obtener información del docente que crea el custionario
+  let registrado;
   var imageRef;
   if (imageUpload !== null) {
     imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     uploadBytes(imageRef, imageUpload).then(() => {
       //alert("uploaded");
     });
-    registrarCuestionarioConImagen(cuestionario, data, user, imageRef)
+    registrado = registrarCuestionarioConImagen(cuestionario, data, user, imageRef)
 
   } else {
-    registrarCuestionarioSinImagen(cuestionario, data, user)
+    registrado = registrarCuestionarioSinImagen(cuestionario, data, user)
   }
 
-
+  return registrado;
 }
 
 async function registrarCuestionarioSinImagen(cuestionario, data, user) {
@@ -329,14 +370,14 @@ async function registrarCuestionarioSinImagen(cuestionario, data, user) {
   const refDocente = doc(db, "Docente", user.uid).withConverter(
     docenteConverter
   );
-
+  let estaRegistrado = false;
   let registrado = null;
 
   const docSnapDocente = await getDoc(refDocente);
   if (docSnapDocente.exists()) {
     const docente = docSnapDocente.data();
     console.log(docente.toString());
-    const cuestionarioAgregado = await addDoc(collection(db, "Cuestionarios"), {
+     await addDoc(collection(db, "Cuestionarios"), {
       Autor: docente.name + " " + docente.apellidoPaterno,
       AutorMatricula: docente.matricula,
       AutorId: user.uid,
@@ -420,24 +461,32 @@ async function registrarCuestionarioSinImagen(cuestionario, data, user) {
         idCuestionario: registrado.id,
       }).then(() => {
         console.log("Cuestionario actualizado con el id");
+        estaRegistrado = true;
+        new Swal({
+          title: "Acción exitosa",
+          text: "El cuestionario ha sido registrado.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 3000
+      })
       });
     }
   } else {
     console.log("No such document!");
   }
-  console.log('Ahora vamos a actualizar el cuestionario con su id')
+  return estaRegistrado;
 }
 async function registrarCuestionarioConImagen(cuestionario, data, user, imageRef) {
   const refDocente = doc(db, "Docente", user.uid).withConverter(
     docenteConverter
   );
-
+  let estaRegistrado = false;
   let registrado = null;
   const docSnapDocente = await getDoc(refDocente);
   if (docSnapDocente.exists()) {
     const docente = docSnapDocente.data();
     console.log(docente.toString());
-    const cuestionarioAgregado = await addDoc(collection(db, "Cuestionarios"), {
+     await addDoc(collection(db, "Cuestionarios"), {
       Autor: docente.name + " " + docente.apellidoPaterno,
       AutorMatricula: docente.matricula,
       AutorId: user.uid,
@@ -518,30 +567,42 @@ async function registrarCuestionarioConImagen(cuestionario, data, user, imageRef
         idCuestionario: registrado.id,
       }).then(() => {
         console.log("Cuestionario actualizado con el id");
+        estaRegistrado = true;
+        new Swal({
+          title: "Acción exitosa",
+          text: "El cuestionario ha sido registrado.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 3000
+      })
       });
     }
   } else {
     console.log("No such document!");
   }
+  return estaRegistrado;
 }
 //Editar un cuestionario
 export function actualizarCuestionario(cuestionario, data, imageUpload) {
 
+  let editado ;
   var imageRef;
   if (imageUpload !== null) {
     imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     uploadBytes(imageRef, imageUpload).then(() => {
       //alert("uploaded");
     });
-    actualizarCuestionarioConImagen(cuestionario, data, imageRef)
+    editado = actualizarCuestionarioConImagen(cuestionario, data, imageRef)
 
   } else {
-    actualizarCuestionarioSinImagen(cuestionario, data)
+    editado = actualizarCuestionarioSinImagen(cuestionario, data)
   }
+  return editado;
 
 }
 
 async function actualizarCuestionarioSinImagen(cuestionario, data) {
+  let editado = false;
   if (cuestionario !== null) {
     const cuestionarioRef = doc(db, "Cuestionarios", data.idCuestionario);
     await updateDoc(cuestionarioRef, {
@@ -609,10 +670,13 @@ async function actualizarCuestionarioSinImagen(cuestionario, data) {
       respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
     }).then(() => {
       console.log("Cuestionario actualizado...");
+      editado = true;
     });
   }
+  return editado;
 }
 async function actualizarCuestionarioConImagen(cuestionario, data, imageRef) {
+  let editado = false;
   if (cuestionario !== null) {
     const cuestionarioRef = doc(db, "Cuestionarios", data.idCuestionario);
     await updateDoc(cuestionarioRef, {
@@ -681,8 +745,10 @@ async function actualizarCuestionarioConImagen(cuestionario, data, imageRef) {
       respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
     }).then(() => {
       console.log("Cuestionario actualizado...");
+      editado = true;
     });
   }
+  return editado;
 }
 
 
@@ -690,6 +756,13 @@ async function actualizarCuestionarioConImagen(cuestionario, data, imageRef) {
 export async function borrarCuestionarioDocente(id) {
   await deleteDoc(doc(db, "Cuestionarios", id)).then(() => {
     console.log("Cuestionario eliminado");
+        new Swal({
+          title: "Acción exitosa",
+          text: "El cuestionario ha sido borrado.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 3000
+      })
   });
 }
 
@@ -777,54 +850,54 @@ export async function registrarResultadoCuestionario(values, quiz) {
   var calificacion = 0;
   console.log("Entro a la funcion de guardar los resultados valor entrada", values.respuesta1);
   console.log("respuesta incorrecta quiz", quiz.respuestaCorrectaP1);
-  if (values.respuesta1 == quiz.respuestaCorrectaP1) {
+  if (values.respuesta1 === quiz.respuestaCorrectaP1) {
     console.log("Respuesta correcta", values.respuesta1);
     calificacion++;
   }
 
-  if (values.respuesta2 == quiz.respuestaCorrectaP2) {
+  if (values.respuesta2 === quiz.respuestaCorrectaP2) {
     console.log("Respuesta correcta2", values.respuesta2);
     calificacion++;
   }
 
 
-  if (values.respuesta3 == quiz.respuestaCorrectaP3) {
+  if (values.respuesta3 === quiz.respuestaCorrectaP3) {
     console.log("Respuesta correcta2", values.respuesta3);
     calificacion++;
   }
 
-  if (values.respuesta4 == quiz.respuestaCorrectaP4) {
+  if (values.respuesta4 === quiz.respuestaCorrectaP4) {
     console.log("Respuesta correcta", values.respuesta4);
     calificacion++;
   }
-  if (values.respuesta5 == quiz.respuestaCorrectaP5) {
+  if (values.respuesta5 === quiz.respuestaCorrectaP5) {
     console.log("Respuesta correcta2", values.respuesta5);
     calificacion++;
   }
 
 
-  if (values.respuesta6 == quiz.respuestaCorrectaP6) {
+  if (values.respuesta6 === quiz.respuestaCorrectaP6) {
     console.log("Respuesta correcta2", values.respuesta6);
     calificacion++;
   }
 
-  if (values.respuesta7 == quiz.respuestaCorrectaP7) {
+  if (values.respuesta7 === quiz.respuestaCorrectaP7) {
     console.log("Respuesta correcta", values.respuesta7);
     calificacion++;
   }
 
-  if (values.respuesta8 == quiz.respuestaCorrectaP8) {
+  if (values.respuesta8 === quiz.respuestaCorrectaP8) {
     console.log("Respuesta correcta2", values.respuesta8);
     calificacion++;
   }
 
 
-  if (values.respuesta9 == quiz.respuestaCorrectaP9) {
+  if (values.respuesta9 === quiz.respuestaCorrectaP9) {
     console.log("Respuesta correcta2", values.respuesta9);
     calificacion++;
   }
 
-  if (values.respuesta10 == quiz.respuestaCorrectaP10) {
+  if (values.respuesta10 === quiz.respuestaCorrectaP10) {
     console.log("Respuesta correcta2", values.respuesta10);
     calificacion++;
   }
@@ -929,7 +1002,7 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
         console.log(doc.id, ' => ', doc.data());
         console.log(user.uid);
         console.log(doc.data().idAlumno);
-        if (doc.data().idAlumno == user.uid) {
+        if (doc.data().idAlumno === user.uid) {
           contIgualAlum++;
           calSub = calSub + doc.data().calificacion;
         }
@@ -988,7 +1061,7 @@ export async function registrarResultadoCuestionarioAsignado(values, quiz, user)
           console.log(":::en else countS en if::::", countS);
 
         }
-        if (countS == doc.data().TotalSubtemas) {
+        if (countS === doc.data().TotalSubtemas) {
           console.log(":::Entro if de countS==doc.data().TotalSubtemas::");
           countT = countT + 1;
           console.log("countT en if:::::",countT);

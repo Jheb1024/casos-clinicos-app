@@ -19,7 +19,6 @@ import {LinkContainer} from 'react-router-bootstrap';
 
 
 export default function Header() {
-  const [loading, setLoading] = useState(false);
 
   const auth = getAuth(firebaseApp);
   const currentUser = useAuth();
@@ -36,56 +35,6 @@ export default function Header() {
       });
   }
 
-  const dropRgistro = (
-    <li className="nav-item dropdown ">
-      <a className="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-        aria-expanded="true"
-        
-      >
-        Registro
-      </a>
-      <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <li>
-          <Link to={"/registro-docente"} style={{textDecoration:'none'}}>Docente</Link>
-        </li>
-        <li>
-        <Link to={"/registro-alumno"} style={{textDecoration:'none'}}>Alumno</Link>
-        </li>
-      </ul>
-    </li>
-  );
-  const leftLinkStyle = {
-    textDecoration: "none",
-    color: "white",
-    fontSize: "25px",
-  };
-  const StyledLeftLink = styled(Link)`
-    text-decoration: none;
-    color: white;
-    font-size: 25px;
-    &:hover {
-      color: white;
-    }
-    @media (max-width: 850px) {
-      font-size: 20px;
-    }
-  `;
-
-  const StyledRightLink = styled(Link)`
-    text-decoration: none;
-    &:hover {
-      color: white;
-    }
-    color: white;
-    margin-left: 15px;
-    font-size: 20px;
-    @media (max-width: 850px) {
-      font-size: 18px;
-    }
-  `;
-
- 
-
   return (
     <Navbar className="color-nav" collapseOnSelect expand="lg" variant="dark">
   <Container>
@@ -101,7 +50,7 @@ export default function Header() {
     </Nav>
     <Nav>
     {!currentUser ? 
-    <NavDropdown title="Registro" id="collasible-nav-dropdown" >
+    <NavDropdown title="Registro" id="collasible-nav-dropdown">
       <LinkContainer to="/registro-docente" ><NavDropdown.Item >Docente</NavDropdown.Item></LinkContainer>
         <LinkContainer to="/registro-alumno"><NavDropdown.Item >Alumno</NavDropdown.Item></LinkContainer>
       </NavDropdown> : null}

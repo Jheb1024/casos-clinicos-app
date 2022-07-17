@@ -12,7 +12,9 @@ function SubtemaModal({tema}) {
         e.preventDefault();
         const subtema=e.target.elements.subtema.value; 
         console.log("subtema",subtema)
-        registrarSubtema(tema,subtema);
+        registrarSubtema(tema,subtema).then(()=>{
+          setShow(false);
+        })
     }
   return (
       <>

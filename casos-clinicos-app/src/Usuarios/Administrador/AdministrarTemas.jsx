@@ -70,11 +70,13 @@ export default function AdministrarTemas() {
     }else{
       setCuestionarios(null);
     }
+
+    
   }
   function borrarTema(tema, id) {
     new Swal({
       title: "Está seguro?",
-      text: "Al eliminar un tema se borrarán todos los subtemas provenientes del tema así como los cuestionarios!",
+      text: "Al eliminar un tema se borrarán todos los subtemas provenientes del tema así como los cuestionarios. Esta acción no podrá deshacerse!",
       icon: "question",
       showDenyButton: true,
       confirmButtonText: 'Si',
@@ -82,12 +84,16 @@ export default function AdministrarTemas() {
     })
       .then((respuesta) => {
         if (respuesta.isConfirmed) {
-          borrarTemaAdmin(tema, id).then(() => Swal("El tema y los subtemas y cuesitonarios que eran parte de él han sido borrados!", {
-            icon: "success",
-          }))
+          borrarTemaAdmin(tema, id)
 
         } else {
-          Swal("El tema no se borró!");
+          new Swal({
+            position: 'center',
+            icon: 'info',
+            title: 'El tema no se borró',
+            showConfirmButton: false,
+            timer: 3000
+        });
         }
       });
 
@@ -104,9 +110,7 @@ export default function AdministrarTemas() {
     })
       .then((respuesta) => {
         if (respuesta.isConfirmed) {
-          borrarSubtemaAdmin(subtema, id, tema).then(() => Swal("El subtema y cuesitonarios que eran parte de él han sido borrados!", {
-            icon: "success",
-          }))
+          borrarSubtemaAdmin(subtema, id, tema)
         } else {
           Swal("El subtema no se borró!");
         }
@@ -176,7 +180,7 @@ export default function AdministrarTemas() {
         </Col>
         <Col xs={4} className='p-3 mb-2 bg-light text-dark'>
           <h3>Cuestionarios</h3>
-{cuestionarios==null && <p >Sin cuestionarios</p>}
+        {cuestionarios==null && <p >Sin cuestionarios</p>}
           <ListGroup defaultActiveKey="#link1" >
             {cuestionarios?.map((cuestionario) => (
 

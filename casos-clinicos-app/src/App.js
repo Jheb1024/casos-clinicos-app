@@ -69,45 +69,17 @@ function App() {
             {/**Rutas privadas del administrador */}
             { user || localUser? <AdminProtectedRoutes path="/usuario/admin" component={HomeAdmin} user={user}/> :
              <Redirect to={window.location}/>}
-            {/*<AdminProtectedRoutes path="/usuario/admin/administrar-cuestionarios" component={AdministrarCuestionarios} user={user}/>
-            <AdminProtectedRoutes path="/usuario/admin/administrar-temas" component={AdministrarTemas} user={user}/>
-            <AdminProtectedRoutes path="/usuario/admin/lista-usuarios" component={ListaUsuarios} user={user}/>*/}
-
+           
             {/**Rutas privadas del docente */}
            { user ? <DocenteProtectedRoutes path='/usuario/docente' component={HomeDocente} user={user}/> :
             <Redirect to='/inicio-sesion'/>}
-            {/*<Route path="/usuario/docente/miperfil-docente">
-              <MiperfilD></MiperfilD>
-            </Route>
-            <Route path="/usuario/docente/agregarcuestionario-docente">
-              <AgregarCuestionario></AgregarCuestionario>
-            </Route>*/}
-            
+          
 
-            {/**Rutas privadas del alumno 
-            <Route path="/usuario/alumno">
-              {user && <HomeAlumno usuario={user} />}
-            </Route>*/}
+            {/**Rutas privadas del alumno */}
             { user ? <AlumnoProtectedRoutes path='/usuario/alumno' component={HomeAlumno} user={user}/> :
              <Redirect to='/inicio-sesion'/>}
             
-            {/** 
-            <Route path="/usuario/docente/agregar-alumnoD">
-              <AgregarAlumno></AgregarAlumno>
-            </Route>
-            <Route path="/usuario/docente/lista-alumno">
-              <ListaAlumno></ListaAlumno>
-            </Route>
-            <Route path="/usuario/alumno/cuestionarios-alumno">
-              <CuestionariosA></CuestionariosA>
-            </Route>
-            <Route path="/usuario/alumno/miavance-alumno">
-              <MiavanceA></MiavanceA>
-            </Route>
-            <Route path="/usuario/alumno/miperfil-alumno">
-              <Miperfil></Miperfil>
-            </Route>
-          */}
+           
           </Switch>
         </Router>
         </div>

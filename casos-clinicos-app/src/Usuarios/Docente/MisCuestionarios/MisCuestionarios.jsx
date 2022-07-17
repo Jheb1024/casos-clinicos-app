@@ -89,21 +89,24 @@ function MisCuestionarios({ user }) {
 
   function borrarCuestionario(id) {
     new Swal({
-      title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this imaginary file!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
+      title: 'Cuestionarios',
+      text: '¿Está seguro de eliminar este cuestionario? Esta acción no puede deshacerse.',
+      icon: 'question',
+      showDenyButton: true,
+      confirmButtonText: 'Si',
+      denyButtonText: `No`,
     })
-      .then((willDelete) => {
-        if (willDelete) {
-          borrarCuestionarioDocente(id).then(() =>
-            Swal("Poof! Your imaginary file has been deleted!", {
-              icon: "success",
-            }))
-
+      .then((respuesta) => {
+        if (respuesta.isConfirmed) {
+          borrarCuestionarioDocente(id)
         } else {
-          Swal("Your imaginary file is safe!");
+          new Swal({
+            position: 'center',
+            icon: 'info',
+            title: 'El cuestionario no fue eliminado',
+            showConfirmButton: false,
+            timer: 3000
+        });
         }
       });
   }

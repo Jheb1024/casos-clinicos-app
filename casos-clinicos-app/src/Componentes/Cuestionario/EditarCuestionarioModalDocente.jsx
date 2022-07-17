@@ -190,16 +190,16 @@ function EditarCuestionarioModalDocente({data}) {
                             return errors;
                         }}
                         onSubmit={(values, { setSubmitting }) => {
-                            actualizarCuestionario(values, data, imageUpload).then(()=>{
+                            if(actualizarCuestionario(values, data, imageUpload)){
+                                setShow(false)
                                 new Swal({
-                                    position: 'top-end',
-                                    icon: 'succes',
-                                    title: 'Cuestionario Actualizado',
+                                    title: "Acción exitosa",
+                                    text: "El cuestionario ha sido actualzado.",
+                                    icon: "success",
                                     showConfirmButton: false,
                                     timer: 3000
-                                })
-                                setShow(false);
-                            })
+                                });
+                            }
                         }}
                     >
                         {({ isSubmitting }) => (

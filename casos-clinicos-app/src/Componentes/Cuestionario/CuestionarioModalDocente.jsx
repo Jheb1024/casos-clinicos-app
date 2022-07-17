@@ -170,7 +170,9 @@ function CuestionarioModalDocente({ data, user}) {
                             return errors;
                         }}
                         onSubmit={(values, { setSubmitting }) => {
-                            registrarNuevoCuestionario(values,data, user, imageUpload);
+                            if(registrarNuevoCuestionario(values,data, user, imageUpload)){
+                                setShow(false)
+                            }
                         }} 
                     >
                         {({ isSubmitting }) => (

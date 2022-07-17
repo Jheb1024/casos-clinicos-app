@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword,signOut, } from 'firebase/auth';
 import { getFirestore, doc, setDoc,updateDoc } from 'firebase/firestore';
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
@@ -14,6 +14,19 @@ const firestore = getFirestore(firebaseApp);
 const Registro = () => {
     let history = useHistory();
     const [formularioEnviado, cambiarFormularioEnviado] = useState(false);
+     
+    function CerrarSesion(){
+        const auth = getAuth(firebaseApp);
+            signOut(auth)
+      .then((user) => {
+        window.localStorage.removeItem('rol');
+        window.localStorage.clear();
+        console.log("El usaurio a cerrado la sesion");
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+    }
 
     async function registrarUsuario(email, pass, Matricula, Nombre,ApellidoP,ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro) {
 
@@ -70,7 +83,7 @@ const Registro = () => {
         console.log(infoUsuario);
 
         if (infoUsuario) {
-
+            
             var docuRef = doc(firestore, `Alumno/${infoUsuario.user.uid}`);
 
             await setDoc(docuRef, {
@@ -106,6 +119,7 @@ const Registro = () => {
                 email: email,
                 rol: "alumno"
             }).then(()=>{
+                CerrarSesion()
                 history.push('/inicio-sesion')
             })
             

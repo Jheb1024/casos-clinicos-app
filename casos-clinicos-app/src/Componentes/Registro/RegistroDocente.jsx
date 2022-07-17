@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { submitHandler } from "./funcRegistroDocente";
 import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
 import Swal from "sweetalert2";
+import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
+import { getAuth, createUserWithEmailAndPassword,signOut, } from 'firebase/auth';
+
 import "./registro.css";
 function RegistroDocente() {
+    
     return (
         <div className="container px-lg-2">
             <div className="row mx-lg-n2">

@@ -117,8 +117,8 @@ const InicioSesion = ({data}) => {
         
         <div >
             <div className="container">
-                <div class="row justify-content-md-center">
-                    <div id ="FormContainer" class="col-md-15 offset-md-0">
+                <div className="row justify-content-md-center">
+                    <div id ="FormContainer" className="col-md-15 offset-md-0">
                         <Formik
                             initialValues={
                                 {
@@ -165,36 +165,36 @@ const InicioSesion = ({data}) => {
 
                                                 <fieldset>
                                                     <h1 className="h1">Inicio de sesión</h1>
-                                                    <div class="form-group">
-                                                        <label for="email">Correo electrónico</label>
+                                                    <div className="form-group">
+                                                        <label htmlFor="email">Correo electrónico</label>
                                                         <Field
                                                             type="text"
-                                                            class="form-control"
+                                                            className="form-control"
                                                             name="email"
                                                             id="email"
                                                             placeholder="ejemplo@gmail.com"
                                                         />
                                                         <ErrorMessage name="email" component={() => (
-                                                            <div className="error"><p class="text-danger"><small>{errors.email}</small></p></div>
+                                                            <div className="error"><p className="text-danger"><small>{errors.email}</small></p></div>
                                                         )} />
                                                         {correoIncorrecto && <p className="error">Correo electrónico incorrecto</p>}
 
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="password">Contraseña</label>
+                                                    <div className="form-group">
+                                                        <label htmlFor="password">Contraseña</label>
                                                         <Field type="password"
-                                                            class="form-control"
+                                                            className="form-control"
                                                             id="password"
                                                             name="password"
                                                             placeholder="Constraseña"
                                                         />
                                                         <ErrorMessage name="password" component={() => (
-                                                            <div className="error"><p class="text-danger"><small>{errors.password}</small></p></div>
+                                                            <div className="error"><p className="text-danger"><small>{errors.password}</small></p></div>
                                                         )} />
 
                                                     </div>
                                                     <br />
-                                                    <label for="txt">¿Aún no tienes una cuenta? <br/>
+                                                    <label htmlFor="txt">¿Aún no tienes una cuenta? <br/>
                                                     <Link to="/registro-docente">Registro Docente</Link>
                                                     <br/>
                                                     <Link to="/registro-alumno">Registro Alumno</Link></label>
@@ -206,7 +206,7 @@ const InicioSesion = ({data}) => {
                                                         <input type="submit"
                                                             value={"Iniciar Sesión"} className="btn btn-primary" />
                                                     </div>
-                                                    {formularioEnviado && <p class="text-success">Inicio de sesión exitoso</p>}
+                                                    {formularioEnviado && <p className="text-success">Inicio de sesión exitoso</p>}
                                                 </fieldset>
                                             </div>
                                         </div>
