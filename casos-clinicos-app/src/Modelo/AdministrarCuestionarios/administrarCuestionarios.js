@@ -906,202 +906,236 @@ export async function registrarResultadoCuestionario(values, quiz) {
 }
 
 //Registrar resultado cuestionario
-export async function registrarResultadoCuestionarioAsignado(values, quiz, user) {
-  var cal = 0;
-  var intento = 1;
-  var contIgualAlum = 0;
-  var calSub = 0;
-
-  console.log("Entro a la funcion de guardar los resultados valor entrada", values.respuesta1);
-  console.log("respuesta incorrecta quiz", quiz.respuestaCorrectaP1);
-  if (values.respuesta1 === quiz.respuestaCorrectaP1) {
-    console.log("Respuesta correcta", values.respuesta1);
-    cal++;
-  }
-
-  if (values.respuesta2 === quiz.respuestaCorrectaP2) {
-    console.log("Respuesta correcta2", values.respuesta2);
-    cal++;
-  }
-
-
-  if (values.respuesta3 === quiz.respuestaCorrectaP3) {
-    console.log("Respuesta correcta2", values.respuesta3);
-    cal++;
-  }
-
-  if (values.respuesta4 === quiz.respuestaCorrectaP4) {
-    console.log("Respuesta correcta", values.respuesta4);
-    cal++;
-  }
-
-  if (values.respuesta5 === quiz.respuestaCorrectaP5) {
-    console.log("Respuesta correcta2", values.respuesta5);
-    cal++;
-  }
-
-
-  if (values.respuesta6 === quiz.respuestaCorrectaP6) {
-    console.log("Respuesta correcta2", values.respuesta6);
-    cal++;
-  }
-  if (values.respuesta7 === quiz.respuestaCorrectaP7) {
-    console.log("Respuesta correcta", values.respuesta7);
-    cal++;
-  }
-  if (values.respuesta8 === quiz.respuestaCorrectaP8) {
-    console.log("Respuesta correcta2", values.respuesta8);
-    cal++;
-  }
-
-
-  if (values.respuesta9 === quiz.respuestaCorrectaP9) {
-    console.log("Respuesta correcta2", values.respuesta9);
-    cal++;
-  }
-  if (values.respuesta10 === quiz.respuestaCorrectaP10) {
-    console.log("Respuesta correcta2", values.respuesta10);
-    cal++;
-  }
-
-  console.log("Calificacion", cal);
-  console.log("idCuestionario=>", quiz.idCuestionario);
-  console.log("idAlumno", user.uid);
-
-  const cuestionarioRef = collection(db, "Resultado");
-  const museums = query(cuestionarioRef, where("idCuestionario", "==", quiz.idCuestionario), where("idAlumno", "==", user.uid));
-  const querySnapshot = await getDocs(museums);
-  querySnapshot.forEach((doc) => {
-    console.log(doc.id, ' => ', doc.data());
-  });
-
-  if (querySnapshot.size > 0) {
-    let idRes;
-    console.log("Hay al menos un registro con esa informacion");
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, ' => ', doc.data());
-      console.log("NumIntento::", doc.data().intento);
-      intento = doc.data().intento + 1;
-      idRes = doc.id;
+//Actualizar en alumno el avance de un tema
+export async function actualizarAvanceTemaAlumno(user){
+  //Actualizar temascompletos
+    //Actualizar el avance.TemasCompletos
+    //1.Saber el total de temas existentes
+    const alumnoRef = doc(db, "Alumno", user.uid);
+    const qTemas = query(collection(db, "Temas"));
+    var countTemas = 0;
+    onSnapshot(qTemas, (querySnapshotT) => {
+      querySnapshotT.forEach(() => {
+        countTemas = countTemas + 1;
+      });
+      console.log("Total de temas ", countTemas);
     });
-    console.log("Nuevo intento::>", intento);
-    if (intento > 3) {
-      console.log("Ya no puede volver a hacer el cuestionario porque ya tienen 3 intentos");
-    } else {
-      const resultadoRef = doc(db, "Resultado", idRes);
-      await updateDoc(resultadoRef, {
-        intento: intento,
-        calificacion: cal,
-      });
-      //Obtener el total de cuestionarios con al menos un intento
-      const cuestionarioRef = collection(db, "Resultado");
-      const museums2 = query(cuestionarioRef, where("intento", "<=", 3));
-      const querySnapshot2 = await getDocs(museums2);
-
-      querySnapshot2.forEach((doc) => {
-        console.log(doc.id, ' => ', doc.data());
-        console.log(user.uid);
-        console.log(doc.data().idAlumno);
-        if (doc.data().idAlumno === user.uid) {
-          contIgualAlum++;
-          calSub = calSub + doc.data().calificacion;
-        }
-      });
-      var prom = calSub / contIgualAlum;
-      console.log("Datos encontradoos", contIgualAlum);
-      console.log("Promdio::", prom);
-      //Acceder al doc del alumno que esta contestando para actualizar su avance 
-      const alumnoRef = doc(db, "Alumno", user.uid);
-      await updateDoc(alumnoRef, {
-        "Avance.CuestionariosCompletos": contIgualAlum,
-        "Avance.PromedioGeneral": prom,
-      });
-      //Actualizar temascompletos
-            //Actualizar el avance.TemasCompletos
-      //1.Saber el total de temas existentes
-      const qTemas = query(collection(db, "Temas"));
-      var countTemas = 0;
-      onSnapshot(qTemas, (querySnapshotT) => {
-        querySnapshotT.forEach((doc) => {
-          countTemas = countTemas + 1;
-        });
-        console.log("Total de temas ", countTemas);
-      });
-      //2.Conocer lo cuestionarios que tiene resuelto el usuario por tema PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
-      var countS = 0;
-    var countT = 0;
-    let avanceT=0;
+    //2.Conocer lo cuestionarios que tiene resuelto el usuario por tema PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+    var countS = 0;//contador de subtemas con al menos un cuetionario resuelto
+    var countT = 0;//contador de temas completos
+    let avanceT = 0; // temas terminanos del alumno
+    //Obtenemos los temas existentes 
     const querySnapshotTemas = await getDocs(qTemas);
+    //Dentro del forEach se visita cada uno de los temas disponibles
     querySnapshotTemas.forEach(async (doc) => {
       console.log(doc.id, " => ", doc.data());
+      //Se declara una varible tipo let para que gurdemos el nombre del tema en cuestión
       let tema = "";
       tema = doc.data().Tema;
       console.log("Tema:::::-------", tema);
+      //Query que nos dara los subtemas cuando el atributo  Tema sea igual al tema dependiendiendo del forEach
       const qSub = query(collection(db, "Subtemas"), where("Tema", "==", tema));
       const querySnapshotSub = await getDocs(qSub);
+      //Se recorre cada uno de los valores con un forEach
       querySnapshotSub.forEach(async (docSub) => {
         console.log(docSub.id, " => ", docSub.data());
+        //Se declara una varible tipo let para ir guardando el valor del subtema
         let Subtema = "";
         Subtema = docSub.data().Subtema;
+        console.log("Tema----------------------------------------------",tema);
         console.log("SubTema:::::--------", Subtema);
+        // refenrencia a la colección de Resultado en la bd
         const refR = collection(db, "Resultado");
-
-        const qRes = query(refR, where("idAlumno", "==", user.uid),
-          where("subTemaCuestionario", "==", Subtema), where("temaCuestionario", "==", tema));
+        //query que permite obtener los regitros de Rsultados cuando el idAlumno, subtema y tema coincida con los asignados.
+        const qRes = query(
+          refR,
+          where("idAlumno", "==", user.uid),
+          where("subTemaCuestionario", "==", Subtema),
+          where("temaCuestionario", "==", tema)
+        );
+        //Se obtienen los resultados del query
         const querySnapshotRes = await getDocs(qRes);
+        //Se manda a imprimir cada uno de los valores de los documentos obtennidos
         querySnapshotRes.forEach(async (docRes) => {
           console.log("Resultado");
           console.log(docSub.id, " => ", docRes.data());
-        })
+        });
+        console.log("Tamaño de resultados con idAlumno, subtme y tema::",querySnapshotRes.size);
+        //Si el tamaño de los resultados es mayor que 0 entra dentro del if para poder aumentar el contador de countS, 
+          //que permitira cuantos subtemas han sido completos del tema en cuestgion, dependiendo del forEach.
         if (querySnapshotRes.size > 0) {
           countS = countS + 1;
           console.log("countS en if::::", countS);
-        }else{
-          //countS=0;
+        } else {
+          countS=0;
           console.log(":::en else countS en if::::", countS);
-
         }
-        if (countS === doc.data().TotalSubtemas) {
+        console.log("Numero de subtemas",doc.data().TotalSubtemas)
+        //Si el valor del contado de subtemas completos coincide con el total de subtemas de un tema se podra tomar como tema completo.
+          // Y se podra aumentar el contador de temas completos y calcular el avance para poderlo actualizar en el doc de Alumno
+        if (countS == doc.data().TotalSubtemas) {
           console.log(":::Entro if de countS==doc.data().TotalSubtemas::");
           countT = countT + 1;
-          console.log("countT en if:::::",countT);
-         avanceT=(countT*100)/countTemas;
-          console.log("Avance Tema",avanceT);
+          console.log("countT en if:::::", countT);
+          avanceT = (countT * 100) / countTemas;
+          console.log("Avance Tema", avanceT);
           await updateDoc(alumnoRef, {
             "Avance.TemasCompletos": countT,
           });
-        }else{
-          console.log("countT en if:::::",countT);
+        } else {
+          countT=0;//Aun no se si sea tan necesario
+          console.log("countT en if:::::", countT);
         }
       });
-
     });
-
-    }
-  } else {
-    console.log("Sin datos");
-    // Add a new document with a generated id.
-
-    const docRef = await addDoc(collection(db, "Resultado"), {
-      calificacion: cal,
-      idAlumno: user.uid,
-      idCuestionario: quiz.idCuestionario,
-      intento: intento,
-      temaCuestionario: quiz.Tema,
-      subTemaCuestionario: quiz.Subtema
-    });
-    console.log("Document written with ID: ", docRef.id);
-    const resultadoRef = doc(db, "Resultado", docRef.id);
-
-    await updateDoc(resultadoRef, {
-      idResultado: docRef.id
-    });
-    //Checar porque aqui tambien se tiene que actualizar la tabla de Alumno para el promedio y cuestionarios resueltos
-
   }
-
-  return cal;
-}
+  //Registrar resultado cuestionario
+  export async function registrarResultadoCuestionarioAsignado(
+    values,
+    quiz,
+    user
+  ) {
+    var cal = 0;
+    var intento = 1;
+    var contIgualAlum = 0;
+    var calSub = 0;
+    if (values.respuesta1 === quiz.respuestaCorrectaP1) {
+      cal++;
+    }
+  
+    if (values.respuesta2 === quiz.respuestaCorrectaP2) {
+      cal++;
+    }
+  
+    if (values.respuesta3 === quiz.respuestaCorrectaP3) {
+      cal++;
+    }
+  
+    if (values.respuesta4 === quiz.respuestaCorrectaP4) {
+      cal++;
+    }
+  
+    if (values.respuesta5 === quiz.respuestaCorrectaP5) {
+      cal++;
+    }
+  
+    if (values.respuesta6 === quiz.respuestaCorrectaP6) {
+      cal++;
+    }
+    if (values.respuesta7 === quiz.respuestaCorrectaP7) {
+      cal++;
+    }
+    if (values.respuesta8 === quiz.respuestaCorrectaP8) {
+      cal++;
+    }
+  
+    if (values.respuesta9 === quiz.respuestaCorrectaP9) {
+      cal++;
+    }
+    if (values.respuesta10 === quiz.respuestaCorrectaP10) {
+      cal++;
+    }
+  
+    console.log("Calificacion", cal);
+    console.log("idCuestionario=>", quiz.idCuestionario);
+    console.log("idAlumno", user.uid);
+  
+    const cuestionarioRef = collection(db, "Resultado");
+    const resu = query(
+      cuestionarioRef,
+      where("idCuestionario", "==", quiz.idCuestionario),
+      where("idAlumno", "==", user.uid)
+    );
+    const querySnapshot = await getDocs(resu);
+  
+    if (querySnapshot.size > 0) {
+      let idRes;
+      console.log("Hay al menos un registro con esa informacion");
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        console.log("NumIntento::", doc.data().intento);
+        intento = doc.data().intento + 1;
+        idRes = doc.id;
+      });
+      console.log("Nuevo intento::>", intento);
+      if (intento > 3) {
+        console.log(
+          "Ya no puede volver a hacer el cuestionario porque ya tienen 3 intentos"
+        );
+        //Aqui puedo retornar  bandera 0
+      } else {
+        const resultadoRef = doc(db, "Resultado", idRes);
+        await updateDoc(resultadoRef, {
+          intento: intento,
+          calificacion: cal,
+        });
+        //Obtener el total de cuestionarios con al menos un intento
+        const cuestionarioRef = collection(db, "Resultado");
+        const museums2 = query(cuestionarioRef, where("intento", "<=", 3));
+        const querySnapshot2 = await getDocs(museums2);
+  
+        querySnapshot2.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          console.log(user.uid);
+          console.log(doc.data().idAlumno);
+          if (doc.data().idAlumno == user.uid) {
+            contIgualAlum++;
+            calSub = calSub + doc.data().calificacion;}
+        });
+        var prom = calSub / contIgualAlum;
+        console.log("Datos encontradoos", contIgualAlum);
+        console.log("Promdio::", prom);
+        //Acceder al doc del alumno que esta contestando para actualizar su avance
+        const alumnoRef = doc(db, "Alumno", user.uid);
+        await updateDoc(alumnoRef, {
+          "Avance.CuestionariosCompletos": contIgualAlum,
+          "Avance.PromedioGeneral": prom,
+        });
+        //retornar 1
+      }
+    } else {
+      console.log("Sin datos");
+      // Add a new document with a generated id.
+      const docRef = await addDoc(collection(db, "Resultado"), {
+        calificacion: cal,
+        idAlumno: user.uid,
+        idCuestionario: quiz.idCuestionario,
+        intento: intento,
+        temaCuestionario: quiz.Tema,
+        subTemaCuestionario: quiz.Subtema,
+      });
+      console.log("Document written with ID: ", docRef.id);
+      const resultadoRef = doc(db, "Resultado", docRef.id);
+  
+      await updateDoc(resultadoRef, {
+        idResultado: docRef.id,
+      });
+      //Actualzar datos en alumno
+      //Obtener el total de cuestionarios con al menos un intento
+      const cuestionarioRef = collection(db, "Resultado");
+      const museums2 = query(cuestionarioRef);
+      const querySnapshot2 = await getDocs(museums2);
+  
+      querySnapshot2.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        console.log(user.uid);
+        console.log(doc.data().idAlumno);
+        if (doc.data().idAlumno == user.uid) {
+          contIgualAlum++;
+        }
+      });
+      //Acceder al doc del alumno que esta contestando para actualizar su avance
+      const alumnoRef = doc(db, "Alumno", user.uid);
+      await updateDoc(alumnoRef, {
+        "Avance.CuestionariosCompletos": contIgualAlum,
+        "Avance.PromedioGeneral": cal,
+      });
+      //Actualiar el avance respecto al tema
+      actualizarAvanceTemaAlumno(user);
+    }
+    
+    return cal;
+  }
 
 export async function buscarCuestionario(criterioBusqueda, claveBusqueda) {
   let docusFiltradoF = [];

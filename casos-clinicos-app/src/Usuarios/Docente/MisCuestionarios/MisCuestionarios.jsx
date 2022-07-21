@@ -141,7 +141,7 @@ function MisCuestionarios({ user }) {
               </ListGroup>
             </Col>
             <Col style={{background:'white', height:'100%'}} className='shadow' >
-              {cuestionario &&
+              {cuestionario ?
 
                 <Form style={{ width: '100%', height: '700px', overflowY: 'auto' }} className="cuestionarioForm">
                   {/*Pregunta 1*/}
@@ -369,7 +369,7 @@ function MisCuestionarios({ user }) {
 
 
                   <br />
-                </Form>
+                </Form>: <p>Selecciona un cuestionario</p>
 
               }
             </Col>

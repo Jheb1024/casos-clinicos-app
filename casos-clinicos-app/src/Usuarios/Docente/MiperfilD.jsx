@@ -92,7 +92,7 @@ export default function MiperfilD({ user }) {
           {docente ?
             <Card >
               <Card.Body>
-                <Card.Title><h4 claseName="h4">Datos personales</h4></Card.Title>
+                <Card.Title><h4 claseName="h4"><b>Datos personales</b></h4></Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">Docente</Card.Subtitle>
                 <Card.Text>
                   <b>Nombre: </b>{docente.Nombre}
@@ -120,8 +120,8 @@ export default function MiperfilD({ user }) {
             </Card> : null}
         </div>
         <div class="col-4 shadow bg-white p-2">
+          <h4 claseName="h4"><b>Clases registradas</b></h4>
           <AgregarClaseModal uid={user.uid} />
-          <h4 claseName="h4">Clases registradas</h4>
           <table className=" WIDTH=50% table table-bordered">
             <thead>
               <tr>

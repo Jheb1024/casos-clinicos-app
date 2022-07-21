@@ -117,7 +117,7 @@ export default function ListaAlumno({ user }) {
       <AgregarAlumnoDocModal />
       <div className="container-fluid">
         <form className="d-flex" onSubmit={busquedaFormHandler}>
-          <label for="criterio">Buscar por:</label>
+          <label htmlFor="criterio">Buscar por:</label>
           <select name="criterio" id="criterio">
             <option value="1" selected>
               Apellido paterno

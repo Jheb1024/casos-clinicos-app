@@ -113,7 +113,7 @@ async function registrarDocente(email, pass, Matricula, Nombre, apellidoP, apell
     
 
 }
-export function submitHandler(e) {
+export async function submitHandler(e) {
     e.preventDefault();
     /// debemos hacer las validaciones
     const Matricula = e.target.elements.matriculaDoc.value;
@@ -139,8 +139,18 @@ export function submitHandler(e) {
         });
     } else {
 
-        
+        const matriculaRepetida = await verificarMatriculaDocente(Matricula);
+        console.log(matriculaRepetida)
+        if(matriculaRepetida){
+            console.log("La matricula está en uso por otro usuario, si eres el propietario por favor comunicate con el administrador");
+            new Swal({
+                icon: 'warning',
+                title: 'Matricula en uso.',
+                text: 'La matricula está en uso por otro usuario, si eres el propietario por favor comunícate con el administrador.'
+            });
+        }else{
 
+        
         
         new Swal({
             title: 'Registro docente',
@@ -173,6 +183,7 @@ export function submitHandler(e) {
             });
         
     }
+}
     console.log("submit", email, pass);
 }
 function CerrarSesion() {
@@ -194,13 +205,14 @@ async function verificarMatriculaDocente(matricula){
 
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
         console.log(doc.id, " => ", doc.data());
         });
 
         if(querySnapshot.empty){
             repetido = false;
+            console.log("Esta vacío")
         }else{
+            console.log("Encontró algo")
             repetido = true;
         }
 

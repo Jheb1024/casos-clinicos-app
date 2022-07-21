@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { getAuth, createUserWithEmailAndPassword,signOut, } from 'firebase/auth';
-import { getFirestore, doc, setDoc,updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc,updateDoc,query,collection,where,getDocs } from 'firebase/firestore';
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
 import Swal from "sweetalert2";
@@ -131,7 +131,7 @@ const Registro = () => {
             });
         }
     }
-    function submitHandler(e) {
+   async function submitHandler(e) {
         e.preventDefault();
         /// debemos hacer las validaciones
         const Matricula = e.target.elements.InputMatricula.value;
@@ -158,6 +158,18 @@ const Registro = () => {
                 timer: 2000
             });
         } else {
+            
+            const matriculaRepetida = await verificarMatriculaDocente(Matricula);
+        console.log(matriculaRepetida)
+        if(matriculaRepetida){
+            console.log("La matricula está en uso por otro usuario, si eres el propietario por favor comunicate con el administrador");
+            new Swal({
+                icon: 'warning',
+                title: 'Matricula en uso.',
+                text: 'La matricula está en uso por otro usuario, si eres el propietario por favor comunícate con el administrador.'
+            });
+        }else{
+
             new Swal({
                 title: 'Registro alumno',
                 text: '¿Desea confirmar tu registro?',
@@ -185,8 +197,31 @@ const Registro = () => {
                         }
                     }
                 });
+            
         }
+    }
+    
         console.log("submit", email, pass);
+    }
+    async function verificarMatriculaDocente(matricula){
+        let repetido;
+    
+        const q = query(collection(firestore, "Alumno"), where("Matricula", "==", matricula));
+    
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            });
+    
+            if(querySnapshot.empty){
+                repetido = false;
+                console.log("Esta vacío")
+            }else{
+                console.log("Encontró algo")
+                repetido = true;
+            }
+    
+        return repetido;
     }
     return (
         <div className='container px-lg-2'>
@@ -286,7 +321,7 @@ const Registro = () => {
                             //Validaciones contraseña2
                             if (!valores.passwordr2) {
                                 errores.passwordr2 = "Por favor repita su contraseña."
-                            } else if (valores.passwordr != valores.passwordr2) {
+                            } else if (valores.passwordr !== valores.passwordr2) {
                                 errores.passwordr2 = "Verifique su contraseña, no coinciden."
                             }
                             return errores;
@@ -305,7 +340,7 @@ const Registro = () => {
                                     <h1 className="h1">Registro Alumno</h1>
                                     <small id="emailHelp" className="form-text text-muted">No compartiremos tu información</small>
                                     <div className="form-group">
-                                        <label for="InputMatricula" className="form-label">Matrícula</label>
+                                        <label htmlFor="InputMatricula" className="form-label">Matrícula</label>
                                         <Field
                                             type="txt"
                                             className="form-control"
@@ -318,7 +353,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="InputNombre">Nombre(s)</label>
+                                        <label htmlFor="InputNombre">Nombre(s)</label>
                                         <Field type="txt"
                                             className="form-control"
                                             id="InputNombre"
@@ -330,7 +365,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="InputApellidoP">Apellido paterno</label>
+                                        <label htmlFor="InputApellidoP">Apellido paterno</label>
                                         <Field type="txt"
                                             className="form-control"
                                             id="InputApellidoP"
@@ -342,7 +377,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="InputApellidoM">Apellido materno</label>
+                                        <label htmlFor="InputApellidoM">Apellido materno</label>
                                         <Field type="txt"
                                             className="form-control"
                                             id="InputApellidoM"
@@ -354,7 +389,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="InputSexo">Sexo</label><br></br>
+                                        <label htmlFor="InputSexo">Sexo</label><br></br>
                                         <Field className="form-select" id="SelectSexo" name="SelectSexo" as="select">
                                             <option  value="Elige una opción">Elige una opción</option>
                                             <option value="Mujer">Mujer</option>
@@ -366,7 +401,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="InputEdad">Edad</label>
+                                        <label htmlFor="InputEdad">Edad</label>
                                         <Field
                                             type="number"
                                             className="form-control"
@@ -380,7 +415,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="InputNRC">NRC de la materia</label>
+                                        <label htmlFor="InputNRC">NRC de la materia</label>
                                         <Field
                                             type="text"
                                             className="form-control"
@@ -393,7 +428,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="SelectVeces">¿Cuántas veces ha tomado la materia?</label>
+                                        <label htmlFor="SelectVeces">¿Cuántas veces ha tomado la materia?</label>
                                         <Field className="form-select" id="SelectVeces" name="SelectVeces" as="select">
                                             <option value="Elige una opción">Elige una opción</option>
                                             <option value="0">0</option>
@@ -405,7 +440,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="SelectEstudios">¿Tiene estudios previos?</label>
+                                        <label htmlFor="SelectEstudios">¿Tiene estudios previos?</label>
                                         <Field className="form-select" name="SelectEstudios" id="SelectEstudios" as="select">
                                             <option value="Elige una opción">Elige una opción</option>
                                             <option value="Si">Si</option>
@@ -417,7 +452,7 @@ const Registro = () => {
                                     </div>
 
                                     <div className="form-group">
-                                        <label for="email">Correo electrónico</label>
+                                        <label htmlFor="email">Correo electrónico</label>
                                         <Field
                                             type="txt"
                                             className="form-control"
@@ -431,7 +466,7 @@ const Registro = () => {
 
                                     </div>
                                     <div className="form-group">
-                                        <label for="passwordr">Contraseña</label>
+                                        <label htmlFor="passwordr">Contraseña</label>
                                         <Field
                                             type="password"
                                             className="form-control"
@@ -444,7 +479,7 @@ const Registro = () => {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="passwordr2">Confirmar Contraseña</label>
+                                        <label htmlFor="passwordr2">Confirmar Contraseña</label>
                                         <Field
                                             type="password"
                                             className="form-control"
@@ -459,7 +494,7 @@ const Registro = () => {
 
                                 </fieldset>
                                 <br />
-                                <label for="txt">¿Ya tienes una cuenta? <a href="/inicio-sesion">Iniciar Sesión</a></label>
+                                <label htmlFor="txt">¿Ya tienes una cuenta? <a href="/inicio-sesion">Iniciar Sesión</a></label>
                                 <br />
                                 <div>
                                     <input type="submit" className="btn btn-success"
