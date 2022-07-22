@@ -2,8 +2,10 @@ import { Modal, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { doc, updateDoc, getFirestore} from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { verificarMatriculaDocente } from "../../Componentes/Registro/funcRegistroDocente"
 import Swal from "sweetalert2";
 import './EditarPerfilDocente.css'
+import { actualizarPassword } from "../../Modelo/AdministrarUsuarios/AdministradorDocente";
 
 const EditarPerfil=({ Perfil , uid}) =>{
     console.log(Perfil);
@@ -18,6 +20,15 @@ const EditarPerfil=({ Perfil , uid}) =>{
       }
     },  )
     
+    function mostrarContrasena() {
+      var tipo = document.getElementById("password");
+      console.log("tipo", tipo.type);
+      if (tipo.type === "password") {
+        tipo.type = "text";
+      } else {
+        tipo.type = "password";
+      }
+    }
 
 
 
@@ -31,27 +42,50 @@ const EditarPerfil=({ Perfil , uid}) =>{
     apellidoMaterno,
     edad,
     matricula,
-    nrc,
     SelectSexo,
-    email,
     password
   ){
     console.log("uid from editarpefil : ")
     console.log(uid);
-    const docuRef = doc(db, "Docente", uid);
+    if(matricula === perfil.Matricula){
 
-    await updateDoc(docuRef, {
-        Nombre :nombre,
-        ApellidoPaterno: apellidoPaterno,
-        ApellidoMaterno: apellidoMaterno,
-        Edad: edad,
-        Matricula: matricula,
-        NRC: nrc,
-        Sexo:SelectSexo,
-        corre:email,
-        password:password
-    });
-     setShow(false);
+      const docuRef = doc(db, "Docente", uid);
+        await updateDoc(docuRef, {
+            Nombre :nombre,
+            ApellidoPaterno: apellidoPaterno,
+            ApellidoMaterno: apellidoMaterno,
+            Edad: edad,
+            Matricula: matricula,
+            Sexo:SelectSexo,
+            password: password,
+        }).then(()=>{
+
+          actualizarPassword(password).then(()=>{
+            new Swal({
+            icon: 'success',
+            title: 'Registro.',
+            text: 'Se han actualizado los datos'
+        }); setShow(false);
+          })
+          
+        })
+       
+
+    }else{
+      const matriculaRepetida = await verificarMatriculaDocente(matricula);
+        console.log(matriculaRepetida)
+        if(matriculaRepetida){
+            console.log("La matricula está en uso por otro usuario, si eres el propietario por favor comunicate con el administrador");
+            new Swal({
+                icon: 'warning',
+                title: 'Matricula en uso.',
+                text: 'La matricula está en uso por otro usuario, si eres el propietario por favor comunícate con el administrador.'
+            });
+        }
+    }
+    
+        
+      
   }
 
   return (
@@ -69,32 +103,16 @@ const EditarPerfil=({ Perfil , uid}) =>{
         <Formik
 
        initialValues={{
-        email: perfil.correo,
-        password: perfil.password,
         nombre: perfil.Nombre,
         apellidoPaterno: perfil.ApellidoPaterno,
         apellidoMaterno: perfil.ApellidoMaterno,
         edad: perfil.Edad,
         matricula: perfil.Matricula,
-        nrc: perfil.NRC,
-        SelectSexo: perfil.Sexo
+        SelectSexo: perfil.Sexo,
+        password: perfil.password
        }}
        validate={values => {
          const errors = {};
-         if (!values.email) {
-            errors.email = 'Campo requerido';
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = 'Correo invalido';
-          }
-
-          if (!values.password) {
-            errors.password = 'Campo requerido'
-          } else if (values.password.length < 7) {
-            errors.password = 'La contraseña es muy debil'
-          }
-
           if (!values.nombre) {
             errors.nombre = 'Campo requerido'
           } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(values.nombre)) {
@@ -121,16 +139,21 @@ const EditarPerfil=({ Perfil , uid}) =>{
           } else if (values.matricula.length < 9 || values.matricula.length > 9) {
             errors.matricula = "La matricula solo puede tener 5 números, sin espacios."
           }
-          if (!values.nrc) {
-            values.nrc = "Por favor ingrese el NRC."
-          } else if (!/^(?:\+|-)?\d+$/.test(values.nrc)) {
-            errors.nrc = "El NRC de la materia solo puede tener números, sin espacios."
-          } else if (values.nrc.length < 5 || values.nrc.length > 7) {
-            errors.nrc = "El NRC solo puede tener de 5 a 7 números, sin espacios."
+          if (!values.password) {
+            errors.password = "Campo requerido";
+          } else if (!/^[A-Za-z0-9]{7}$/.test(values.password)) {
+            errors.password =
+              "Su contraseña solo puede tener números y letras, sin espacios.";
+          } else if (
+            values.password.length < 7 ||
+            values.password.length > 7
+          ) {
+            errors.password =
+              "Su contraseña debe de tener 7 elementos.Sin espacios!";
           }
-
          return errors;
-       }}
+       }
+      }
        onSubmit={(values, { setSubmitting }) => {
 
         new Swal({
@@ -149,10 +172,10 @@ const EditarPerfil=({ Perfil , uid}) =>{
                 values.apellidoMaterno,
                 values.edad,
                 values.matricula,
-                values.nrc,
                 values.SelectSexo,
-                values.email,
-                values.password
+                values.password,
+                
+                
               )) {
                 new Swal({
                   title: "Registro exitoso",
@@ -173,72 +196,155 @@ const EditarPerfil=({ Perfil , uid}) =>{
      >
        {({ isSubmitting }) => (
         
-           <Form style={{ textAlign: 'left', fontSize: '20px', padding: '10px', scrollBehavior: 'smooth' }}>
-                      <div className="mb3">
-                        <label htmlFor="nombre">Nombre</label>
-                        <Field name="nombre" />
-                        <ErrorMessage name="nombre" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div>
+        <Form
+        className="row g-3"
+        style={{
+          textAlign: "left",
+          fontSize: "20px",
+          padding: "10px",
+          scrollBehavior: "smooth",
+        }}
+      >
+        <div className="form-group">
+          <label className="form-label" htmlFor="nombre">
+            Nombre
+          </label>
+          <Field
+            type="txt"
+            className="form-control"
+            name="nombre"
+          />
+          <ErrorMessage
+            name="nombre"
+            component="div"
+            style={{ color: "red", fontSize: "15px" }}
+          />
+        </div>
 
+        <div className="form-group">
+          <label className="form-label" htmlFor="apellidoPaterno">
+            Apellido Paterno
+          </label>
+          <Field
+            type="txt"
+            className="form-control"
+            name="apellidoPaterno"
+          />
+          <ErrorMessage
+            name="apellidoPaterno"
+            component="div"
+            style={{ color: "red", fontSize: "15px" }}
+          />
+        </div>
 
-                      <div className="mb3">
-                        <label htmlFor="apellidoPaterno">Apellido Paterno</label>
-                        <Field name="apellidoPaterno" />
-                        <ErrorMessage name="nomapellidoPaternobre" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="apellidoMaterno">
+            Apellido Materno
+          </label>
+          <Field
+            type="txt"
+            className="form-control"
+            name="apellidoMaterno"
+          />
+          <ErrorMessage
+            name="apellidoMaterno"
+            component="div"
+            style={{ color: "red", fontSize: "15px" }}
+          />
+        </div>
 
-                      <div className="mb3">
-                        <label htmlFor="apellidoMaterno">Apellido Materno</label>
-                        <Field name="apellidoMaterno" />
-                        <ErrorMessage name="apellidoMaterno" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="edad">
+            Edad
+          </label>
+          <Field
+            type="number"
+            className="form-control"
+            name="edad"
+            min="18"
+            max="80"
+          />
+          <ErrorMessage
+            name="edad"
+            component="div"
+            style={{ color: "red", fontSize: "15px" }}
+          />
+        </div>
 
-                      <div className="mb3">
-                        <label htmlFor="edad">Edad</label>
-                        <Field name="edad" />
-                        <ErrorMessage name="edad" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="matricula">
+            Matricula
+          </label>
+          <Field
+            type="text"
+            className="form-control"
+            name="matricula"
+          />
+          <ErrorMessage
+            name="matricula"
+            component="div"
+            style={{ color: "red", fontSize: "15px" }}
+          />
+        </div>
 
-                      <div className="mb3">
-                        <label htmlFor="matricula">Matricula</label>
-                        <Field name="matricula" />
-                        <ErrorMessage name="matricula" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div>
-
-                      <div className="mb3">
-                        <label htmlFor="nrc">NRC Inscrito</label>
-                        <Field name="nrc" />
-                        <ErrorMessage name="nrc" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div>
-
-                      <div className="mb3">
-                        <label htmlFor="selectSexo">Sexo</label>
-                        <Field class="form-select" id="selectSexo" name="SelectSexo" as="select">
-                          <option value="Elige una opción">Elige una opción</option>
-                          <option value="Mujer">Mujer</option>
-                          <option value="Hombre">Hombre</option>
-                          <option value="Hombre">Otro</option>
-                        </Field>
-                        <ErrorMessage name="selectSexo" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div>
-                      <div className="mb3">
-                        <label htmlFor="email">Correo</label>
-                        <Field type="email" name="email" />
-                        <ErrorMessage name="email" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div>
-                      <div className="mb3">
-                        <label htmlFor="password">Contraseña</label>
-                        <Field type="password" name="password" />
-                        <ErrorMessage name="password" component="div" style={{ color: 'red', fontSize: '15px' }} />
-                      </div> 
-           <br></br>
-           <Button variant="primary"  type="submit" disabled={isSubmitting}>
-             Actualizar
-           </Button>
-           <Button variant="secondary" onClick={handleClose}>
+        <div className="form-group">
+          <label className="form-label" htmlFor="selectSexo">
+            Sexo
+          </label>
+          <Field
+            className="form-select"
+            id="selectSexo"
+            name="SelectSexo"
+            as="select"
+          >
+            <option value="Elige una opción">Elige una opción</option>
+            <option value="Mujer">Mujer</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Hombre">Otro</option>
+          </Field>
+          <ErrorMessage
+            name="selectSexo"
+            component="div"
+            style={{ color: "red", fontSize: "15px" }}
+          />
+        </div>
+        <div className="form-group">
+                  <label className="form-label" htmlFor="password">
+                    Contraseña
+                  </label>
+                  <Field
+                    type="password"
+                    className="form-control"
+                    name="password"
+                    id="password"
+                  />
+                  <button
+                    className="btn btn-primary btn-sm"
+                    type="button"
+                    onClick={() => mostrarContrasena()}
+                  >
+                    Mostrar/Ocultar
+                  </button>
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    style={{ color: "red", fontSize: "15px" }}
+                  />
+                </div>
+        
+        
+        <br></br>
+        <div className="btn-group" role="group">
+          <input
+            type="submit"
+            className="btn btn-success"
+            value="Guardar"
+          />
+          <Button variant="danger" onClick={handleClose}>
             Cancelar
           </Button>
-         </Form>
+        </div>
+      </Form>
        )}
      </Formik>
         </Modal.Body>

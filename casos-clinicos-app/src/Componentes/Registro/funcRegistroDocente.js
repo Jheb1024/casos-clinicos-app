@@ -97,7 +97,8 @@ async function registrarDocente(email, pass, Matricula, Nombre, apellidoP, apell
             });
             await setDoc(doc(firestore, `Usuarios/${infoUsuario.user.uid}`), {
                 email: email,
-                rol: "docente"
+                rol: "docente",
+                matricula: Matricula
             }).then(() => {
                 CerrarSesion()
                 window.location.href = "/inicio-sesion";
@@ -198,10 +199,10 @@ function CerrarSesion() {
             console.log(err.message);
         });
 }
-async function verificarMatriculaDocente(matricula){
+export async function verificarMatriculaDocente(matricula){
     let repetido;
 
-    const q = query(collection(firestore, "Docente"), where("Matricula", "==", matricula));
+    const q = query(collection(firestore, "Usuarios"), where("matricula", "==", matricula));
 
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {

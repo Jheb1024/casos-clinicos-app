@@ -20,9 +20,10 @@ const EditarPerfilAModal = ({ alumno, id }) => {
     matricula,
     nrc,
     selectSexo,
-    email,
     password
   ) {
+
+    if(matricula === alumno.Matricula){
     const docuRef = doc(db, "Alumno", id);
 
     await updateDoc(docuRef, {
@@ -33,10 +34,33 @@ const EditarPerfilAModal = ({ alumno, id }) => {
       Matricula: matricula,
       NRC: nrc,
       Sexo: selectSexo,
-      Correo: email,
-      Password: password,
-    });
+      password: password,
+      }).then(()=>{
+
+        admiAl.actualizarPasswordAlumno(password).then(()=>{
+          new Swal({
+          icon: 'success',
+          title: 'Registro.',
+          text: 'Se han actualizado los datos'
+      }); setShow(false);
+        })
+        
+        
+      })
+    }else{
+      const matriculaRepetida = await admiAl.verificarMatriculaAlumno(matricula);
+      console.log(matriculaRepetida)
+      if(matriculaRepetida){
+          console.log("La matricula está en uso por otro usuario, si eres el propietario por favor comunicate con el administrador");
+          new Swal({
+              icon: 'warning',
+              title: 'Matricula en uso.',
+              text: 'La matricula está en uso por otro usuario, si eres el propietario por favor comunícate con el administrador.'
+          });
+      }
+    }
   }
+
   function submitHandler(e) {
     e.preventDefault();
     const MatriculaN = e.target.elements.InputMatricula.value;
@@ -45,7 +69,6 @@ const EditarPerfilAModal = ({ alumno, id }) => {
     const ApellidoMN = e.target.elements.InputApellidoM.value;
     const NRCn = e.target.elements.InputNRC.value;
     const sexoN = e.target.elements.SelectSexo.value;
-    const emailN = e.target.elements.email.value;
     const passN = e.target.elements.InputPassword.value;
     const edadN = e.target.elements.InputEdad.value;
 
@@ -56,9 +79,8 @@ const EditarPerfilAModal = ({ alumno, id }) => {
       ApellidoMN === "" ||
       NRCn === "" ||
       sexoN === "" ||
-      emailN === "" ||
-      passN === "" ||
-      edadN === ""
+      edadN === ""||
+      passN === "" 
     ) {
       new Swal({
         position: "top-end",
@@ -86,7 +108,6 @@ const EditarPerfilAModal = ({ alumno, id }) => {
               MatriculaN,
               NRCn,
               sexoN,
-              emailN,
               passN
             )
           ) {
@@ -146,9 +167,6 @@ const EditarPerfilAModal = ({ alumno, id }) => {
         <Modal.Body>
           <Formik
             initialValues={{
-              email: alumno.correo,
-              InputPassword: alumno.password,
-              passwordr2: alumno.password,
               InputNombre: alumno.Nombre,
               InputApellidoP: alumno.ApellidoPaterno,
               InputApellidoM: alumno.ApellidoMaterno,
@@ -156,35 +174,11 @@ const EditarPerfilAModal = ({ alumno, id }) => {
               InputMatricula: alumno.Matricula,
               InputNRC: alumno.NRC,
               SelectSexo: alumno.Sexo,
+              InputPassword: alumno.password,
             }}
             validate={(values) => {
               let errors = {};
-              if (!values.email) {
-                errors.email = "Campo requerido";
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = "Correo invalido";
-              }
-              if (!values.InputPassword) {
-                errors.password = "Campo requerido";
-              } else if (!/^[A-Za-z0-9]{7}$/.test(values.InputPassword)) {
-                errors.password =
-                  "Su contraseña solo puede tener números y letras, sin espacios.";
-              } else if (
-                values.InputPassword.length < 7 ||
-                values.InputPassword.length > 7
-              ) {
-                errors.password =
-                  "Su contraseña debe de tener 7 elementos.Sin espacios!";
-              }
-              //Validaciones contraseña2
-              if (!values.passwordr2) {
-                errors.passwordr2 = "Por favor repita su contraseña.";
-              } else if (values.passwordr != values.passwordr2) {
-                errors.passwordr2 = "Verifique su contraseña, no coinciden.";
-              }
-
+             
               if (!values.InputNombre) {
                 errors.nombre = "Campo requerido";
               } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(values.InputNombre)) {
@@ -237,6 +231,18 @@ const EditarPerfilAModal = ({ alumno, id }) => {
                 values.SelectSexo === "Elige una opción"
               ) {
                 errors.selectSexo = "Por favor seleccione una opción.";
+              }
+              if (!values.InputPassword) {
+                errors.password = "Campo requerido";
+              } else if (!/^[A-Za-z0-9]{7}$/.test(values.InputPassword)) {
+                errors.password =
+                  "Su contraseña solo puede tener números y letras, sin espacios.";
+              } else if (
+                values.InputPassword.length < 7 ||
+                values.InputPassword.length > 7
+              ) {
+                errors.password =
+                  "Su contraseña debe de tener 7 elementos.Sin espacios!";
               }
               return errors;
             }}
@@ -371,17 +377,6 @@ const EditarPerfilAModal = ({ alumno, id }) => {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="email">
-                    Correo
-                  </label>
-                  <Field type="email" name="email" className="form-control" />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    style={{ color: "red", fontSize: "15px" }}
-                  />
-                </div>
-                <div className="form-group">
                   <label className="form-label" htmlFor="password">
                     Contraseña
                   </label>
@@ -404,34 +399,8 @@ const EditarPerfilAModal = ({ alumno, id }) => {
                     style={{ color: "red", fontSize: "15px" }}
                   />
                 </div>
-                <div className="form-group">
-                  <label for="passwordr2">Confirmar Contraseña</label>
-                  <Field
-                    type="password"
-                    className="form-control"
-                    id="passwordr2"
-                    name="passwordr2"
-                    placeholder="Constraseña"
-                  />
-                  <button
-                    className="btn btn-primary btn-sm"
-                    type="button"
-                    onClick={() => mostrarContrasena2()}
-                  >
-                    Mostrar/Ocultar
-                  </button>
-
-                  <ErrorMessage
-                    name="passwordr2"
-                    component={() => (
-                      <div className="error">
-                        <p className="text-danger">
-                          <small>{errors.passwordr2}</small>
-                        </p>
-                      </div>
-                    )}
-                  />
-                </div>
+                
+                
                 <br></br>
                 <div className="btn-group" role="group">
                   <input

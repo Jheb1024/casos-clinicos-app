@@ -10,7 +10,7 @@ import {
   } from "firebase/firestore";
   import Docente from "../Usuarios/Docente";
   import firebaseApp from "../../Firebase/firebase-config";
-  import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+  import { getAuth, updatePassword } from "firebase/auth";
   import AdministradorUsuario from "../AdministrarUsuarios/AdministradorUsuario";
   
   export default class AdministradorDocente extends AdministradorUsuario {
@@ -170,3 +170,38 @@ import {
       );
     },
   };
+
+  export async function verificarMatriculaDocente(matricula){
+    let repetido;
+
+    const q = query(collection(this.db, "Docente"), where("Matricula", "==", matricula));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        
+        });
+
+        if(querySnapshot.empty){
+            repetido = false;
+            console.log("Esta vacío")
+        }else{
+            repetido = true;
+        }
+
+    return repetido;
+}
+
+export async function actualizarPassword(password){ 
+  const auth = getAuth();
+
+const user = auth.currentUser;
+const newPassword = password;
+
+await updatePassword(user, newPassword).then(() => {
+  console.log('COntraseña actualizada')
+}).catch((error) => {
+  // An error ocurred
+  // ...
+});
+
+}

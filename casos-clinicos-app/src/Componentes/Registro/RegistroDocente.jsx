@@ -1,9 +1,6 @@
-import React, { useState } from "react";
+import React, {  } from "react";
 import { submitHandler } from "./funcRegistroDocente";
-import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
-import Swal from "sweetalert2";
-import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
-import { getAuth, createUserWithEmailAndPassword,signOut, } from 'firebase/auth';
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import "./registro.css";
 function RegistroDocente() {
@@ -111,7 +108,7 @@ function RegistroDocente() {
                                         No compartiremos tu información
                                     </small>
                                     <div className="form-group">
-                                        <label for="matriculaDoc" className="form-label">ID</label>
+                                        <label htmlFor="matriculaDoc" className="form-label">ID</label>
                                         <Field
                                             type="txt"
                                             className="form-control"
@@ -124,7 +121,7 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="nombreDoc" className="form-label">Nombre(s)</label>
+                                        <label htmlFor="nombreDoc" className="form-label">Nombre(s)</label>
                                         <Field
                                             type="txt"
                                             className="form-control"
@@ -137,7 +134,7 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="apellidoPDoc" className="form-label">Apellido Materno</label>
+                                        <label htmlFor="apellidoPDoc" className="form-label">Apellido Materno</label>
                                         <Field
                                             type="txt"
                                             className="form-control"
@@ -150,7 +147,7 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="apellidoMDoc" className="form-label">Apellido Materno</label>
+                                        <label htmlFor="apellidoMDoc" className="form-label">Apellido Materno</label>
                                         <Field
                                             type="txt"
                                             className="form-control"
@@ -163,7 +160,7 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="sexoDoc" className="form-label">Sexo</label>
+                                        <label htmlFor="sexoDoc" className="form-label">Sexo</label>
                                         <br></br>
                                         <Field className="form-select" id="sexoDoc" name="sexoDoc" as="select">
                                             <option value="Elige una opción">Elige una opción</option>
@@ -176,7 +173,7 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="edadDoc" className="form-label">Edad</label>
+                                        <label htmlFor="edadDoc" className="form-label">Edad</label>
                                         <Field
                                             type="number"
                                             className="form-control"
@@ -191,7 +188,7 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="emailDoc" className="form-label">Correo electrónico</label>
+                                        <label htmlFor="emailDoc" className="form-label">Correo electrónico</label>
                                         <Field
                                             type="email"
                                             className="form-control"
@@ -204,7 +201,7 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="passwordDoc" className="form-label">Contraseña</label>
+                                        <label htmlFor="passwordDoc" className="form-label">Contraseña</label>
                                         <Field
                                             type="password"
                                             className="form-control"
@@ -217,7 +214,7 @@ function RegistroDocente() {
                                         )} />
                                     </div>
                                     <div className="form-group">
-                                        <label for="passwordDoc2" className="form-label">Confirmar Contraseña</label>
+                                        <label htmlFor="passwordDoc2" className="form-label">Confirmar Contraseña</label>
                                         <Field
                                             type="password"
                                             className="form-control"
@@ -231,7 +228,7 @@ function RegistroDocente() {
                                     </div>
                                 </fieldset>
                                 <br />
-                                <label for="txt">
+                                <label htmlFor="txt">
                                     ¿Ya tienes una cuenta? <a href="/inicio-sesion">Iniciar Sesión</a>
                                 </label>
                                 <br />

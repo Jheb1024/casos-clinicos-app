@@ -1,17 +1,19 @@
 import React, {useState} from "react";
 import firebaseApp from "C:/Users/jhan_/Documents/casosc-app/casos-clinicos-app/casos-clinicos-app/src/Firebase/firebase-config.js";
 import { getAuth, createUserWithEmailAndPassword,signOut, } from 'firebase/auth';
-import { getFirestore, doc, setDoc,updateDoc,query,collection,where,getDocs } from 'firebase/firestore';
+import { getFirestore, doc, setDoc,updateDoc} from 'firebase/firestore';
 import { useHistory } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import Swal from "sweetalert2";
 import './registro.css'
+import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorAlumno";
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
 
 
 const Registro = () => {
+    const admiAl = new AdministradorAlumno();
     let history = useHistory();
     const [formularioEnviado, cambiarFormularioEnviado] = useState(false);
      
@@ -29,7 +31,8 @@ const Registro = () => {
     }
 
     async function registrarUsuario(email, pass, Matricula, Nombre,ApellidoP,ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro) {
-
+        console.log('entramos para crear un nuevo usuario')
+      
         const infoUsuario = await createUserWithEmailAndPassword(auth, email, pass).then((usuarioFirebase) => {
             return usuarioFirebase;
         }).catch(error => {
@@ -117,7 +120,8 @@ const Registro = () => {
              });
             await setDoc(doc(firestore, `Usuarios/${infoUsuario.user.uid}`), {
                 email: email,
-                rol: "alumno"
+                rol: "alumno",
+                matricula: Matricula
             }).then(()=>{
                 CerrarSesion()
                 history.push('/inicio-sesion')
@@ -130,6 +134,7 @@ const Registro = () => {
                 text: 'El correo electrónico ya esta registrado.Introduzca otro correo.'
             });
         }
+    
     }
    async function submitHandler(e) {
         e.preventDefault();
@@ -159,7 +164,7 @@ const Registro = () => {
             });
         } else {
             
-            const matriculaRepetida = await verificarMatriculaDocente(Matricula);
+            const matriculaRepetida = await admiAl.verificarMatriculaAlumno(Matricula);
         console.log(matriculaRepetida)
         if(matriculaRepetida){
             console.log("La matricula está en uso por otro usuario, si eres el propietario por favor comunicate con el administrador");
@@ -203,26 +208,7 @@ const Registro = () => {
     
         console.log("submit", email, pass);
     }
-    async function verificarMatriculaDocente(matricula){
-        let repetido;
     
-        const q = query(collection(firestore, "Alumno"), where("Matricula", "==", matricula));
-    
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
-            });
-    
-            if(querySnapshot.empty){
-                repetido = false;
-                console.log("Esta vacío")
-            }else{
-                console.log("Encontró algo")
-                repetido = true;
-            }
-    
-        return repetido;
-    }
     return (
         <div className='container px-lg-2'>
             <div className="row mx-lg-n2">

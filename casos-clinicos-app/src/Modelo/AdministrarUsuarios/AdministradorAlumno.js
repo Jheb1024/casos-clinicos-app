@@ -12,7 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
-import { getAuth } from "firebase/auth";
+import { getAuth,updatePassword } from "firebase/auth";
 
 export default class AdministradorAlumno extends AdministradorUsuario {
   listaAlumnos = [];
@@ -88,15 +88,15 @@ export default class AdministradorAlumno extends AdministradorUsuario {
     switch (criterioBusqueda) {
       case "1":
         console.log("En case 1");
-        docusFiltradoF = alumnos.filter(alumno => alumno.ApellidoPaterno==claveBusqueda);
+        docusFiltradoF = alumnos.filter(alumno => alumno.ApellidoPaterno === claveBusqueda);
         break;
       case "2":
         console.log("En case 2");
-        docusFiltradoF = alumnos.filter(alumno => alumno.Nombre==claveBusqueda);
+        docusFiltradoF = alumnos.filter(alumno => alumno.Nombre === claveBusqueda);
         break;
       case "3":
         console.log("En case 3");
-        docusFiltradoF = alumnos.filter(alumno => alumno.Matricula==claveBusqueda);
+        docusFiltradoF = alumnos.filter(alumno => alumno.Matricula === claveBusqueda);
         break;
       default:
         break;
@@ -164,6 +164,42 @@ export default class AdministradorAlumno extends AdministradorUsuario {
         console.error(error);
         return error;
       });
+  }
+  async  verificarMatriculaAlumno(matricula){
+    console.log('entramos a la funcion para verificar la matricula')
+    let repetido;
+  
+    const q = query(collection(this.db, "Usuarios"), where("matricula", "==", matricula));
+    //we should change matricula field from alumno to usuarios
+  
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        });
+  
+        if(querySnapshot.empty){
+            repetido = false;
+            console.log("Esta vacío")
+        }else{
+            console.log("Encontró algo")
+            repetido = true;
+        }
+  
+    return repetido;
+  }
+  async  actualizarPasswordAlumno(password){ 
+    const auth = getAuth();
+  
+  const user = auth.currentUser;
+  const newPassword = password;
+  
+  await updatePassword(user, newPassword).then(() => {
+    console.log('COntraseña actualizada')
+  }).catch((error) => {
+    // An error ocurred
+    // ...
+  });
+  
   }
 }
 //Buscar un alumno por el apellido paterno, desde el pefil del admi
@@ -247,3 +283,5 @@ const alumnoConverter = {
     );
   },
 };
+
+

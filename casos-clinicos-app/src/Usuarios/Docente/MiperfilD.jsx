@@ -109,9 +109,7 @@ export default function MiperfilD({ user }) {
                 <Card.Text>
                   <b>ID: </b>{docente.Matricula}
                 </Card.Text>
-                <Card.Text>
-                  <b>NRC: </b>{docente.NRC}
-                </Card.Text>
+                
                 <Card.Text>
                   <b>Correo: </b>{docente.correo}
                 </Card.Text>
