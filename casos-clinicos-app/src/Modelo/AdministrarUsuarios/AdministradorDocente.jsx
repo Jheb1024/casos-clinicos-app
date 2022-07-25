@@ -74,7 +74,7 @@ import {
         const collectionRefU = collection(this.db, "Usuarios");
         const docRefU = doc(collectionRefU, id);
         await deleteDoc(docRefU).then(() => {
-          console.log("El alumno ha sido eliminado de Usuarios");
+          console.log("El usuario ha sido eliminado de Usuarios");
         });
     }
     //Para editar datos del docente
