@@ -11,12 +11,6 @@ import Miperfil from './Miperfil'
 import * as FaIcons from 'react-icons/fa';
 function HomeAlumno({usuario}) {
 
-  
-
-  
-    
-
-    console.log("leemos el usuario desde home alumno",usuario.user.uid);
     return (
         <Div>
         <Router>

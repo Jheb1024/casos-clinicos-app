@@ -6,7 +6,6 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { GoSearch } from "react-icons/go";
 import RegistroAlumnoModal from "../../Componentes/Registro/RegistroAlumnoModal";
 import RegistroDocenteModal from "../../Componentes/Registro/RegistroDocenteModal";
-import { BsArrowReturnLeft } from "react-icons/bs";
 import EditarDocenteModal from "./EditarDocenteModal";
 import Swal from "sweetalert2";
 import moment from "moment";

@@ -15,7 +15,7 @@ function MisCuestionarios({ user }) {
   const db = getFirestore(firebaseApp);
   const [cuestionarios, setCuestionarios] = useState(null);
   const [cuestionario, setCuestionario] = useState(null);
-  const [NrcAsignado, setNrcAsignado] = useState([0]);
+  const [NrcAsignado, setNrcAsignado] = useState(null);
   function obtenerNRC(cuestionario) {
     
     if (cuestionario === null || cuestionario.idCuestionario==null) {
@@ -28,7 +28,7 @@ function MisCuestionarios({ user }) {
         const cities = [];
         querySnapshot.forEach((doc) => {
           cities.push(doc.data().nrcClase);
-          setNrcAsignado(cities.join());
+          setNrcAsignado(doc.data().nrcClase);
         });
         console.log("NRC`s de las clases a las que ya se les asigno el cuestionario: ", cities.join());
       });
@@ -54,7 +54,6 @@ function MisCuestionarios({ user }) {
           const xhr = new XMLHttpRequest();
           xhr.responseType = 'blob';
           xhr.onload = (event) => {
-            const blob = xhr.response;
           };
           xhr.open('GET', url);
           xhr.send();
@@ -145,11 +144,10 @@ function MisCuestionarios({ user }) {
 
                 <Form style={{ width: '100%', height: '700px', overflowY: 'auto' }} className="cuestionarioForm">
                   {/*Pregunta 1*/}
-                  <p><strong>NRC asignados:</strong>{NrcAsignado}</p>
-
-
+                  {NrcAsignado==null && <p><strong>El cuestionario no esta asignado a ninguna clase.</strong></p>}
+                  {NrcAsignado!=null && <p><strong>NRC asignados:</strong>{NrcAsignado?.map((nrcM)=>  <li>{nrcM}</li> )}</p>}
                   <div className="btn-group">
-                    <AsignarCuestionarioModal quiz={cuestionario} />
+                    <AsignarCuestionarioModal quiz={cuestionario} docente={user} nrcAsig={NrcAsignado}/>
                     {<EditarCuestionarioModalDocente data={cuestionario} />}
                     <Button className='btn_borrar' onClick={() => borrarCuestionario(cuestionario.idCuestionario)}>Borrar</Button>
                   </div>

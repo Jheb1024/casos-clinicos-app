@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState,  } from 'react'
 import { Modal, Button } from 'react-bootstrap'
-import firebaseApp, { storage } from "../../Firebase/firebase-config";
+import firebaseApp from "../../Firebase/firebase-config";
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, setDoc,updateDoc } from 'firebase/firestore';
-import { Formik, Form, Field, ErrorMessage, isNan } from "formik";
+import { Formik, Form, Field, ErrorMessage,  } from "formik";
 import Swal from "sweetalert2";
 import { FaUserPlus } from "react-icons/fa";
 import { FaRegSave } from "react-icons/fa";

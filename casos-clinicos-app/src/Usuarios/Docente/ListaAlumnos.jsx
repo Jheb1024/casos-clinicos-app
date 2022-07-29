@@ -12,11 +12,9 @@ import {
   query,
   where,
   onSnapshot,
-  orderBy,
 } from "firebase/firestore";
 import Swal from "sweetalert2";
 import EditarAlumnoModal from "../../Usuarios/Docente/EditarAlumnoModal";
-import { Button } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 export default function ListaAlumno({ user }) {
   //console.log(user)

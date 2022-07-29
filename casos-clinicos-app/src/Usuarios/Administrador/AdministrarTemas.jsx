@@ -5,7 +5,7 @@ import styled from "styled-components";
 import scrollreveal from "scrollreveal";
 import { collection, getDocs, getFirestore, onSnapshot, query, where } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
-import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row, AccordionContext } from 'react-bootstrap'
+import { Accordion, Card, useAccordionButton, ListGroup, Col, Row, AccordionContext } from 'react-bootstrap'
 import CuestionarioModal from "../../Componentes/Cuestionario/CuestionarioModal";
 import TemaModal from "../../Componentes/Cuestionario/TemaModal";
 import SubtemaModal from "../../Componentes/Cuestionario/SubtemaModal";

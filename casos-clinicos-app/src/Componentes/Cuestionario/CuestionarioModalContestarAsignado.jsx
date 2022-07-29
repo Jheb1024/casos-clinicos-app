@@ -24,7 +24,6 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
             const xhr = new XMLHttpRequest();
             xhr.responseType = 'blob';
             xhr.onload = (event) => {
-              const blob = xhr.response;
             };
             xhr.open('GET', url);
             xhr.send();
@@ -171,16 +170,17 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                         {({ isSubmitting }) => (
                             <Form style={{ width: '100%' }}>
                                  <div className='enunciado' >
-                                    <textarea rows='6' cols='80' value={quiz.Enunciado} readOnly></textarea>
+                                    <textarea rows='6' cols='80' style={{border:'none',  outline: 'none'}} value={quiz.Enunciado} readOnly></textarea>
                                 </div>
                                 <img id='myimg' alt='' style={{ width: '75%',height: '75%',align:'center'}}></img>
                                
                                 {/*Pregunta 1*/}
                                 <div className='pregunta'>
-                                    <div className='pregunta-respuesta'>
-                                        <label htmlFor="pregunta_1">1.{quiz.pregunta_1}</label>
-                                        <br />
-                                        <div role="group" aria-labelledby="my-radio-group">
+                                    <div className='pregunta-respuesta' >
+                                        
+                                            <p className='fs-5 fw-bold'style={{width:'600px'}}>1.{quiz.pregunta_1}</p>
+                                    
+                                        <div role="group" aria-labelledby="my-radio-group" className='px-4'>
                                             <div className="form-check form-check">
                                                 <Field className="form-check-input" type="radio" name="respuesta1" id="res1" value="respuesta_1" />
                                                 <label className="form-check-label" htmlFor="res1_1">{quiz.respuesta_1}</label>

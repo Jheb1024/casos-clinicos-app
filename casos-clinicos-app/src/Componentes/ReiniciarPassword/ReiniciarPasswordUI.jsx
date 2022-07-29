@@ -28,10 +28,6 @@ async function recuperarContrasenia(email) {
                 });
 
             }
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(error.message);
-            console.log(error.code);
         });
 }
 

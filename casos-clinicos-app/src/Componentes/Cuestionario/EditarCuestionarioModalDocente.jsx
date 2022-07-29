@@ -20,16 +20,14 @@ function EditarCuestionarioModalDocente({data}) {
     function getImage(refImage) {
         console.log('this is what it has',refImage)
         if(refImage === 'none'){
-            //setImageExist(false);
         }else{
-            //setImageExist(true)
+           
             const storage = getStorage();
             getDownloadURL(ref(storage, refImage))
             .then((url) => {
                 const xhr = new XMLHttpRequest();
                 xhr.responseType = 'blob';
                 xhr.onload = (event) => {
-                const blob = xhr.response;
                 };
                 xhr.open('GET', url);
                 xhr.send();

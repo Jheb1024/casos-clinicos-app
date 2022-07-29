@@ -6,7 +6,6 @@ import scrollreveal from "scrollreveal";
 import { Table, Button } from "react-bootstrap";
 import {
   collection,
-  getDocs,
   getFirestore,
   query,
   onSnapshot,

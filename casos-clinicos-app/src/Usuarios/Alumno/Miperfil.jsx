@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import scrollreveal from "scrollreveal";
-import Modal from "../../Componentes/Modal/Modal";
 import { getFirestore, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Card } from "react-bootstrap";
 import "./Miperfil.css";
-import Swal from "sweetalert2";
 import EditarPerfilAModal from "./EditarPerfilAModal";
 
 const db = getFirestore();

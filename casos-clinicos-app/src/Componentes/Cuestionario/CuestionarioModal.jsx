@@ -3,30 +3,23 @@ import { Button, Modal, Form } from 'react-bootstrap'
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 function CuestionarioModal({ quiz }) {
-  const [imageExists, setImageExists]=useState(null);
   function getImage(refImage) {
     if(refImage !== 'none'){
-      //setImageExists(true)
       const storage = getStorage();
       getDownloadURL(ref(storage, refImage))
       .then((url) => {
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
         xhr.onload = (event) => {
-          const blob = xhr.response;
         };
         xhr.open('GET', url);
         xhr.send();
-  
-        // Or inserted into an <img> element
         const img = document.getElementById('myimg');
         img.setAttribute('src', url);
       })
       .catch((error) => {
         console.log('Hubo un error al cargar la imagen',error)
       });
-    }else{
-      //setImageExists(false)
     }
     
   }

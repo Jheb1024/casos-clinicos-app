@@ -1,6 +1,5 @@
 import { Modal, Button } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import { addDoc, collection, updateDoc, getFirestore,doc } from "firebase/firestore";
+import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Swal from "sweetalert2";
 import { FaRegPlusSquare,FaRegSave } from "react-icons/fa";
@@ -35,26 +34,8 @@ const AgregarClaseModal = ({ uid }) => {
             })
                 .then((respuesta) => {
                     if (respuesta.isConfirmed) {
-
-                        if (registrarClase(uid, NRC, NombreClase, FechaRegistro)) {
-                            new Swal({
-                                title: "Registro exitoso",
-                                text: "El registro fue exitoso",
-                                icon: "success",
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-                        } else {
-                            new Swal({
-                                title: "Registro no exitoso",
-                                text: "Favor de verificar sus datos.",
-                                icon: "error",
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-                        }
+                        registrarClase(uid, NRC, NombreClase, FechaRegistro);
                         handleClose();
-
                     } else {
                         handleClose();
                     }

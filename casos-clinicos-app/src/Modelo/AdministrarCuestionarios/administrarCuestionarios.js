@@ -1,8 +1,7 @@
 import firebaseApp, { storage } from "../../Firebase/firebase-config";
-import react, { useState } from "react";
 import {
   addDoc, collection, getFirestore, doc, getDoc, updateDoc,
-  deleteDoc, getDocs, runTransaction, query, where, arrayUnion, onSnapshot, setDoc, orderBy, increment
+  deleteDoc, getDocs, runTransaction, query, where, arrayUnion, onSnapshot, increment, arrayRemove
 } from "firebase/firestore";
 import Swal from "sweetalert2";
 import { ref, uploadBytes } from "firebase/storage";
@@ -767,81 +766,71 @@ export async function borrarCuestionarioDocente(id) {
 }
 
 //asignar cuestionario
-export async function asignarCuestionario(id, nrc) {
-  console.log("ingreso funcion de asignar cuestonario");
+export async function asignarCuestionario(id, nrc,idD) {
 
-  if (nrc.length === 5) {
+  if (nrc.length >4 && nrc.length<8) {
+    const classRef = collection(db, "Clase");
+    const qC = query(classRef, where("NRC", "==", nrc),where("idDocente","==",idD));
+    const querySnapshotC = await getDocs(qC);
+    if (querySnapshotC.size > 0) {
+      const cuestionarioRef = doc(db, "Cuestionarios", id);
+      const ref = collection(db, "Cuestionarios");
+      const q = query(ref, where("nrcClase", "!=", false));
+      let bandera;
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        let idCObte = doc.data().idCuestionario;
 
-    console.log("nrc Admi", nrc);
-    console.log("id cuestionario:", id);
-    const cuestionarioRef = doc(db, "Cuestionarios", id);
-    const docRef = doc(db, "Cuestionarios", id);
-    const docSnap = await getDoc(docRef);
+        if (idCObte === id) {
+          //En este cuestionario ya esta creado el array
+          bandera = 1;
+        }
+      });
+      if (bandera === 1) {
+        await updateDoc(cuestionarioRef, {
+          nrcClase: arrayUnion(nrc),
+        });
+        new Swal({
+          position: "top",
+          icon: "success",
+          title: "Cuestionario Asignado",
+          showConfirmButton: false,
+          timer: 3000,
+        });
 
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+        document.getElementById("nrc").value = "";
+      } else {
+        await updateDoc(cuestionarioRef, {
+          nrcClase: [nrc],
+        });
+        new Swal({
+          position: "top",
+          icon: "success",
+          title: "Cuestionario Asignado",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        document.getElementById("nrc").value = "";
+      }
     } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-
-    const ref = collection(db, 'Cuestionarios');
-    const q = query(ref, where("nrcClase", "!=", false));
-    let bandera;
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-
-      console.log(doc.id, " => ", doc.data().idCuestionario);
-      let idCObte = doc.data().idCuestionario;
-      console.log('Id cuest con arreglo::', idCObte);
-
-      if (idCObte === id) {
-        //En este cuestionario ya esta creado el array
-        bandera = 1;
-      };
-      console.log("Bandera->", bandera);
-    });
-    console.log("Bandera->", bandera);
-    if (bandera === 1) {
-      console.log("Bandera igual a 1...");
-      await updateDoc(cuestionarioRef, {
-        nrcClase: arrayUnion(nrc)
-      });
       new Swal({
-        position: 'top',
-        icon: 'success',
-        title: 'Cuestionario Asignado',
+        position: "top",
+        icon: "error",
+        title: "NRC no existe.",
+        text: "El NRC de la clase no existe, puede ir a su perfil para visualizar sus clases.",
         showConfirmButton: false,
-        timer: 3000
+        timer: 3000,
       });
-
-      document.getElementById('nrc').value = "";
-    } else {
-      console.log("agregar el arreglo al cuestionario");
-      await updateDoc(cuestionarioRef, {
-        nrcClase: [nrc]
-      })
-      new Swal({
-        position: 'top',
-        icon: 'success',
-        title: 'Cuestionario Asignado',
-        showConfirmButton: false,
-        timer: 3000
-      });
-
-      document.getElementById('nrc').value = "";
     }
-
-
-  } else if (nrc.length < 5) {
+  } else if (nrc.length < 5 || nrc.length>7) {
     new Swal({
-      position: 'top',
-      icon: 'error',
-      title: 'Falta ingresar el NRC o no tiene la longitud requerida (5 caracteres).',
+      position: "top",
+      icon: "error",
+      title:
+        "Falta ingresar el NRC o no tiene la longitud requerida (5-7 caracteres).",
       showConfirmButton: false,
-      timer: 3000
+      timer: 3000,
     });
-
   }
 }
 
@@ -973,7 +962,7 @@ export async function actualizarAvanceTemaAlumno(user){
         console.log("Numero de subtemas",doc.data().TotalSubtemas)
         //Si el valor del contado de subtemas completos coincide con el total de subtemas de un tema se podra tomar como tema completo.
           // Y se podra aumentar el contador de temas completos y calcular el avance para poderlo actualizar en el doc de Alumno
-        if (countS == doc.data().TotalSubtemas) {
+        if (countS === doc.data().TotalSubtemas) {
           console.log(":::Entro if de countS==doc.data().TotalSubtemas::");
           countT = countT + 1;
           console.log("countT en if:::::", countT);
@@ -1078,7 +1067,7 @@ export async function actualizarAvanceTemaAlumno(user){
           console.log(doc.id, " => ", doc.data());
           console.log(user.uid);
           console.log(doc.data().idAlumno);
-          if (doc.data().idAlumno == user.uid) {
+          if (doc.data().idAlumno === user.uid) {
             contIgualAlum++;
             calSub = calSub + doc.data().calificacion;}
         });
@@ -1120,7 +1109,7 @@ export async function actualizarAvanceTemaAlumno(user){
         console.log(doc.id, " => ", doc.data());
         console.log(user.uid);
         console.log(doc.data().idAlumno);
-        if (doc.data().idAlumno == user.uid) {
+        if (doc.data().idAlumno === user.uid) {
           contIgualAlum++;
         }
       });
@@ -1213,4 +1202,104 @@ async function buscarCuestionarioPorAutor(claveBusqueda) {
     });
   });
   return docusFiltrado;
+}
+
+//Eliminar NRc asignado en arreglo NRCasignado
+export async function eliminarAsignarCuestionario(id, nrc, idD, nrcAsig) {
+  if (nrc.length > 4 && nrc.length < 8) {
+    const classRef = collection(db, "Clase");
+    const qC = query(
+      classRef,
+      where("NRC", "==", nrc),
+      where("idDocente", "==", idD)
+    );
+    const querySnapshotC = await getDocs(qC);
+    if (querySnapshotC.size > 0) {
+      const cuestionarioRef = doc(db, "Cuestionarios", id);
+      const ref = collection(db, "Cuestionarios");
+      const q = query(ref, where("nrcClase", "!=", false));
+      let bandera;
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        let idCObte = doc.data().idCuestionario;
+        if (idCObte === id) {
+          //En este cuestionario ya esta creado el array
+          bandera = 1;
+        }
+      });
+      if (bandera === 1) {
+        //
+        console.log("entro if");
+        const qHaynrc = query(ref, where("nrcClase", "array-contains", nrc),where("idCuestionario","==",id));
+        const querySnapshotNRC = await getDocs(qHaynrc);
+        if (querySnapshotNRC.size > 0) {
+          //eliminar
+          console.log("Las canciones después: ", nrcAsig);
+          await updateDoc(cuestionarioRef, {
+            nrcClase: arrayRemove(nrc),
+          })
+            .then(() => {
+              new Swal({
+                position: "top",
+                icon: "success",
+                title: "NRC eliminado.",
+                text: "El cuestionario ya no esta asignado a esa clase.",
+                showConfirmButton: false,
+                timer: 3000,
+              });
+              document.getElementById("nrc").value = "";
+            })
+            .catch((error) => {
+              new Swal({
+                title: "Actualización no exitosa",
+                text: "Favor de verificar sus datos.¡Vuelve a intentarlo!",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 3000,
+              });
+            });
+        } else {
+          //
+          new Swal({
+            position: "top",
+            icon: "warning",
+            title: "Nrc no asignado.",
+            text: "Tienes una clase con ese NRC pero no ha sido asignada por lo cual no puede ser eliminada.",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          document.getElementById("nrc").value = "";
+          //
+        }
+      } else {
+        new Swal({
+          position: "top",
+          icon: "warning",
+          title: "Sin clase asignada.",
+          text: "El cuestionario aún no tiene clases asignadas.",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        document.getElementById("nrc").value = "";
+      }
+    } else {
+      new Swal({
+        position: "top",
+        icon: "error",
+        title: "NRC no existe.",
+        text: "El NRC de la clase no existe, puede ir a su perfil para visualizar sus clases.",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    }
+  } else if (nrc.length < 5 || nrc.length > 7) {
+    new Swal({
+      position: "top",
+      icon: "error",
+      title:
+        "Falta ingresar el NRC o no tiene la longitud requerida (5-7 caracteres).",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+  }
 }

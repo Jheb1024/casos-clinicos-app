@@ -4,7 +4,7 @@ import styled from "styled-components";
 import scrollreveal from "scrollreveal";
 import { collection, getDocs, getFirestore, onSnapshot, query, where, doc } from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
-import { Accordion, Card, useAccordionButton, ListGroup, Col, Container, Row, AccordionContext, Badge } from 'react-bootstrap'
+import { Accordion, Card, useAccordionButton, ListGroup, Col, Row, AccordionContext, Badge } from 'react-bootstrap'
 import CuestionarioModalContestar from "../../Componentes/Cuestionario/CuestionarioModalContestar";
 import CuestionarioModalContestarAsignado from "../../Componentes/Cuestionario/CuestionarioModalContestarAsignado";
 import ProgressBar from 'react-bootstrap/ProgressBar'

@@ -38,9 +38,9 @@ export default function Header() {
   return (
     <Navbar className="color-nav" collapseOnSelect expand="lg" variant="dark">
   <Container>
-    <LinkContainer to="/">
+  {!currentUser ? <LinkContainer to="/">
     <Navbar.Brand >Casos Clínicos</Navbar.Brand>
-    </LinkContainer>
+    </LinkContainer>: <Navbar.Brand >Casos Clínicos</Navbar.Brand>}
   
   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
   <Navbar.Collapse id="responsive-navbar-nav">

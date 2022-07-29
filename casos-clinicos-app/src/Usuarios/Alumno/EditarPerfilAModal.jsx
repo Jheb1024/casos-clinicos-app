@@ -3,7 +3,7 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { BiEdit } from "react-icons/bi";
 import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorAlumno";
-import { getFirestore, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 const db = getFirestore();
