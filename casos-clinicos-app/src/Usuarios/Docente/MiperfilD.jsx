@@ -101,7 +101,7 @@ export default function MiperfilD({ user }) {
                   <b>Apellidos: </b>{docente.ApellidoPaterno} {docente.ApellidoMaterno}
                 </Card.Text>
                 <Card.Text>
-                  <b>Edad: </b>{docente.Edad} {/* creo no debemos pponer la edad */}
+                  <b>Edad: </b>{docente.Edad}
                 </Card.Text>
                 <Card.Text>
                   <b>Sexo: </b>{docente.Sexo}
@@ -113,7 +113,7 @@ export default function MiperfilD({ user }) {
                 <Card.Text>
                   <b>Correo: </b>{docente.correo}
                 </Card.Text>
-                <EditarPerfil Perfil={docente} uid={user.uid} /> {/**AQui podemos llamar al modal */}
+                <EditarPerfil Perfil={docente} uid={user.uid} />
               </Card.Body>
             </Card> : null}
         </div>

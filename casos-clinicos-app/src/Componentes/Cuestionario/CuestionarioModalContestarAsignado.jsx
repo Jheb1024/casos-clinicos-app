@@ -179,7 +179,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                     <div className='pregunta-respuesta' >
                                         
                                             <p className='fs-5 fw-bold'style={{width:'600px'}}>1.{quiz.pregunta_1}</p>
-                                    
+                                            <p>Esta pregunta vale: {quiz?.valorResPregunta1} pts.</p>
                                         <div role="group" aria-labelledby="my-radio-group" className='px-4'>
                                             <div className="form-check form-check">
                                                 <Field className="form-check-input" type="radio" name="respuesta1" id="res1" value="respuesta_1" />
@@ -208,6 +208,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_2">2. {quiz.pregunta_2}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta2} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta2" id="res1" value="respuesta_1" />
@@ -234,6 +235,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_3">3. {quiz.pregunta_3}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta3} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta3" id="res3_1" value="respuesta_1" />
@@ -261,6 +263,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_4">4. {quiz.pregunta_4}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta4} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta4" id="res4_1" value="respuesta_1" />
@@ -289,6 +292,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_5">5. {quiz.pregunta_5}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta5} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta5" id="res5_1" value="respuesta_1" />
@@ -316,6 +320,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_6">6. {quiz.pregunta_6}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta6} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta6" id="res6_1" value="respuesta_1" />
@@ -343,6 +348,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_7">7. {quiz.pregunta_7}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta7} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta7" id="res7_1" value="respuesta_1" />
@@ -370,6 +376,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_8">8. {quiz.pregunta_8}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta8} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta8" id="res8_1" value="respuesta_1" />
@@ -397,6 +404,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_9">9. {quiz.pregunta_9}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta9} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta9" id="res9_1" value="respuesta_1" />
@@ -424,6 +432,7 @@ function CuestionarioModalContestarAsignado({ quiz, user }) {
                                 <div className='pregunta'>
                                     <div className='pregunta-respuesta'>
                                         <label htmlFor="pregunta_10">10. {quiz.pregunta_10}</label>
+                                        <p>Esta pregunta vale: {quiz?.valorResPregunta10} pts.</p>
                                         <br />
                                         <div className="form-check form-check">
                                             <Field className="form-check-input" type="radio" name="respuesta10" id="res10_1" value="respuesta_1" />

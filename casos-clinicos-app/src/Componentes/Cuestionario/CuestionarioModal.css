@@ -14,6 +14,10 @@
     float: right;
     width: 200px;
 }
+.valor-respuesta{
+    float: right;
+    width: 200px;
+}
 .btn_guardar{
     padding: 3px;
     margin: 15px;
@@ -23,10 +27,17 @@
 }
 .pregunta_field{
     width: 300px;
+    font-weight: bold;
 }
 .respuesta_field{
     width: 270px;
 }
 .respuestaCorr{
     color:rgb(29, 216, 29);
+}
+.preguntas{
+    padding-top: 20px;
+    padding-left: 80px;
+    padding-bottom: 20px;
+    align-items: center;
 }

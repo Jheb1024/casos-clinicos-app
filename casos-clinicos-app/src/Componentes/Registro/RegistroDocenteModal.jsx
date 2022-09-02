@@ -8,8 +8,9 @@ import Swal from "sweetalert2";
 import { FaUserPlus } from "react-icons/fa";
 import { FaRegSave } from "react-icons/fa";
 import { GrClearOption } from "react-icons/gr";
-
+import AdministradorAlumno from '../../Modelo/AdministrarUsuarios/AdministradorAlumno';
 function RegistroDocenteModal() {
+    const admiAl = new AdministradorAlumno();
     const auth = getAuth(firebaseApp);
     const firestore = getFirestore(firebaseApp);
     const [show, setShow] = useState(false);
@@ -121,7 +122,7 @@ function RegistroDocenteModal() {
             });
         }
     }
-    function submitHandler(e) {
+    async function submitHandler(e) {
         e.preventDefault();
         /// debemos hacer las validaciones
         const Matricula = e.target.elements.matriculaDoc.value;
@@ -148,6 +149,17 @@ function RegistroDocenteModal() {
                 timer: 3000
             });
         } else {
+
+            const matriculaRepetida = await admiAl.verificarMatriculaAlumno(Matricula);
+        console.log(matriculaRepetida)
+        if(matriculaRepetida){
+            console.log("La matricula está en uso por otro usuario, si eres el propietario por favor comunicate con el administrador");
+            new Swal({
+                icon: 'warning',
+                title: 'Matricula en uso.',
+                text: 'La matricula está en uso por otro usuario, si eres el propietario por favor comunícate con el administrador.'
+            });
+        }else{
             new Swal({
                 title: 'Registro docente',
                 text: '¿Desea confirmar tu registro?',
@@ -180,6 +192,7 @@ function RegistroDocenteModal() {
                         }
                     }
                 });
+            }
         }
         console.log("submit", email, pass);
     }

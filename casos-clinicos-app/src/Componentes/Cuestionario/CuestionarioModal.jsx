@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form } from 'react-bootstrap'
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import './CuestionarioModal.css';
 
 function CuestionarioModal({ quiz }) {
   function getImage(refImage) {
@@ -65,6 +66,9 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_4" placeholder="Respuesta 4" value={quiz.respuesta_4} readOnly />
               </div>
               <br />
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta1} 
+              </div>
             </div>
             <br />
             <div className='pregunta'>
@@ -86,7 +90,9 @@ function CuestionarioModal({ quiz }) {
 
                 <br />
               </div>
-
+              <div className='valor-respuesta'>
+                Valor: {quiz?.valorResPregunta2} 
+              </div>
             </div>
             <div className='pregunta'>
               <div className='pregunta-respuesta'>
@@ -105,6 +111,9 @@ function CuestionarioModal({ quiz }) {
                 <br />
                 <input className="respuesta_field" type="text" name="respuesta_3_4" placeholder="Respuesta 4" value={quiz.respuesta_3_4} readOnly />
 
+              </div>
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta3} 
               </div>
 
             </div>
@@ -126,6 +135,9 @@ function CuestionarioModal({ quiz }) {
                 <br />
                 <input className="respuesta_field" type="text" name="respuesta_4_4" placeholder="Respuesta 4" value={quiz.respuesta_4_4} readOnly />
 
+              </div>
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta4} 
               </div>
 
             </div>
@@ -149,6 +161,9 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_5_4" placeholder="Respuesta 4" value={quiz.respuesta_5_4} readOnly />
 
               </div>
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta5} 
+              </div>
 
             </div>
             <br />
@@ -169,6 +184,9 @@ function CuestionarioModal({ quiz }) {
                 <br />
                 <input className="respuesta_field" type="text" name="respuesta_6_4" placeholder="Respuesta 4" value={quiz.respuesta_6_4} readOnly />
 
+              </div>
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta6} 
               </div>
 
             </div>
@@ -191,6 +209,9 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_7_4" placeholder="Respuesta 4" value={quiz.respuesta_7_4} readOnly />
 
               </div>
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta7} 
+              </div>
 
             </div>
             <br />
@@ -211,6 +232,9 @@ function CuestionarioModal({ quiz }) {
                 <br />
                 <input className="respuesta_field" type="text" name="respuesta_8_4" placeholder="Respuesta 4" value={quiz.respuesta_8_4} readOnly />
 
+              </div>
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta8} 
               </div>
 
             </div>
@@ -233,6 +257,9 @@ function CuestionarioModal({ quiz }) {
                 <input className="respuesta_field" type="text" name="respuesta_9_4" placeholder="Respuesta 4" value={quiz.respuesta_9_4} readOnly />
 
               </div>
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta9} 
+              </div>
 
             </div>
             <br />
@@ -253,6 +280,9 @@ function CuestionarioModal({ quiz }) {
                 <br/>
                 <input className="respuesta_field" type="text" name="respuesta_1043" placeholder="Respuesta43" value={quiz.respuesta_10_4} readOnly />
 
+              </div>
+              <div className='valor-respuesta'>
+                Valor: {quiz.valorResPregunta10} 
               </div>
 
             </div>

@@ -9,8 +9,10 @@ import Swal from "sweetalert2";
 import { FaUserPlus } from "react-icons/fa";
 import { FaRegSave } from "react-icons/fa";
 import { GrClearOption } from "react-icons/gr";
+import AdministradorAlumno from '../../Modelo/AdministrarUsuarios/AdministradorAlumno';
 
 function RegistroAlumnoModal() {
+    const admiAl = new AdministradorAlumno();
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -19,8 +21,9 @@ function RegistroAlumnoModal() {
     const firestore = getFirestore(firebaseApp);
     let history = useHistory();
 
-    async function registrarUsuario(email, pass, Matricula, Nombre, ApellidoP, ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro) {
-
+    async function registrarAlumno(email, pass, Matricula, Nombre, ApellidoP, ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro) {
+            
+        
         const infoUsuario = await createUserWithEmailAndPassword(auth, email, pass).then((usuarioFirebase) => {
             return usuarioFirebase;
         }).catch(error => {
@@ -119,8 +122,9 @@ function RegistroAlumnoModal() {
                 text: 'El correo electrónico ya esta registrado.Introduzca otro correo.'
             });
         }
+
     }
-    function submitHandler(e) {
+    async function submitHandler(e) {
         e.preventDefault();
         /// debemos hacer las validaciones
         const Matricula = e.target.elements.InputMatricula.value;
@@ -147,6 +151,18 @@ function RegistroAlumnoModal() {
                 timer: 2000
             });
         } else {
+            const matriculaRepetida = await admiAl.verificarMatriculaAlumno(Matricula);
+        console.log(matriculaRepetida)
+        if(matriculaRepetida){
+            console.log("La matricula está en uso por otro usuario, si eres el propietario por favor comunicate con el administrador");
+            new Swal({
+                icon: 'warning',
+                title: 'Matricula en uso.',
+                text: 'La matricula está en uso por otro usuario, si eres el propietario por favor comunícate con el administrador.'
+            });
+        }else{
+
+
             new Swal({
                 title: 'Registro alumno',
                 text: '¿Desea confirmar tu registro?',
@@ -157,7 +173,7 @@ function RegistroAlumnoModal() {
             })
                 .then((respuesta) => {
                     if (respuesta.isConfirmed) {
-                        if (registrarUsuario(email, pass, Matricula, Nombre, ApellidoP, ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro)) {
+                        if (registrarAlumno(email, pass, Matricula, Nombre, ApellidoP, ApellidoM, Sexo, Edad, NRC, VecesMateriaTomada, EstudiosPrevios, FechaRegistro)) {
                             new Swal({
                                 title: "Registro exitoso",
                                 text: "El usuario ya puede iniciar sesión con su respectivo correo electrónico y contraseña.",
@@ -176,7 +192,8 @@ function RegistroAlumnoModal() {
                         }
                     }
                 });
-        }
+            }
+        }//fin else
         console.log("submit", email, pass);
     }
 

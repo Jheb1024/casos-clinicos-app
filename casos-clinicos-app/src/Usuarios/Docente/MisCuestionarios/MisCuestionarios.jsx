@@ -154,13 +154,14 @@ function MisCuestionarios({ user }) {
                   <div><h3>{cuestionario.Titulo}</h3></div>
                   <div><textarea value={cuestionario.Enunciado} rows='4' cols='80' readOnly /></div>
                   {<img id='myimg' alt=''></img>}
+                  <div className='preguntas'>
+
+                  
                   <div className='pregunta' style={{ textAlign: 'center', width: '500px', height: '130px' }}>
                     <div className='pregunta-respuesta' style={{ float: 'left', width: '300px' }}>
                       <label htmlFor="pregunta_1">Pregunta 1</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_1" value={cuestionario.pregunta_1} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_1}</p>
                       <input className="respuesta_field" type="text" name="respuesta_1" placeholder="Respuesta 1" value={cuestionario.respuesta_1} readOnly />
 
                       <br />
@@ -172,6 +173,9 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_4" placeholder="Respuesta 4" value={cuestionario.respuesta_4} readOnly />
                     </div>
                     <br />
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta1} 
+                    </div>
 
                   </div>
                   <br />
@@ -179,9 +183,8 @@ function MisCuestionarios({ user }) {
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta_2">Pregunta 2</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_2" value={cuestionario.pregunta_2} readOnly />
+                      <p className='pregunta_field'>{cuestionario.pregunta_2}</p>
 
-                      <br />
                       <input className="respuesta_field" type="text" name="respuesta_2_1" placeholder="Respuesta 1" value={cuestionario.respuesta_2_1} readOnly />
 
                       <br />
@@ -194,15 +197,16 @@ function MisCuestionarios({ user }) {
                       
                       <br />
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta2} 
+                    </div>
 
                   </div>
                   <div className='pregunta'>
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta_3">Pregunta 3</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_3" value={cuestionario.pregunta_3} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_3}</p>
                       <input className="respuesta_field" type="text" name="respuesta_3_1" placeholder="Respuesta 1" value={cuestionario.respuesta_3_1} readOnly />
 
                       <br />
@@ -214,6 +218,9 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_3_4" placeholder="Respuesta 4" value={cuestionario.respuesta_3_4} readOnly />
 
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta3} 
+                    </div>
 
                   </div>
                   <br />
@@ -221,9 +228,7 @@ function MisCuestionarios({ user }) {
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta-4">Pregunta 4</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_4" value={cuestionario.pregunta_4} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_4}</p>
                       <input className="respuesta_field" type="text" name="respuesta_4_1" placeholder="Respuesta 1" value={cuestionario.respuesta_4_1} readOnly />
 
                       <br />
@@ -235,6 +240,9 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_4_4" placeholder="Respuesta 4" value={cuestionario.respuesta_4_4} readOnly />
 
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta4} 
+                    </div>
 
                   </div>
 
@@ -243,9 +251,7 @@ function MisCuestionarios({ user }) {
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta_1">Pregunta 5</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_5" value={cuestionario.pregunta_5} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_5}</p>
                       <input className="respuesta_field" type="text" name="respuesta_5_1" placeholder="Respuesta 1" value={cuestionario.respuesta_5_1} readOnly />
 
                       <br />
@@ -258,6 +264,9 @@ function MisCuestionarios({ user }) {
                       
 
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta5} 
+                    </div>
 
                   </div>
                   <br />
@@ -265,9 +274,7 @@ function MisCuestionarios({ user }) {
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta-_">Pregunta 6</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_6" value={cuestionario.pregunta_6} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_6}</p>
                       <input className="respuesta_field" type="text" name="respuesta_6_1" placeholder="Respuesta 1" value={cuestionario.respuesta_6_1} readOnly />
 
                       <br />
@@ -279,6 +286,9 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_6_4" placeholder="Respuesta 4" value={cuestionario.respuesta_6_4} readOnly />
 
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta6} 
+                    </div>
 
                   </div>
                   <br />
@@ -286,9 +296,7 @@ function MisCuestionarios({ user }) {
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta_7">Pregunta 7</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_7" value={cuestionario.pregunta_7} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_7}</p>
                       <input className="respuesta_field" type="text" name="respuesta_7_1" placeholder="Respuesta 1" value={cuestionario.respuesta_7_1} readOnly />
 
                       <br />
@@ -300,6 +308,9 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_7_4" placeholder="Respuesta 4" value={cuestionario.respuesta_7_4} readOnly />
 
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta7} 
+                    </div>
 
                   </div>
                   <br />
@@ -307,9 +318,7 @@ function MisCuestionarios({ user }) {
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta_8">Pregunta 8</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_8" value={cuestionario.pregunta_8} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_8}</p>
                       <input className="respuesta_field" type="text" name="respuesta_8_1" placeholder="Respuesta 1" value={cuestionario.respuesta_8_1} readOnly />
 
                       <br />
@@ -321,6 +330,9 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_8_4" placeholder="Respuesta 4" value={cuestionario.respuesta_8_4} readOnly />
 
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta8} 
+                    </div>
 
                   </div>
                   <br />
@@ -328,9 +340,7 @@ function MisCuestionarios({ user }) {
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta-9">Pregunta 9</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_9" value={cuestionario.pregunta_9} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_9}</p>
                       <input className="respuesta_field" type="text" name="respuesta_9_1" placeholder="Respuesta 1" value={cuestionario.respuesta_9_1} readOnly />
 
                       <br />
@@ -342,16 +352,18 @@ function MisCuestionarios({ user }) {
                       <input className="respuesta_field" type="text" name="respuesta_9_4" placeholder="Respuesta 4" value={cuestionario.respuesta_9_4} readOnly />
 
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta9} 
+                    </div>
 
                   </div>
+                  <br />
                   <br />
                   <div className='pregunta'>
                     <div className='pregunta-respuesta'>
                       <label htmlFor="pregunta_10">Pregunta 10</label>
                       <br />
-                      <input className="pregunta_field" type="text" name="pregunta_10" value={cuestionario.pregunta_10} readOnly />
-
-                      <br />
+                      <p className='pregunta_field'>{cuestionario.pregunta_10}</p>
                       <input className="respuesta_field" type="text" name="respuesta_10_1" placeholder="Respuesta 1" value={cuestionario.respuesta_10_1} readOnly />
 
                       <br />
@@ -362,7 +374,11 @@ function MisCuestionarios({ user }) {
                       <br />
                       <input className="respuesta_field" type="text" name="respuesta_10_4" placeholder="Respuesta 4" value={cuestionario.respuesta_10_4} readOnly />
                     </div>
+                    <div className='valor-respuesta'>
+                      Valor: {cuestionario.valorResPregunta10} 
+                    </div>
 
+                  </div>
                   </div>
 
 

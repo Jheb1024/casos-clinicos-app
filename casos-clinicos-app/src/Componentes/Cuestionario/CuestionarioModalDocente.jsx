@@ -47,60 +47,70 @@ function CuestionarioModalDocente({ data, user}) {
                             respuesta_3: '',
                             respuesta_4: '',
                             respuestaCorrectaP1:'',
+                            valorResPregunta1:'',
                             pregunta_2: '',
                             respuesta_2_1: '',
                             respuesta_2_2: '',
                             respuesta_2_3: '',
                             respuesta_2_4: '',
                             respuestaCorrectaP2:'',
+                            valorResPregunta2:'',
                             pregunta_3: '',
                             respuesta_3_1: '',
                             respuesta_3_2: '',
                             respuesta_3_3: '',
                             respuesta_3_4: '',
                             respuestaCorrectaP3:'',
+                            valorResPregunta3:'',
                             pregunta_4: '',
                             respuesta_4_1: '',
                             respuesta_4_2: '',
                             respuesta_4_3: '',
                             respuesta_4_4: '',
                             respuestaCorrectaP4:'',
+                            valorResPregunta4:'',
                             pregunta_5: '',
                             respuesta_5_1: '',
                             respuesta_5_2: '',
                             respuesta_5_3: '',
                             respuesta_5_4: '',
                             respuestaCorrectaP5:'',
+                            valorResPregunta5:'',
                             pregunta_6: '',
                             respuesta_6_1: '',
                             respuesta_6_2: '',
                             respuesta_6_3: '',
                             respuesta_6_4: '',
                             respuestaCorrectaP6:'',
+                            valorResPregunta6:'',
                             pregunta_7: '',
                             respuesta_7_1: '',
                             respuesta_7_2: '',
                             respuesta_7_3: '',
                             respuesta_7_4: '',
                             respuestaCorrectaP7:'',
+                            valorResPregunta7:'',
                             pregunta_8: '',
                             respuesta_8_1: '',
                             respuesta_8_2: '',
                             respuesta_8_3: '',
                             respuesta_8_4: '',
                             respuestaCorrectaP8:'',
+                            valorResPregunta8:'',
                             pregunta_9: '',
                             respuesta_9_1: '',
                             respuesta_9_2: '',
                             respuesta_9_3: '',
                             respuesta_9_4: '',
                             respuestaCorrectaP9:'',
+                            valorResPregunta9:'',
                             pregunta_10: '',
                             respuesta_10_1: '',
                             respuesta_10_2: '',
                             respuesta_10_3: '',
                             respuesta_10_4: '',
                             respuestaCorrectaP10:'',
+                            valorResPregunta10:'',
                         }}
                         validate={values => {
                             const errors = {};
@@ -112,60 +122,70 @@ function CuestionarioModalDocente({ data, user}) {
                             if (!values.respuesta_3) errors.respuesta_3 = 'Respuesta requerida';
                             if (!values.respuesta_4) errors.respuesta_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP1 || values.respuestaCorrectaP1 === "elige") errors.respuestaCorrectaP1 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta1 || values.valorResPregunta1 === null) errors.valorResPregunta1 = "Valor requerido";
                             if (!values.pregunta_2) errors.pregunta_2 = 'Pregunta requerida';
                             if (!values.respuesta_2_1) errors.respuesta_2_1 = 'Respuesta requerida';
                             if (!values.respuesta_2_2) errors.respuesta_2_2 = 'Respuesta requerida';
                             if (!values.respuesta_2_3) errors.respuesta_2_3 = 'Respuesta requerida';
                               if (!values.respuesta_2_3) errors.respuesta_2_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP2 ||values.respuestaCorrectaP2 === "elige") errors.respuestaCorrectaP2 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta2 || values.valorResPregunta2 === null) errors.valorResPregunta2 = "Valor requerido";
                             if (!values.pregunta_3) errors.pregunta_3 = 'Pregunta requerida';
                             if (!values.respuesta_3_1) errors.respuesta_3_1 = 'Respuesta requerida';
                             if (!values.respuesta_3_2) errors.respuesta_3_2 = 'Respuesta requerida';
                             if (!values.respuesta_3_3) errors.respuesta_3_3 = 'Respuesta requerida';
                               if (!values.respuesta_3_3) errors.respuesta_3_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP3||values.respuestaCorrectaP3 === "elige") errors.respuestaCorrectaP3 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta3 || values.valorResPregunta3 === null) errors.valorResPregunta3 = "Valor requerido";
                             if (!values.pregunta_4) errors.pregunta_4 = 'Pregunta requerida';
                             if (!values.respuesta_4_1) errors.respuesta_4_1 = 'Respuesta requerida';
                             if (!values.respuesta_4_2) errors.respuesta_4_2 = 'Respuesta requerida';
                             if (!values.respuesta_4_3) errors.respuesta_4_3 = 'Respuesta requerida';
                               if (!values.respuesta_4_3) errors.respuesta_4_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP4||values.respuestaCorrectaP4 === "elige") errors.respuestaCorrectaP4 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta4 || values.valorResPregunta4 === null) errors.valorResPregunta4 = "Valor requerido";
                             if (!values.pregunta_5) errors.pregunta_5 = 'Pregunta requerida';
                             if (!values.respuesta_5_1) errors.respuesta_5_1 = 'Respuesta requerida';
                             if (!values.respuesta_5_2) errors.respuesta_5_2 = 'Respuesta requerida';
                             if (!values.respuesta_5_3) errors.respuesta_5_3 = 'Respuesta requerida';
                               if (!values.respuesta_5_3) errors.respuesta_5_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP5||values.respuestaCorrectaP5 === "elige") errors.respuestaCorrectaP5 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta5 || values.valorResPregunta5 === null) errors.valorResPregunta5 = "Valor requerido";
                             if (!values.pregunta_6) errors.pregunta_6 = 'Pregunta requerida';
                             if (!values.respuesta_6_1) errors.respuesta_6_1 = 'Respuesta requerida';
                             if (!values.respuesta_6_2) errors.respuesta_6_2 = 'Respuesta requerida';
                             if (!values.respuesta_6_3) errors.respuesta_6_3 = 'Respuesta requerida';
                               if (!values.respuesta_6_3) errors.respuesta_6_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP6||values.respuestaCorrectaP6 === "elige") errors.respuestaCorrectaP6 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta6 || values.valorResPregunta6 === null) errors.valorResPregunta6 = "Valor requerido";
                             if (!values.pregunta_7) errors.pregunta_7 = 'Pregunta requerida';
                             if (!values.respuesta_7_1) errors.respuesta_7_1 = 'Respuesta requerida';
                             if (!values.respuesta_7_2) errors.respuesta_7_2 = 'Respuesta requerida';
                             if (!values.respuesta_7_3) errors.respuesta_7_3 = 'Respuesta requerida';
                               if (!values.respuesta_7_3) errors.respuesta_7_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP7||values.respuestaCorrectaP7 === "elige") errors.respuestaCorrectaP7 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta7 || values.valorResPregunta7 === null) errors.valorResPregunta7 = "Valor requerido";
                             if (!values.pregunta_8) errors.pregunta_8 = 'Pregunta requerida';
                             if (!values.respuesta_8_1) errors.respuesta_8_1 = 'Respuesta requerida';
                             if (!values.respuesta_8_2) errors.respuesta_8_2 = 'Respuesta requerida';
                             if (!values.respuesta_8_3) errors.respuesta_8_3 = 'Respuesta requerida';
                               if (!values.respuesta_8_3) errors.respuesta_8_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP8||values.respuestaCorrectaP8 === "elige") errors.respuestaCorrectaP8 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta8 || values.valorResPregunta8 === null) errors.valorResPregunta8 = "Valor requerido";
                             if (!values.pregunta_9) errors.pregunta_9 = 'Pregunta requerida';
                             if (!values.respuesta_9_1) errors.respuesta_9_1 = 'Respuesta requerida';
                             if (!values.respuesta_9_2) errors.respuesta_9_2 = 'Respuesta requerida';
                             if (!values.respuesta_9_3) errors.respuesta_9_3 = 'Respuesta requerida';
                               if (!values.respuesta_9_3) errors.respuesta_9_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP9||values.respuestaCorrectaP9 === "elige") errors.respuestaCorrectaP9 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta9 || values.valorResPregunta9 === null) errors.valorResPregunta9 = "Valor requerido";
                             if (!values.pregunta_10) errors.pregunta_10 = 'Pregunta requerida';
                             if (!values.respuesta_10_1) errors.respuesta_10_1 = 'Respuesta requerida';
                             if (!values.respuesta_10_2) errors.respuesta_10_2 = 'Respuesta requerida';
                             if (!values.respuesta_10_3) errors.respuesta_10_3 = 'Respuesta requerida';
                             if (!values.respuesta_10_3) errors.respuesta_10_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP10||values.respuestaCorrectaP10 === "elige") errors.respuestaCorrectaP10 = 'Respuesta correcta requerida';
+                            if(!values.valorResPregunta10 || values.valorResPregunta10 === null) errors.valorResPregunta10 = "Valor requerido";
 
                             return errors;
                         }}
@@ -187,6 +207,8 @@ function CuestionarioModalDocente({ data, user}) {
                                         setImageUpload(event.target.files[0])
                                     }}></input>
                                 </div>
+                                <br/>
+                                <p><b>Nota: Si quiere dejar preguntas nulas coloque el valor de respuesta en cero.</b></p>
                                 {/*Pregunta 1*/}
                                 <div className='pregunta' style={{textAlign:'center', width:'500px', height:'130px'}}>
                                 <div className='pregunta-respuesta' style={{float:'left', width:'300px'}}>
@@ -222,12 +244,16 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP1" component="div" className='errors'/>
+                                <br></br>
+                                <label htmlFor='valorResPregunta1'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta1' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta1' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <br/>
                                 <div className='pregunta'>
                                 <div className='pregunta-respuesta'>
-                                <label htmlFor="pregunta_2">Pregunta 2</label>
+                                <label htmlFor="pregunta_2" >Pregunta 2</label>
                                 <br />
                                 <Field className="pregunta_field" type="text" name="pregunta_2" />
                                 <ErrorMessage name="pregunta_2" component="div" className='errors'/>
@@ -258,6 +284,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP2" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta2'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta2' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta2' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <div className='pregunta'>
@@ -292,6 +321,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP3" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta3'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta3' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta3' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <br />
@@ -327,6 +359,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP4" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta4'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta4' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta4' component="div" className='errors'/>
                                 </div>
                                 </div>
 
@@ -363,6 +398,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP5" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta5'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta5' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta5' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <br />
@@ -398,6 +436,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP6" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta6'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta6' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta6' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <br />
@@ -433,6 +474,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP7" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta7'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta7' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta7' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <br />
@@ -468,6 +512,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP8" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta8'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta8' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta8' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <br />
@@ -503,6 +550,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP9" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta9'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta9' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta9' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <br />
@@ -538,6 +588,9 @@ function CuestionarioModalDocente({ data, user}) {
                                     <option value="respuesta_4">Respuesta 4</option>
                                 </Field>
                                 <ErrorMessage name="respuestaCorrectaP10" component="div" className='errors'/>
+                                <label htmlFor='valorResPregunta10'>Valor: </label>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta10' min="0" max="10" step="0.01"/>
+                                <ErrorMessage name='valorResPregunta10' component="div" className='errors'/>
                                 </div>
                                 </div>
                                 <br />

@@ -129,7 +129,6 @@ function CuestionarioModalContestar({ quiz }) {
                                             </div>
                                         </div>
                                         <ErrorMessage name="respuesta1" component="div" className='errors' />
-
                                     </div>
                                     <br />
 
