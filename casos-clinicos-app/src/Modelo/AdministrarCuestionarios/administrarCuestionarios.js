@@ -871,144 +871,60 @@ export async function registrarResultadoCuestionario(values, quiz) {
   console.log("respuesta incorrecta quiz", quiz.respuestaCorrectaP1);
   if (values.respuesta1 === quiz.respuestaCorrectaP1) {
     console.log("Respuesta correcta", values.respuesta1);
-    calificacion++;
+    calificacion=calificacion+quiz.valorResPregunta1;
   }
 
   if (values.respuesta2 === quiz.respuestaCorrectaP2) {
     console.log("Respuesta correcta2", values.respuesta2);
-    calificacion++;
+    calificacion=calificacion+quiz.valorResPregunta2;
   }
 
 
   if (values.respuesta3 === quiz.respuestaCorrectaP3) {
-    console.log("Respuesta correcta2", values.respuesta3);
-    calificacion++;
+    console.log("Respuesta correcta3", values.respuesta3);
+    calificacion=calificacion+quiz.valorResPregunta3;
   }
 
   if (values.respuesta4 === quiz.respuestaCorrectaP4) {
-    console.log("Respuesta correcta", values.respuesta4);
-    calificacion++;
+    console.log("Respuesta correcta4", values.respuesta4);
+    calificacion=calificacion+quiz.valorResPregunta4;
   }
   if (values.respuesta5 === quiz.respuestaCorrectaP5) {
-    console.log("Respuesta correcta2", values.respuesta5);
-    calificacion++;
+    console.log("Respuesta correcta5", values.respuesta5);
+    calificacion=calificacion+quiz.valorResPregunta5;
   }
 
 
   if (values.respuesta6 === quiz.respuestaCorrectaP6) {
-    console.log("Respuesta correcta2", values.respuesta6);
-    calificacion++;
+    console.log("Respuesta correcta6", values.respuesta6);
+    calificacion=calificacion+quiz.valorResPregunta6;
   }
 
   if (values.respuesta7 === quiz.respuestaCorrectaP7) {
-    console.log("Respuesta correcta", values.respuesta7);
-    calificacion++;
+    console.log("Respuesta correcta7", values.respuesta7);
+    calificacion=calificacion+quiz.valorResPregunta7;
   }
 
   if (values.respuesta8 === quiz.respuestaCorrectaP8) {
-    console.log("Respuesta correcta2", values.respuesta8);
-    calificacion++;
+    console.log("Respuesta correcta8", values.respuesta8);
+    calificacion=calificacion+quiz.valorResPregunta8;
   }
 
 
   if (values.respuesta9 === quiz.respuestaCorrectaP9) {
-    console.log("Respuesta correcta2", values.respuesta9);
-    calificacion++;
+    console.log("Respuesta correcta9", values.respuesta9);
+    calificacion=calificacion+quiz.valorResPregunta9;
   }
 
   if (values.respuesta10 === quiz.respuestaCorrectaP10) {
-    console.log("Respuesta correcta2", values.respuesta10);
-    calificacion++;
+    console.log("Respuesta correcta10", values.respuesta10);
+    calificacion=calificacion+quiz.valorResPregunta10;
   }
 
   return calificacion;
 }
 
-//Registrar resultado cuestionario
-//Actualizar en alumno el avance de un tema
-export async function actualizarAvanceTemaAlumno(user){
-  //Actualizar temascompletos
-    //Actualizar el avance.TemasCompletos
-    //1.Saber el total de temas existentes
-    const alumnoRef = doc(db, "Alumno", user.uid);
-    const qTemas = query(collection(db, "Temas"));
-    var countTemas = 0;
-    onSnapshot(qTemas, (querySnapshotT) => {
-      querySnapshotT.forEach(() => {
-        countTemas = countTemas + 1;
-      });
-      console.log("Total de temas ", countTemas);
-    });
-    //2.Conocer lo cuestionarios que tiene resuelto el usuario por tema PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
-    var countS = 0;//contador de subtemas con al menos un cuetionario resuelto
-    var countT = 0;//contador de temas completos
-    let avanceT = 0; // temas terminanos del alumno
-    //Obtenemos los temas existentes 
-    const querySnapshotTemas = await getDocs(qTemas);
-    //Dentro del forEach se visita cada uno de los temas disponibles
-    querySnapshotTemas.forEach(async (doc) => {
-      console.log(doc.id, " => ", doc.data());
-      //Se declara una varible tipo let para que gurdemos el nombre del tema en cuestión
-      let tema = "";
-      tema = doc.data().Tema;
-      console.log("Tema:::::-------", tema);
-      //Query que nos dara los subtemas cuando el atributo  Tema sea igual al tema dependiendiendo del forEach
-      const qSub = query(collection(db, "Subtemas"), where("Tema", "==", tema));
-      const querySnapshotSub = await getDocs(qSub);
-      //Se recorre cada uno de los valores con un forEach
-      querySnapshotSub.forEach(async (docSub) => {
-        console.log(docSub.id, " => ", docSub.data());
-        //Se declara una varible tipo let para ir guardando el valor del subtema
-        let Subtema = "";
-        Subtema = docSub.data().Subtema;
-        console.log("Tema----------------------------------------------",tema);
-        console.log("SubTema:::::--------", Subtema);
-        // refenrencia a la colección de Resultado en la bd
-        const refR = collection(db, "Resultado");
-        //query que permite obtener los regitros de Rsultados cuando el idAlumno, subtema y tema coincida con los asignados.
-        const qRes = query(
-          refR,
-          where("idAlumno", "==", user.uid),
-          where("subTemaCuestionario", "==", Subtema),
-          where("temaCuestionario", "==", tema)
-        );
-        //Se obtienen los resultados del query
-        const querySnapshotRes = await getDocs(qRes);
-        //Se manda a imprimir cada uno de los valores de los documentos obtennidos
-        querySnapshotRes.forEach(async (docRes) => {
-          console.log("Resultado");
-          console.log(docSub.id, " => ", docRes.data());
-        });
-        console.log("Tamaño de resultados con idAlumno, subtme y tema::",querySnapshotRes.size);
-        //Si el tamaño de los resultados es mayor que 0 entra dentro del if para poder aumentar el contador de countS, 
-          //que permitira cuantos subtemas han sido completos del tema en cuestgion, dependiendo del forEach.
-        if (querySnapshotRes.size > 0) {
-          countS = countS + 1;
-          console.log("countS en if::::", countS);
-        } else {
-          countS=0;
-          console.log(":::en else countS en if::::", countS);
-        }
-        console.log("Numero de subtemas",doc.data().TotalSubtemas)
-        //Si el valor del contado de subtemas completos coincide con el total de subtemas de un tema se podra tomar como tema completo.
-          // Y se podra aumentar el contador de temas completos y calcular el avance para poderlo actualizar en el doc de Alumno
-        if (countS === doc.data().TotalSubtemas) {
-          console.log(":::Entro if de countS==doc.data().TotalSubtemas::");
-          countT = countT + 1;
-          console.log("countT en if:::::", countT);
-          avanceT = (countT * 100) / countTemas;
-          console.log("Avance Tema", avanceT);
-          await updateDoc(alumnoRef, {
-            "Avance.TemasCompletos": countT,
-          });
-        } else {
-          countT=0;//Aun no se si sea tan necesario
-          console.log("countT en if:::::", countT);
-        }
-      });
-    });
-  }
-  //Registrar resultado cuestionario
+ //Registrar resultado cuestionario
   export async function registrarResultadoCuestionarioAsignado(
     values,
     quiz,
@@ -1019,40 +935,40 @@ export async function actualizarAvanceTemaAlumno(user){
     var contIgualAlum = 0;
     var calSub = 0;
     if (values.respuesta1 === quiz.respuestaCorrectaP1) {
-      cal++;
+      cal=cal+quiz.valorResPregunta1;
     }
   
     if (values.respuesta2 === quiz.respuestaCorrectaP2) {
-      cal++;
+      cal=cal+quiz.valorResPregunta2;
     }
   
     if (values.respuesta3 === quiz.respuestaCorrectaP3) {
-      cal++;
+      cal=cal+quiz.valorResPregunta3;
     }
   
     if (values.respuesta4 === quiz.respuestaCorrectaP4) {
-      cal++;
+      cal=cal+quiz.valorResPregunta4;
     }
   
     if (values.respuesta5 === quiz.respuestaCorrectaP5) {
-      cal++;
+      cal=cal+quiz.valorResPregunta5;
     }
   
     if (values.respuesta6 === quiz.respuestaCorrectaP6) {
-      cal++;
+      cal=cal+quiz.valorResPregunta6;
     }
     if (values.respuesta7 === quiz.respuestaCorrectaP7) {
-      cal++;
+      cal=cal+quiz.valorResPregunta7;
     }
     if (values.respuesta8 === quiz.respuestaCorrectaP8) {
-      cal++;
+      cal=cal+quiz.valorResPregunta8;
     }
   
     if (values.respuesta9 === quiz.respuestaCorrectaP9) {
-      cal++;
+      cal=cal+quiz.valorResPregunta9;
     }
     if (values.respuesta10 === quiz.respuestaCorrectaP10) {
-      cal++;
+      cal=cal+quiz.valorResPregunta10;
     }
   
     console.log("Calificacion", cal);
@@ -1155,6 +1071,93 @@ export async function actualizarAvanceTemaAlumno(user){
     
     return cal;
   }
+
+
+//Registrar resultado cuestionario
+//Actualizar en alumno el avance de un tema
+export async function actualizarAvanceTemaAlumno(user){
+  //Actualizar temascompletos
+    //Actualizar el avance.TemasCompletos
+    //1.Saber el total de temas existentes
+    const alumnoRef = doc(db, "Alumno", user.uid);
+    const qTemas = query(collection(db, "Temas"));
+    var countTemas = 0;
+    onSnapshot(qTemas, (querySnapshotT) => {
+      querySnapshotT.forEach(() => {
+        countTemas = countTemas + 1;
+      });
+      console.log("Total de temas ", countTemas);
+    });
+    //2.Conocer lo cuestionarios que tiene resuelto el usuario por tema PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+    var countS = 0;//contador de subtemas con al menos un cuetionario resuelto
+    var countT = 0;//contador de temas completos
+    let avanceT = 0; // temas terminanos del alumno
+    //Obtenemos los temas existentes 
+    const querySnapshotTemas = await getDocs(qTemas);
+    //Dentro del forEach se visita cada uno de los temas disponibles
+    querySnapshotTemas.forEach(async (doc) => {
+      console.log(doc.id, " => ", doc.data());
+      //Se declara una varible tipo let para que gurdemos el nombre del tema en cuestión
+      let tema = "";
+      tema = doc.data().Tema;
+      console.log("Tema:::::-------", tema);
+      //Query que nos dara los subtemas cuando el atributo  Tema sea igual al tema dependiendiendo del forEach
+      const qSub = query(collection(db, "Subtemas"), where("Tema", "==", tema));
+      const querySnapshotSub = await getDocs(qSub);
+      //Se recorre cada uno de los valores con un forEach
+      querySnapshotSub.forEach(async (docSub) => {
+        console.log(docSub.id, " => ", docSub.data());
+        //Se declara una varible tipo let para ir guardando el valor del subtema
+        let Subtema = "";
+        Subtema = docSub.data().Subtema;
+        console.log("Tema----------------------------------------------",tema);
+        console.log("SubTema:::::--------", Subtema);
+        // refenrencia a la colección de Resultado en la bd
+        const refR = collection(db, "Resultado");
+        //query que permite obtener los regitros de Rsultados cuando el idAlumno, subtema y tema coincida con los asignados.
+        const qRes = query(
+          refR,
+          where("idAlumno", "==", user.uid),
+          where("subTemaCuestionario", "==", Subtema),
+          where("temaCuestionario", "==", tema)
+        );
+        //Se obtienen los resultados del query
+        const querySnapshotRes = await getDocs(qRes);
+        //Se manda a imprimir cada uno de los valores de los documentos obtennidos
+        querySnapshotRes.forEach(async (docRes) => {
+          console.log("Resultado");
+          console.log(docSub.id, " => ", docRes.data());
+        });
+        console.log("Tamaño de resultados con idAlumno, subtme y tema::",querySnapshotRes.size);
+        //Si el tamaño de los resultados es mayor que 0 entra dentro del if para poder aumentar el contador de countS, 
+          //que permitira cuantos subtemas han sido completos del tema en cuestgion, dependiendo del forEach.
+        if (querySnapshotRes.size > 0) {
+          countS = countS + 1;
+          console.log("countS en if::::", countS);
+        } else {
+          countS=0;
+          console.log(":::en else countS en if::::", countS);
+        }
+        console.log("Numero de subtemas",doc.data().TotalSubtemas)
+        //Si el valor del contado de subtemas completos coincide con el total de subtemas de un tema se podra tomar como tema completo.
+          // Y se podra aumentar el contador de temas completos y calcular el avance para poderlo actualizar en el doc de Alumno
+        if (countS === doc.data().TotalSubtemas) {
+          console.log(":::Entro if de countS==doc.data().TotalSubtemas::");
+          countT = countT + 1;
+          console.log("countT en if:::::", countT);
+          avanceT = (countT * 100) / countTemas;
+          console.log("Avance Tema", avanceT);
+          await updateDoc(alumnoRef, {
+            "Avance.TemasCompletos": countT,
+          });
+        } else {
+          countT=0;//Aun no se si sea tan necesario
+          console.log("countT en if:::::", countT);
+        }
+      });
+    });
+  }
+ 
 
 export async function buscarCuestionario(criterioBusqueda, claveBusqueda) {
   let docusFiltradoF = [];
