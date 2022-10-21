@@ -6,15 +6,25 @@ import { FcList } from "react-icons/fc";
 import { FcRatings } from "react-icons/fc";
 import { FcTimeline } from "react-icons/fc";
 import { FcButtingIn } from "react-icons/fc";
-import ProgressBar from 'react-bootstrap/ProgressBar'
-import { collection, getDocs, getFirestore, onSnapshot, query, doc } from "firebase/firestore";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+  query,
+  doc,
+  getDoc,
+  where,
+} from "firebase/firestore";
 import firebaseApp from "../../Firebase/firebase-config";
 
 export default function MiavanceA({ user }) {
   const [alumno, setAlumno] = useState(null);
   const [temasNum, settemasNum] = useState(0);
   const [cuesNum, setCuesNum] = useState(0);
-  const [barra,setBarra]=useState(0);
+  const [nrc, setNrc] = useState(0);
+  const [barra, setBarra] = useState(0);
 
   const db = getFirestore(firebaseApp);
 
@@ -31,25 +41,39 @@ export default function MiavanceA({ user }) {
     return numTemas;
   }
   async function getCuestionarios() {
-    var numCuestionarios = 0;
-    const q = query(collection(db, "Cuestionarios"));
+    const docRef = doc(db, "Alumno", user.uid);
+    const docSnap = await getDoc(docRef);
 
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-      numCuestionarios++;
-    });
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      const nrcAl = docSnap.data().NRC;
+      console.log("NRC", nrcAl);
+      var numCuestionarios = 0;
+      const q = query(
+        collection(db, "Cuestionarios"),
+        where("nrcClase", "array-contains", nrcAl)
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        numCuestionarios++;
+      });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
     return numCuestionarios;
   }
-  useEffect(() => {
 
-    getTemas().then(res => {
+  useEffect(() => {
+    getTemas().then((res) => {
       console.log("Num de temas totales", res);
       settemasNum(res);
     });
 
-    getCuestionarios().then(res => {
+    getCuestionarios().then((res) => {
       console.log("Num de cuestionarios totales", res);
       setCuesNum(res);
     });
@@ -63,7 +87,7 @@ export default function MiavanceA({ user }) {
 
     return () => {
       unsubscribe();
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -87,82 +111,106 @@ export default function MiavanceA({ user }) {
   }, []);
   return (
     <Section>
-       {alumno ?
-      <div class="row border bg-light px-4">
-      <h1>Resultados de uso</h1>
-        <div className="col-xl-3 col-sm-6 col-12">
-          <div className="card">
-            <div className="card-content">
-              <div className="card-body">
-                <div className="media d-flex">
-                  <div className="align-self-center">
-                  <h1> < FcButtingIn /></h1>
-                    
+      {alumno ? (
+        <div class="row border bg-light px-4">
+          <h1>Resultados de uso</h1>
+          <div className="col-xl-3 col-sm-6 col-12">
+            <div className="card">
+              <div className="card-content">
+                <div className="card-body">
+                  <div className="media d-flex">
+                    <div className="align-self-center">
+                      <h1>
+                        {" "}
+                        <FcButtingIn />
+                      </h1>
+                    </div>
+                    <div className="media-body text-right">
+                      <h3>
+                        {alumno.Nombre} {alumno.ApellidoPaterno}{" "}
+                        {alumno.ApellidoMaterno}
+                      </h3>
+                      <span>Estudiante</span>
+                    </div>
                   </div>
-                  <div className="media-body text-right">
-                    <h3>{alumno.Nombre} {alumno.ApellidoPaterno} {alumno.ApellidoMaterno}</h3>
-                    <span>Estudiante</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-xl-3 col-sm-6 col-12">
+            <div className="card">
+              <div className="card-content">
+                <div className="card-body">
+                  <div className="media d-flex">
+                    <div className="align-self-center">
+                      <h1>
+                        <FcList />
+                      </h1>
+                    </div>
+                    <div className="media-body text-right">
+                      <h3>Temas completos</h3>
+                      <ProgressBar
+                        animated
+                        now={(alumno.Avance.TemasCompletos * 100) / temasNum}
+                      />
+                      <span>
+                        {alumno.Avance.TemasCompletos} / {temasNum}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-xl-3 col-sm-6 col-12 p-2">
+            <div className="card">
+              <div className="card-content">
+                <div className="card-body">
+                  <div className="media d-flex">
+                    <div className="align-self-center">
+                      <h1>
+                        <FcTimeline />
+                      </h1>
+                    </div>
+                    <div className="media-body text-right">
+                      <h3>Cuestionarios completos</h3>
+                      <ProgressBar
+                        animated
+                        now={
+                          (alumno.Avance.CuestionariosCompletos * 100) / cuesNum
+                        }
+                      />
+                      <span>
+                        {alumno.Avance.CuestionariosCompletos} / {cuesNum}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-xl-3 col-sm-6 col-12 p-2">
+            <div className="card">
+              <div className="card-content">
+                <div className="card-body">
+                  <div className="media d-flex">
+                    <div className="align-self-center">
+                      <h1>
+                        {" "}
+                        <FcRatings />
+                      </h1>
+                    </div>
+                    <div className="media-body text-right">
+                      <h3>Promedio general</h3>
+                      <span>{alumno.Avance.PromedioGeneral} / 10</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-xl-3 col-sm-6 col-12">
-          <div className="card">
-            <div className="card-content">
-              <div className="card-body">
-                <div className="media d-flex">
-                  <div className="align-self-center">
-                    <h1><FcList/></h1>
-                  </div>
-                  <div className="media-body text-right">
-                    <h3>Temas completos</h3>
-                    <ProgressBar animated now={((alumno.Avance.TemasCompletos)*100)/temasNum} />
-                    <span>{alumno.Avance.TemasCompletos} / {temasNum}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-xl-3 col-sm-6 col-12 p-2">
-          <div className="card">
-            <div className="card-content">
-              <div className="card-body">
-                <div className="media d-flex">
-                  <div className="align-self-center">
-                    <h1><FcTimeline/></h1>
-                  </div>
-                  <div className="media-body text-right">
-                    <h3>Cuestionarios completos</h3>
-                    <ProgressBar animated now={((alumno.Avance.CuestionariosCompletos)*100)/cuesNum} />
-                    <span>{alumno.Avance.CuestionariosCompletos} / {cuesNum}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-xl-3 col-sm-6 col-12 p-2">
-          <div className="card">
-            <div className="card-content">
-              <div className="card-body">
-                <div className="media d-flex">
-                  <div className="align-self-center">
-                   <h1> <FcRatings/></h1> 
-                  </div>
-                  <div className="media-body text-right">
-                    <h3>Promedio general</h3>
-                    <span>{alumno.Avance.PromedioGeneral} / 10</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      : null}
+      ) : null}
     </Section>
   );
 }

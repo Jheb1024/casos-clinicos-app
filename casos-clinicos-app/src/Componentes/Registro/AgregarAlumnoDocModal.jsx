@@ -166,7 +166,8 @@ function AgregarAlumnoDocModal() {
                         <Form onSubmit={submitHandler}>
 
                             <div className="form-group">
-                                <label for="NRC">Ingrese el NRC de la clase</label>
+                                <label for="NRC"><b>NRC nuevo</b></label>
+                                <label><small>Este NRC se actualizara en los datos del alumno para que pueda corresponder a la clase correspondiente y pueda aparecer en la lista de sus clases.</small></label>
                                 <Field
                                     type="text"
                                     className="form-control"

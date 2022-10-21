@@ -82,6 +82,20 @@ export default class AdministradorAlumno extends AdministradorUsuario {
     console.log(alumnos);
     return alumnos;
   }
+  //Busqueda ppara obtener la lista de alumnos por clase
+  
+  async busquedaDocentePorClase(claveBusqueda) {
+    let docusFiltrado = [];
+  const collecionRef = collection(this.db, "Alumno");
+  const q = query(collecionRef, where("NRC", "==", claveBusqueda));
+  const querySnapshot = await Promise.all([getDocs(q)]);
+  querySnapshot.forEach((snapshot) => {
+    snapshot.forEach((doc) => {
+      docusFiltrado.push(doc.data());
+    });
+  });
+  return docusFiltrado;
+  }
   //Función principal de busqueda para la lista de alumnos en docente
   async busquedaDocente(id, criterioBusqueda, claveBusqueda,alumnos) {
     let docusFiltradoF = [];
@@ -141,6 +155,25 @@ export default class AdministradorAlumno extends AdministradorUsuario {
     await deleteDoc(docRefU).then(() => {
       console.log("El usuario ha sido eliminado de Usuarios");
     });
+  }
+  //Quitar alumno de la lista de un docente
+  async quitarAlumnoLista(idA){
+    console.log("id del alumno a editar quitarAlumnoLista()::", idA);
+    const collectionRef = collection(this.db, "Alumno");
+    const docRef = doc(collectionRef, idA);
+
+    await updateDoc(docRef, {
+      NRC: "00000",
+    })
+      .then(() => {
+        console.log("El NRC es igual a 00000");
+        return "1";
+      })
+      .catch((error) => {
+        console.log("Error en catch");
+        console.error(error);
+        return error;
+      });
   }
   //Para editar datos del alumno
   async editarAlumno(MatriculaN, NombreN, ApellidoPN, ApellidoMN, NRCN, idA) {
@@ -234,6 +267,19 @@ async function buscarAlumnoPorMatricula(base, claveBusqueda) {
   let docusFiltrado = [];
   const collecionRef = collection(base, "Alumno");
   const q = query(collecionRef, where("Matricula", "==", claveBusqueda));
+  const querySnapshot = await Promise.all([getDocs(q)]);
+  querySnapshot.forEach((snapshot) => {
+    snapshot.forEach((doc) => {
+      docusFiltrado.push(doc.data());
+    });
+  });
+  return docusFiltrado;
+}
+//Buscar un alumno por el NRC, desde el pefil del admi
+async function buscarAlumnoPorNRC( claveBusqueda) {
+  let docusFiltrado = [];
+  const collecionRef = collection(this.db, "Alumno");
+  const q = query(collecionRef, where("NRC", "==", claveBusqueda));
   const querySnapshot = await Promise.all([getDocs(q)]);
   querySnapshot.forEach((snapshot) => {
     snapshot.forEach((doc) => {

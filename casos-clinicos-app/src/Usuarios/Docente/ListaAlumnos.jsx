@@ -4,6 +4,7 @@ import scrollreveal from "scrollreveal";
 import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorAlumno";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { GoSearch } from "react-icons/go";
+import {FaListOl} from "react-icons/fa"
 import firebaseApp from "../../../src/Firebase/firebase-config.js";
 import AgregarAlumnoDocModal from "../../Componentes/Registro/AgregarAlumnoDocModal";
 import {
@@ -22,6 +23,7 @@ export default function ListaAlumno({ user }) {
   const db = getFirestore(firebaseApp);
 
   const [alumnos, setAlumnos] = useState(null);
+  const [clases,setClases]=useState(null);
   const [show, setShow] = useState(false);
 
   async function busquedaFormHandler(e) {
@@ -44,20 +46,50 @@ export default function ListaAlumno({ user }) {
       setShow(true);
     }
   }
+  async function busquedaFormClase(e) {
+    const input = document.getElementById("busqueda");
+    input.value = "";
+    const selectB=document.getElementById("criterio");
+    selectB.value="1";
+    console.log("en busqueda form clase");
+    e.preventDefault();
+    const clase = e.target.clase.value;
+    console.log("clase elegida",clase);
+    const nvosDocus = await admiAl.busquedaDocentePorClase(
+      clase
+    );
+    if (nvosDocus.length > 0) {
+      console.log("resulll", alumnos);
+      setAlumnos(nvosDocus);
+      setShow(false);
+    } else {
+      setAlumnos(null);
+      setShow(true);
+    }
+  }
   async function actualizarEstadoAlumnos(user) {
     let nrc = [];
+    let clase=[];
     const collecionRef1 = collection(db, "Clase");
     const collecionRef = collection(db, "Alumno");
     const que = query(collecionRef1, where("idDocente", "==", user.uid));
     onSnapshot(que, async (querySnapshot) => {
       querySnapshot.forEach((doc) => {
         nrc.push(doc.data().NRC);
+        clase.push(doc.data());
       });
+      setClases(clase);
+      console.log("Clases del docente ");
+console.log(clases);
+      console.log("nrc en lista alumnos::",nrc);
       for (let i = 0; i < nrc.length; i++) {
         const q1 = query(collecionRef, where("NRC", "==", nrc[i]));
+        console.log("nrc i en lista alumnos::",nrc[i]);
         onSnapshot(q1, (querySnapshot1) => {
           if (querySnapshot1.size > 0) {
-            setAlumnos(querySnapshot1.docs.map((doc) => doc.data()));
+            console.log("Alumno con NRc de clase ant.");
+            console.log(querySnapshot1.docs.map((doc) => doc.data()));
+          //  setAlumnos(querySnapshot1.docs.map((doc) => doc.data()));
           }
         });
       }
@@ -74,7 +106,7 @@ export default function ListaAlumno({ user }) {
       denyButtonText: `No`,
     }).then((respuesta) => {
       if (respuesta.isConfirmed) {
-        if (admiAl.borrarAlumnoAd(id)) {
+        if (admiAl.quitarAlumnoLista(id)==1) {
           new Swal({
             position: "center",
             icon: "success",
@@ -112,7 +144,24 @@ export default function ListaAlumno({ user }) {
 
   return (
     <Section>
-      <AgregarAlumnoDocModal />
+      <div className="container-fluid" style={{width: '500px'}}>
+      <form className="d-flex" onSubmit={busquedaFormClase}>
+          <label htmlFor="clases">Seleccioné la clase:</label>
+          <select name="clases" id="clase">
+          {clases!=null && 
+           (
+            clases.map((clase, index) => (
+              <option value={clase.NRC} >{index+1}.{clase.NombreClase}</option>
+            ))
+           )
+          }
+          </select>
+          <button className="btn btn-outline-primary me-2" type="submit">
+            <FaListOl />
+          </button>
+          </form>
+      </div>
+      <div class="shadow-lg p-3 mb-5 bg-white rounded mt-3">
       <div className="container-fluid">
         <form className="d-flex" onSubmit={busquedaFormHandler}>
           <label htmlFor="criterio">Buscar por:</label>
@@ -128,31 +177,19 @@ export default function ListaAlumno({ user }) {
             type="search"
             id="busqueda"
             name="busqueda"
-            placeholder="Buscar por nombre o apellido paterno."
+            placeholder="Buscar por nombre,apellido paterno o por matrícula"
           />
           <button className="btn btn-outline-success" type="submit">
             <GoSearch />
           </button>
         </form>
-        <button
-          className="btn btn-secondary"
-          onClick={() => {
-            const input = document.getElementById("busqueda");
-            input.value = "";
-            const selectB=document.getElementById("criterio");
-            selectB.value="1";
-            actualizarEstadoAlumnos(user);
-          }}
-        >
-          Resetear
-        </button>
       </div>
+      <AgregarAlumnoDocModal />
       {alumnos == null && (
         <Alert variant="warning">
           <Alert.Heading>Sin registros!</Alert.Heading>
           <p>
-            De "Clic" en <b>Resetear</b>
-             para volver a visualizar la lista de alumnos actualizada e intente con otro dato de búsqueda.
+            Buscar en otra clase o agregar un nuevo alumno a su clase.
           </p>
         </Alert>
       )}
@@ -200,6 +237,7 @@ export default function ListaAlumno({ user }) {
           </table>
         </div>
       )}
+      </div>
     </Section>
   );
 }
