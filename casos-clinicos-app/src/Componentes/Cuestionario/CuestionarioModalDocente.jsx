@@ -122,70 +122,70 @@ function CuestionarioModalDocente({ data, user}) {
                             if (!values.respuesta_3) errors.respuesta_3 = 'Respuesta requerida';
                             if (!values.respuesta_4) errors.respuesta_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP1 || values.respuestaCorrectaP1 === "elige") errors.respuestaCorrectaP1 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta1 || values.valorResPregunta1 === null) errors.valorResPregunta1 = "Valor requerido";
+                            if(values.valorResPregunta1  < 0 || values.valorResPregunta1 > 10 || values.valorResPregunta1.length === 0) errors.valorResPregunta1 = "Valor requerido";
                             if (!values.pregunta_2) errors.pregunta_2 = 'Pregunta requerida';
                             if (!values.respuesta_2_1) errors.respuesta_2_1 = 'Respuesta requerida';
                             if (!values.respuesta_2_2) errors.respuesta_2_2 = 'Respuesta requerida';
                             if (!values.respuesta_2_3) errors.respuesta_2_3 = 'Respuesta requerida';
-                              if (!values.respuesta_2_3) errors.respuesta_2_4 = 'Respuesta requerida';
+                            if (!values.respuesta_2_3) errors.respuesta_2_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP2 ||values.respuestaCorrectaP2 === "elige") errors.respuestaCorrectaP2 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta2 || values.valorResPregunta2 === null) errors.valorResPregunta2 = "Valor requerido";
+                            if(values.valorResPregunta2 < 0 || values.valorResPregunta2 > 10 || values.valorResPregunta2.length === 0) errors.valorResPregunta2 = "Valor requerido";
                             if (!values.pregunta_3) errors.pregunta_3 = 'Pregunta requerida';
                             if (!values.respuesta_3_1) errors.respuesta_3_1 = 'Respuesta requerida';
                             if (!values.respuesta_3_2) errors.respuesta_3_2 = 'Respuesta requerida';
                             if (!values.respuesta_3_3) errors.respuesta_3_3 = 'Respuesta requerida';
                               if (!values.respuesta_3_3) errors.respuesta_3_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP3||values.respuestaCorrectaP3 === "elige") errors.respuestaCorrectaP3 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta3 || values.valorResPregunta3 === null) errors.valorResPregunta3 = "Valor requerido";
+                            if(values.valorResPregunta3 < 0 || values.valorResPregunta3 > 10 || values.valorResPregunta3.length === 0) errors.valorResPregunta3 = "Valor requerido";
                             if (!values.pregunta_4) errors.pregunta_4 = 'Pregunta requerida';
                             if (!values.respuesta_4_1) errors.respuesta_4_1 = 'Respuesta requerida';
                             if (!values.respuesta_4_2) errors.respuesta_4_2 = 'Respuesta requerida';
                             if (!values.respuesta_4_3) errors.respuesta_4_3 = 'Respuesta requerida';
                               if (!values.respuesta_4_3) errors.respuesta_4_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP4||values.respuestaCorrectaP4 === "elige") errors.respuestaCorrectaP4 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta4 || values.valorResPregunta4 === null) errors.valorResPregunta4 = "Valor requerido";
+                            if(values.valorResPregunta4 < 0 || values.valorResPregunta4 > 10 || values.valorResPregunta4.length === 0) errors.valorResPregunta4 = "Valor requerido";
                             if (!values.pregunta_5) errors.pregunta_5 = 'Pregunta requerida';
                             if (!values.respuesta_5_1) errors.respuesta_5_1 = 'Respuesta requerida';
                             if (!values.respuesta_5_2) errors.respuesta_5_2 = 'Respuesta requerida';
                             if (!values.respuesta_5_3) errors.respuesta_5_3 = 'Respuesta requerida';
                               if (!values.respuesta_5_3) errors.respuesta_5_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP5||values.respuestaCorrectaP5 === "elige") errors.respuestaCorrectaP5 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta5 || values.valorResPregunta5 === null) errors.valorResPregunta5 = "Valor requerido";
+                            if(values.valorResPregunta5 < 0 || values.valorResPregunta5 > 10 || values.valorResPregunta5.length === 0) errors.valorResPregunta5 = "Valor requerido";
                             if (!values.pregunta_6) errors.pregunta_6 = 'Pregunta requerida';
                             if (!values.respuesta_6_1) errors.respuesta_6_1 = 'Respuesta requerida';
                             if (!values.respuesta_6_2) errors.respuesta_6_2 = 'Respuesta requerida';
                             if (!values.respuesta_6_3) errors.respuesta_6_3 = 'Respuesta requerida';
                               if (!values.respuesta_6_3) errors.respuesta_6_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP6||values.respuestaCorrectaP6 === "elige") errors.respuestaCorrectaP6 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta6 || values.valorResPregunta6 === null) errors.valorResPregunta6 = "Valor requerido";
+                            if(values.valorResPregunta6 < 0 || values.valorResPregunta6 > 10 || values.valorResPregunta6.length === 0) errors.valorResPregunta6 = "Valor requerido";
                             if (!values.pregunta_7) errors.pregunta_7 = 'Pregunta requerida';
                             if (!values.respuesta_7_1) errors.respuesta_7_1 = 'Respuesta requerida';
                             if (!values.respuesta_7_2) errors.respuesta_7_2 = 'Respuesta requerida';
                             if (!values.respuesta_7_3) errors.respuesta_7_3 = 'Respuesta requerida';
                               if (!values.respuesta_7_3) errors.respuesta_7_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP7||values.respuestaCorrectaP7 === "elige") errors.respuestaCorrectaP7 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta7 || values.valorResPregunta7 === null) errors.valorResPregunta7 = "Valor requerido";
+                            if(values.valorResPregunta7 < 0 || values.valorResPregunta7 > 10 || values.valorResPregunta7.length === 0) errors.valorResPregunta7 = "Valor requerido";
                             if (!values.pregunta_8) errors.pregunta_8 = 'Pregunta requerida';
                             if (!values.respuesta_8_1) errors.respuesta_8_1 = 'Respuesta requerida';
                             if (!values.respuesta_8_2) errors.respuesta_8_2 = 'Respuesta requerida';
                             if (!values.respuesta_8_3) errors.respuesta_8_3 = 'Respuesta requerida';
                               if (!values.respuesta_8_3) errors.respuesta_8_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP8||values.respuestaCorrectaP8 === "elige") errors.respuestaCorrectaP8 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta8 || values.valorResPregunta8 === null) errors.valorResPregunta8 = "Valor requerido";
+                            if(values.valorResPregunta8 < 0 || values.valorResPregunta8 > 10 || values.valorResPregunta8.length === 0) errors.valorResPregunta8 = "Valor requerido";
                             if (!values.pregunta_9) errors.pregunta_9 = 'Pregunta requerida';
                             if (!values.respuesta_9_1) errors.respuesta_9_1 = 'Respuesta requerida';
                             if (!values.respuesta_9_2) errors.respuesta_9_2 = 'Respuesta requerida';
                             if (!values.respuesta_9_3) errors.respuesta_9_3 = 'Respuesta requerida';
                               if (!values.respuesta_9_3) errors.respuesta_9_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP9||values.respuestaCorrectaP9 === "elige") errors.respuestaCorrectaP9 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta9 || values.valorResPregunta9 === null) errors.valorResPregunta9 = "Valor requerido";
+                            if(values.valorResPregunta9 < 0 || values.valorResPregunta9 > 10 || values.valorResPregunta9.length === 0) errors.valorResPregunta9 = "Valor requerido";
                             if (!values.pregunta_10) errors.pregunta_10 = 'Pregunta requerida';
                             if (!values.respuesta_10_1) errors.respuesta_10_1 = 'Respuesta requerida';
                             if (!values.respuesta_10_2) errors.respuesta_10_2 = 'Respuesta requerida';
                             if (!values.respuesta_10_3) errors.respuesta_10_3 = 'Respuesta requerida';
                             if (!values.respuesta_10_3) errors.respuesta_10_4 = 'Respuesta requerida';
                             if (!values.respuestaCorrectaP10||values.respuestaCorrectaP10 === "elige") errors.respuestaCorrectaP10 = 'Respuesta correcta requerida';
-                            if(!values.valorResPregunta10 || values.valorResPregunta10 === null) errors.valorResPregunta10 = "Valor requerido";
+                            if(values.valorResPregunta10 < 0 || values.valorResPregunta10 > 10 || values.valorResPregunta10.length === 0) errors.valorResPregunta10 = "Valor requerido";
 
                             return errors;
                         }}
@@ -246,7 +246,7 @@ function CuestionarioModalDocente({ data, user}) {
                                 <ErrorMessage name="respuestaCorrectaP1" component="div" className='errors'/>
                                 <br></br>
                                 <label htmlFor='valorResPregunta1'>Valor: </label>
-                                <Field className='valorRespuesta' type="number" name='valorResPregunta1' min="0" max="10" step="0.01"/>
+                                <Field className='valorRespuesta' type="number" name='valorResPregunta1' min="0.0" max="10" step="0.01"/>
                                 <ErrorMessage name='valorResPregunta1' component="div" className='errors'/>
                                 </div>
                                 </div>

@@ -217,6 +217,8 @@ function EditarCuestionarioModalDocente({data}) {
                                     showConfirmButton: false,
                                     timer: 3000
                                 });
+
+                                window.location.reload();
                             }
                         }}
                     >

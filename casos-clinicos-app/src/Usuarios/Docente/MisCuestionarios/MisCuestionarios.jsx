@@ -40,7 +40,6 @@ function MisCuestionarios({ user }) {
 
     obtenerNRC(cuestionario);
     setCuestionario(cuestionario);
-    //console.log('this is what it has', cuestionario.refImage)
     
     if (JSON.stringify(cuestionario.refImage) === 'none'|| cuestionario.refImage ===null ) {
       const img = document.getElementById('myimg');
@@ -79,7 +78,7 @@ function MisCuestionarios({ user }) {
     const q = query(collection(db, "Cuestionarios"), where("AutorId", "==", docente.uid));
     onSnapshot(q, (querySnapshot) => {
       if (querySnapshot.size > 0) {
-        console.log(querySnapshot.docs.map((doc) => doc.data()))
+        //console.log(querySnapshot.docs.map((doc) => doc.data()))
         setCuestionarios(querySnapshot.docs.map((doc) => doc.data()))
       }
     })
