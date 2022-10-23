@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import './CuestionarioModal.css';
 
-function EditarCuestionarioModalDocente({data}) {
+function EditarCuestionarioModalDocente({data, info}) {
 
     console.log(data)
     const [show, setShow] = useState(false);
@@ -209,6 +209,9 @@ function EditarCuestionarioModalDocente({data}) {
                         }}
                         onSubmit={(values, { setSubmitting }) => {
                             if(actualizarCuestionario(values, data, imageUpload)){
+                                
+                                
+                                //
                                 setShow(false)
                                 new Swal({
                                     title: "Acción exitosa",
@@ -217,8 +220,9 @@ function EditarCuestionarioModalDocente({data}) {
                                     showConfirmButton: false,
                                     timer: 3000
                                 });
+                                info(true);
 
-                                window.location.reload();
+                                //window.location.reload();
                             }
                         }}
                     >

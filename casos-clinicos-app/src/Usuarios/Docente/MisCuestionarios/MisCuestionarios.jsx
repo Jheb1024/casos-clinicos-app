@@ -11,6 +11,18 @@ import { Link } from 'react-router-dom';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import './MisCuestionarios.css'
 function MisCuestionarios({ user }) {
+
+const [data, setData] = useState('');
+
+const childToParent = (childData) => {
+   if(childData){
+    //obtenerCuestionariosDocente(user)
+    //console.log("Este es un mensaje desde el modal")
+    //window.location.reload();
+    //obtenerCuestionario(cuestionario)
+    setCuestionario(null);
+   }
+}
   
   const db = getFirestore(firebaseApp);
   const [cuestionarios, setCuestionarios] = useState(null);
@@ -37,7 +49,6 @@ function MisCuestionarios({ user }) {
   }
   function obtenerCuestionario(cuestionario) {
     
-
     obtenerNRC(cuestionario);
     setCuestionario(cuestionario);
     
@@ -147,11 +158,11 @@ function MisCuestionarios({ user }) {
                   {NrcAsignado!=null && <p><strong>NRC asignados:</strong>{NrcAsignado?.map((nrcM)=>  <li>{nrcM}</li> )}</p>}
                   <div className="btn-group">
                     <AsignarCuestionarioModal quiz={cuestionario} docente={user} nrcAsig={NrcAsignado}/>
-                    {<EditarCuestionarioModalDocente data={cuestionario} />}
+                    {<EditarCuestionarioModalDocente data={cuestionario} info={childToParent} />}
                     <Button className='btn_borrar' onClick={() => borrarCuestionario(cuestionario.idCuestionario)}>Borrar</Button>
                   </div>
                   <div><h3>{cuestionario.Titulo}</h3></div>
-                  <div><textarea value={cuestionario.Enunciado} rows='4' cols='80' readOnly /></div>
+                  <div><textarea value={cuestionario.Enunciado} rows='9' cols='80' readOnly style={{padding: '10px'}}/></div>
                   {<img id='myimg' alt=''></img>}
                   <div className='preguntas'>
 

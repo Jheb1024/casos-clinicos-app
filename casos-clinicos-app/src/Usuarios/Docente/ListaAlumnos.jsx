@@ -4,7 +4,7 @@ import scrollreveal from "scrollreveal";
 import AdministradorAlumno from "../../Modelo/AdministrarUsuarios/AdministradorAlumno";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { GoSearch } from "react-icons/go";
-import {FaListOl} from "react-icons/fa"
+import { FaListOl } from "react-icons/fa"
 import firebaseApp from "../../../src/Firebase/firebase-config.js";
 import AgregarAlumnoDocModal from "../../Componentes/Registro/AgregarAlumnoDocModal";
 import {
@@ -23,7 +23,7 @@ export default function ListaAlumno({ user }) {
   const db = getFirestore(firebaseApp);
 
   const [alumnos, setAlumnos] = useState(null);
-  const [clases,setClases]=useState(null);
+  const [clases, setClases] = useState(0);
   const [show, setShow] = useState(false);
 
   async function busquedaFormHandler(e) {
@@ -49,12 +49,12 @@ export default function ListaAlumno({ user }) {
   async function busquedaFormClase(e) {
     const input = document.getElementById("busqueda");
     input.value = "";
-    const selectB=document.getElementById("criterio");
-    selectB.value="1";
+    const selectB = document.getElementById("criterio");
+    selectB.value = "1";
     console.log("en busqueda form clase");
     e.preventDefault();
     const clase = e.target.clase.value;
-    console.log("clase elegida",clase);
+    console.log("clase elegida", clase);
     const nvosDocus = await admiAl.busquedaDocentePorClase(
       clase
     );
@@ -69,7 +69,7 @@ export default function ListaAlumno({ user }) {
   }
   async function actualizarEstadoAlumnos(user) {
     let nrc = [];
-    let clase=[];
+    let clase = [];
     const collecionRef1 = collection(db, "Clase");
     const collecionRef = collection(db, "Alumno");
     const que = query(collecionRef1, where("idDocente", "==", user.uid));
@@ -80,16 +80,16 @@ export default function ListaAlumno({ user }) {
       });
       setClases(clase);
       console.log("Clases del docente ");
-console.log(clases);
-      console.log("nrc en lista alumnos::",nrc);
+      console.log(clases);
+      console.log("nrc en lista alumnos::", nrc);
       for (let i = 0; i < nrc.length; i++) {
         const q1 = query(collecionRef, where("NRC", "==", nrc[i]));
-        console.log("nrc i en lista alumnos::",nrc[i]);
+        console.log("nrc i en lista alumnos::", nrc[i]);
         onSnapshot(q1, (querySnapshot1) => {
           if (querySnapshot1.size > 0) {
             console.log("Alumno con NRc de clase ant.");
             console.log(querySnapshot1.docs.map((doc) => doc.data()));
-          //  setAlumnos(querySnapshot1.docs.map((doc) => doc.data()));
+            //  setAlumnos(querySnapshot1.docs.map((doc) => doc.data()));
           }
         });
       }
@@ -106,7 +106,7 @@ console.log(clases);
       denyButtonText: `No`,
     }).then((respuesta) => {
       if (respuesta.isConfirmed) {
-        if (admiAl.quitarAlumnoLista(id)==1) {
+        if (admiAl.quitarAlumnoLista(id) == 1) {
           new Swal({
             position: "center",
             icon: "success",
@@ -144,99 +144,102 @@ console.log(clases);
 
   return (
     <Section>
-      <div className="container-fluid" style={{width: '500px'}}>
-      <form className="d-flex" onSubmit={busquedaFormClase}>
-          <label htmlFor="clases">Seleccioné la clase:</label>
+      <div className="container-fluid" style={{ width: '500px' }}>
+        <form className="d-flex" onSubmit={busquedaFormClase}>
+          <label htmlFor="clases">Seleccione la clase:</label>
           <select name="clases" id="clase">
-          {clases!=null && 
-           (
-            clases.map((clase, index) => (
-              <option value={clase.NRC} >{index+1}.{clase.NombreClase}</option>
-            ))
-           )
-          }
+            {clases != 0 &&
+              (
+                clases.map((clase, index) => (
+                  <option value={clase.NRC} >{index + 1}.{clase.NombreClase}</option>
+                ))
+              )
+            }
+            {clases == 0 &&
+              (<option value="1">Sin clases</option>)
+            }
           </select>
           <button className="btn btn-outline-primary me-2" type="submit">
             <FaListOl />
           </button>
-          </form>
-      </div>
-      <div class="shadow-lg p-3 mb-5 bg-white rounded mt-3">
-      <div className="container-fluid">
-        <form className="d-flex" onSubmit={busquedaFormHandler}>
-          <label htmlFor="criterio">Buscar por:</label>
-          <select name="criterio" id="criterio">
-            <option value="1" selected>
-              Apellido paterno
-            </option>
-            <option value="2">Nombre</option>
-            <option value="3">Matrícula</option>
-          </select>
-          <input
-            className="form-control me-2"
-            type="search"
-            id="busqueda"
-            name="busqueda"
-            placeholder="Buscar por nombre,apellido paterno o por matrícula"
-          />
-          <button className="btn btn-outline-success" type="submit">
-            <GoSearch />
-          </button>
         </form>
       </div>
-      <AgregarAlumnoDocModal />
-      {alumnos == null && (
-        <Alert variant="warning">
-          <Alert.Heading>Sin registros!</Alert.Heading>
-          <p>
-            Buscar en otra clase o agregar un nuevo alumno a su clase.
-          </p>
-        </Alert>
-      )}
-      {alumnos != null && (
-        <div className="table-responsive border bg-light px-4">
-          <h1>Lista de Alumnos</h1>
-          <table className=" WIDTH=50% table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">ApellidoPaterno</th>
-                <th scope="col">ApellidoMaterno</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">TemasCompletos</th>
-                <th scope="col">CuestionariosCompletos</th>
-                <th scope="col">PromedioGeneral</th>
-                <th scope="col">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {alumnos &&
-                alumnos.map((alumno, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{alumno.ApellidoPaterno}</td>
-                    <td>{alumno.ApellidoMaterno}</td>
-                    <td>{alumno.Nombre}</td>
-                    <td>{alumno.Avance.TemasCompletos}</td>
-                    <td>{alumno.Avance.CuestionariosCompletos}</td>
-                    <td>{alumno.Avance.PromedioGeneral}</td>
-                    <td>
-                      <div className="btn-group btn-group-sm" role="group">
-                        <button
-                          className="btn btn-danger m-1"
-                          onClick={() => borrarAlumno(alumno.id)}
-                        >
-                          <RiDeleteBin6Line />
-                        </button>
-                        <EditarAlumnoModal alumno={alumno} id={alumno.id} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+      <div class="shadow-lg p-3 mb-5 bg-white rounded mt-3">
+        <div className="container-fluid">
+          <form className="d-flex" onSubmit={busquedaFormHandler}>
+            <label htmlFor="criterio">Buscar por:</label>
+            <select name="criterio" id="criterio">
+              <option value="1" selected>
+                Apellido paterno
+              </option>
+              <option value="2">Nombre</option>
+              <option value="3">Matrícula</option>
+            </select>
+            <input
+              className="form-control me-2"
+              type="search"
+              id="busqueda"
+              name="busqueda"
+              placeholder="Buscar por nombre,apellido paterno o por matrícula"
+            />
+            <button className="btn btn-outline-success" type="submit">
+              <GoSearch />
+            </button>
+          </form>
         </div>
-      )}
+        <AgregarAlumnoDocModal />
+        {alumnos == null && (
+          <Alert variant="warning">
+            <Alert.Heading>Sin registros!</Alert.Heading>
+            <p>
+              Buscar en otra clase o agregar un nuevo alumno a su clase.
+            </p>
+          </Alert>
+        )}
+        {alumnos != null && (
+          <div className="table-responsive border bg-light px-4">
+            <h1>Lista de Alumnos</h1>
+            <table className=" WIDTH=50% table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">ApellidoPaterno</th>
+                  <th scope="col">ApellidoMaterno</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">TemasCompletos</th>
+                  <th scope="col">CuestionariosCompletos</th>
+                  <th scope="col">PromedioGeneral</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {alumnos &&
+                  alumnos.map((alumno, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{alumno.ApellidoPaterno}</td>
+                      <td>{alumno.ApellidoMaterno}</td>
+                      <td>{alumno.Nombre}</td>
+                      <td>{alumno.Avance.TemasCompletos}</td>
+                      <td>{alumno.Avance.CuestionariosCompletos}</td>
+                      <td>{alumno.Avance.PromedioGeneral}</td>
+                      <td>
+                        <div className="btn-group btn-group-sm" role="group">
+                          <button
+                            className="btn btn-danger m-1"
+                            onClick={() => borrarAlumno(alumno.id)}
+                          >
+                            <RiDeleteBin6Line />
+                          </button>
+                          <EditarAlumnoModal alumno={alumno} id={alumno.id} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </Section>
   );

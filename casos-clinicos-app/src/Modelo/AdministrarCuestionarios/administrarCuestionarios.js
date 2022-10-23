@@ -921,7 +921,12 @@ export async function registrarResultadoCuestionario(values, quiz) {
     calificacion=calificacion+quiz.valorResPregunta10;
   }
 
-  return calificacion;
+  if(!isNaN(calificacion)){
+    return calificacion;
+  }else{
+    calificacion=0;
+    return calificacion;
+  }
 }
 
  //Registrar resultado cuestionario
@@ -969,6 +974,9 @@ export async function registrarResultadoCuestionario(values, quiz) {
     }
     if (values.respuesta10 === quiz.respuestaCorrectaP10) {
       cal=cal+quiz.valorResPregunta10;
+    }
+    if(isNaN(cal)){
+      cal=0;
     }
   
     console.log("Calificacion", cal);
