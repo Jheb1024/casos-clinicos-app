@@ -412,49 +412,7 @@ async function registrarCuestionarioSinImagen(cuestionario, data, user) {
       respuesta_4_3: cuestionario.respuesta_4_3,
       respuesta_4_4: cuestionario.respuesta_4_4,
       respuestaCorrectaP4: cuestionario.respuestaCorrectaP4,
-      valorResPregunta4:cuestionario.valorResPregunta4,
-      pregunta_5: cuestionario.pregunta_5,
-      respuesta_5_1: cuestionario.respuesta_5_1,
-      respuesta_5_2: cuestionario.respuesta_5_2,
-      respuesta_5_3: cuestionario.respuesta_5_3,
-      respuesta_5_4: cuestionario.respuesta_5_4,
-      respuestaCorrectaP5: cuestionario.respuestaCorrectaP5,
-      valorResPregunta5:cuestionario.valorResPregunta5,
-      pregunta_6: cuestionario.pregunta_6,
-      respuesta_6_1: cuestionario.respuesta_6_1,
-      respuesta_6_2: cuestionario.respuesta_6_2,
-      respuesta_6_3: cuestionario.respuesta_6_3,
-      respuesta_6_4: cuestionario.respuesta_6_4,
-      respuestaCorrectaP6: cuestionario.respuestaCorrectaP6,
-      valorResPregunta6:cuestionario.valorResPregunta6,
-      pregunta_7: cuestionario.pregunta_7,
-      respuesta_7_1: cuestionario.respuesta_7_1,
-      respuesta_7_2: cuestionario.respuesta_7_2,
-      respuesta_7_3: cuestionario.respuesta_7_3,
-      respuesta_7_4: cuestionario.respuesta_7_4,
-      respuestaCorrectaP7: cuestionario.respuestaCorrectaP7,
-      valorResPregunta7:cuestionario.valorResPregunta7,
-      pregunta_8: cuestionario.pregunta_8,
-      respuesta_8_1: cuestionario.respuesta_8_1,
-      respuesta_8_2: cuestionario.respuesta_8_2,
-      respuesta_8_3: cuestionario.respuesta_8_3,
-      respuesta_8_4: cuestionario.respuesta_8_4,
-      respuestaCorrectaP8: cuestionario.respuestaCorrectaP8,
-      valorResPregunta8:cuestionario.valorResPregunta8,
-      pregunta_9: cuestionario.pregunta_9,
-      respuesta_9_1: cuestionario.respuesta_9_1,
-      respuesta_9_2: cuestionario.respuesta_9_2,
-      respuesta_9_3: cuestionario.respuesta_9_3,
-      respuesta_9_4: cuestionario.respuesta_9_4,
-      respuestaCorrectaP9: cuestionario.respuestaCorrectaP9,
-      valorResPregunta9:cuestionario.valorResPregunta9,
-      pregunta_10: cuestionario.pregunta_10,
-      respuesta_10_1: cuestionario.respuesta_10_1,
-      respuesta_10_2: cuestionario.respuesta_10_2,
-      respuesta_10_3: cuestionario.respuesta_10_3,
-      respuesta_10_4: cuestionario.respuesta_10_4,
-      respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
-      valorResPregunta10:cuestionario.valorResPregunta10,
+      valorResPregunta4:cuestionario.valorResPregunta4
     }).then((cuestionario) => {
       console.log("Cuestionario registrado");
       registrado = cuestionario;
@@ -528,42 +486,7 @@ async function registrarCuestionarioConImagen(cuestionario, data, user, imageRef
       respuesta_4_3: cuestionario.respuesta_4_3,
       respuesta_4_4: cuestionario.respuesta_4_4,
       respuestaCorrectaP4: cuestionario.respuestaCorrectaP4,
-      pregunta_5: cuestionario.pregunta_5,
-      respuesta_5_1: cuestionario.respuesta_5_1,
-      respuesta_5_2: cuestionario.respuesta_5_2,
-      respuesta_5_3: cuestionario.respuesta_5_3,
-      respuesta_5_4: cuestionario.respuesta_5_4,
-      respuestaCorrectaP5: cuestionario.respuestaCorrectaP5,
-      pregunta_6: cuestionario.pregunta_6,
-      respuesta_6_1: cuestionario.respuesta_6_1,
-      respuesta_6_2: cuestionario.respuesta_6_2,
-      respuesta_6_3: cuestionario.respuesta_6_3,
-      respuesta_6_4: cuestionario.respuesta_6_4,
-      respuestaCorrectaP6: cuestionario.respuestaCorrectaP6,
-      pregunta_7: cuestionario.pregunta_7,
-      respuesta_7_1: cuestionario.respuesta_7_1,
-      respuesta_7_2: cuestionario.respuesta_7_2,
-      respuesta_7_3: cuestionario.respuesta_7_3,
-      respuesta_7_4: cuestionario.respuesta_7_4,
-      respuestaCorrectaP7: cuestionario.respuestaCorrectaP7,
-      pregunta_8: cuestionario.pregunta_8,
-      respuesta_8_1: cuestionario.respuesta_8_1,
-      respuesta_8_2: cuestionario.respuesta_8_2,
-      respuesta_8_3: cuestionario.respuesta_8_3,
-      respuesta_8_4: cuestionario.respuesta_8_4,
-      respuestaCorrectaP8: cuestionario.respuestaCorrectaP8,
-      pregunta_9: cuestionario.pregunta_9,
-      respuesta_9_1: cuestionario.respuesta_9_1,
-      respuesta_9_2: cuestionario.respuesta_9_2,
-      respuesta_9_3: cuestionario.respuesta_9_3,
-      respuesta_9_4: cuestionario.respuesta_9_4,
-      respuestaCorrectaP9: cuestionario.respuestaCorrectaP9,
-      pregunta_10: cuestionario.pregunta_10,
-      respuesta_10_1: cuestionario.respuesta_10_1,
-      respuesta_10_2: cuestionario.respuesta_10_2,
-      respuesta_10_3: cuestionario.respuesta_10_3,
-      respuesta_10_4: cuestionario.respuesta_10_4,
-      respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
+      
     }).then((cuestionario) => {
       console.log("Cuestionario registrado");
       registrado = cuestionario;
@@ -645,48 +568,7 @@ async function actualizarCuestionarioSinImagen(cuestionario, data) {
       respuesta_4_4: cuestionario.respuesta_4_4,
       respuestaCorrectaP4: cuestionario.respuestaCorrectaP4,
       valorResPregunta4:cuestionario.valorResPregunta4,
-      pregunta_5: cuestionario.pregunta_5,
-      respuesta_5_1: cuestionario.respuesta_5_1,
-      respuesta_5_2: cuestionario.respuesta_5_2,
-      respuesta_5_3: cuestionario.respuesta_5_3,
-      respuesta_5_4: cuestionario.respuesta_5_4,
-      respuestaCorrectaP5: cuestionario.respuestaCorrectaP5,
-      valorResPregunta5:cuestionario.valorResPregunta5,
-      pregunta_6: cuestionario.pregunta_6,
-      respuesta_6_1: cuestionario.respuesta_6_1,
-      respuesta_6_2: cuestionario.respuesta_6_2,
-      respuesta_6_3: cuestionario.respuesta_6_3,
-      respuesta_6_4: cuestionario.respuesta_6_4,
-      respuestaCorrectaP6: cuestionario.respuestaCorrectaP6,
-      valorResPregunta6:cuestionario.valorResPregunta6,
-      pregunta_7: cuestionario.pregunta_7,
-      respuesta_7_1: cuestionario.respuesta_7_1,
-      respuesta_7_2: cuestionario.respuesta_7_2,
-      respuesta_7_3: cuestionario.respuesta_7_3,
-      respuesta_7_4: cuestionario.respuesta_7_4,
-      respuestaCorrectaP7: cuestionario.respuestaCorrectaP7,
-      valorResPregunta7:cuestionario.valorResPregunta7,
-      pregunta_8: cuestionario.pregunta_8,
-      respuesta_8_1: cuestionario.respuesta_8_1,
-      respuesta_8_2: cuestionario.respuesta_8_2,
-      respuesta_8_3: cuestionario.respuesta_8_3,
-      respuesta_8_4: cuestionario.respuesta_8_4,
-      respuestaCorrectaP8: cuestionario.respuestaCorrectaP8,
-      valorResPregunta8:cuestionario.valorResPregunta8,
-      pregunta_9: cuestionario.pregunta_9,
-      respuesta_9_1: cuestionario.respuesta_9_1,
-      respuesta_9_2: cuestionario.respuesta_9_2,
-      respuesta_9_3: cuestionario.respuesta_9_3,
-      respuesta_9_4: cuestionario.respuesta_9_4,
-      respuestaCorrectaP9: cuestionario.respuestaCorrectaP9,
-      valorResPregunta9:cuestionario.valorResPregunta9,
-      pregunta_10: cuestionario.pregunta_10,
-      respuesta_10_1: cuestionario.respuesta_10_1,
-      respuesta_10_2: cuestionario.respuesta_10_2,
-      respuesta_10_3: cuestionario.respuesta_10_3,
-      respuesta_10_4: cuestionario.respuesta_10_4,
-      respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
-      valorResPregunta10:cuestionario.valorResPregunta10,
+      
     }).then(() => {
       console.log("Cuestionario actualizado...");
       editado = true;
@@ -730,48 +612,6 @@ async function actualizarCuestionarioConImagen(cuestionario, data, imageRef) {
       respuesta_4_4: cuestionario.respuesta_4_4,
       respuestaCorrectaP4: cuestionario.respuestaCorrectaP4,
       valorResPregunta4:cuestionario.valorResPregunta4,
-      pregunta_5: cuestionario.pregunta_5,
-      respuesta_5_1: cuestionario.respuesta_5_1,
-      respuesta_5_2: cuestionario.respuesta_5_2,
-      respuesta_5_3: cuestionario.respuesta_5_3,
-      respuesta_5_4: cuestionario.respuesta_5_4,
-      respuestaCorrectaP5: cuestionario.respuestaCorrectaP5,
-      valorResPregunta5:cuestionario.valorResPregunta5,
-      pregunta_6: cuestionario.pregunta_6,
-      respuesta_6_1: cuestionario.respuesta_6_1,
-      respuesta_6_2: cuestionario.respuesta_6_2,
-      respuesta_6_3: cuestionario.respuesta_6_3,
-      respuesta_6_4: cuestionario.respuesta_6_4,
-      respuestaCorrectaP6: cuestionario.respuestaCorrectaP6,
-      valorResPregunta6:cuestionario.valorResPregunta6,
-      pregunta_7: cuestionario.pregunta_7,
-      respuesta_7_1: cuestionario.respuesta_7_1,
-      respuesta_7_2: cuestionario.respuesta_7_2,
-      respuesta_7_3: cuestionario.respuesta_7_3,
-      respuesta_7_4: cuestionario.respuesta_7_4,
-      respuestaCorrectaP7: cuestionario.respuestaCorrectaP7,
-      valorResPregunta7:cuestionario.valorResPregunta7,
-      pregunta_8: cuestionario.pregunta_8,
-      respuesta_8_1: cuestionario.respuesta_8_1,
-      respuesta_8_2: cuestionario.respuesta_8_2,
-      respuesta_8_3: cuestionario.respuesta_8_3,
-      respuesta_8_4: cuestionario.respuesta_8_4,
-      respuestaCorrectaP8: cuestionario.respuestaCorrectaP8,
-      valorResPregunta8:cuestionario.valorResPregunta8,
-      pregunta_9: cuestionario.pregunta_9,
-      respuesta_9_1: cuestionario.respuesta_9_1,
-      respuesta_9_2: cuestionario.respuesta_9_2,
-      respuesta_9_3: cuestionario.respuesta_9_3,
-      respuesta_9_4: cuestionario.respuesta_9_4,
-      respuestaCorrectaP9: cuestionario.respuestaCorrectaP9,
-      valorResPregunta9:cuestionario.valorResPregunta9,
-      pregunta_10: cuestionario.pregunta_10,
-      respuesta_10_1: cuestionario.respuesta_10_1,
-      respuesta_10_2: cuestionario.respuesta_10_2,
-      respuesta_10_3: cuestionario.respuesta_10_3,
-      respuesta_10_4: cuestionario.respuesta_10_4,
-      respuestaCorrectaP10: cuestionario.respuestaCorrectaP10,
-      valorResPregunta10:cuestionario.valorResPregunta10,
     }).then(() => {
       console.log("Cuestionario actualizado...");
       editado = true;
@@ -889,37 +729,6 @@ export async function registrarResultadoCuestionario(values, quiz) {
     console.log("Respuesta correcta4", values.respuesta4);
     calificacion=calificacion+quiz.valorResPregunta4;
   }
-  if (values.respuesta5 === quiz.respuestaCorrectaP5) {
-    console.log("Respuesta correcta5", values.respuesta5);
-    calificacion=calificacion+quiz.valorResPregunta5;
-  }
-
-
-  if (values.respuesta6 === quiz.respuestaCorrectaP6) {
-    console.log("Respuesta correcta6", values.respuesta6);
-    calificacion=calificacion+quiz.valorResPregunta6;
-  }
-
-  if (values.respuesta7 === quiz.respuestaCorrectaP7) {
-    console.log("Respuesta correcta7", values.respuesta7);
-    calificacion=calificacion+quiz.valorResPregunta7;
-  }
-
-  if (values.respuesta8 === quiz.respuestaCorrectaP8) {
-    console.log("Respuesta correcta8", values.respuesta8);
-    calificacion=calificacion+quiz.valorResPregunta8;
-  }
-
-
-  if (values.respuesta9 === quiz.respuestaCorrectaP9) {
-    console.log("Respuesta correcta9", values.respuesta9);
-    calificacion=calificacion+quiz.valorResPregunta9;
-  }
-
-  if (values.respuesta10 === quiz.respuestaCorrectaP10) {
-    console.log("Respuesta correcta10", values.respuesta10);
-    calificacion=calificacion+quiz.valorResPregunta10;
-  }
 
   if(!isNaN(calificacion)){
     return calificacion;
@@ -954,27 +763,6 @@ export async function registrarResultadoCuestionario(values, quiz) {
     if (values.respuesta4 === quiz.respuestaCorrectaP4) {
       cal=cal+quiz.valorResPregunta4;
     }
-  
-    if (values.respuesta5 === quiz.respuestaCorrectaP5) {
-      cal=cal+quiz.valorResPregunta5;
-    }
-  
-    if (values.respuesta6 === quiz.respuestaCorrectaP6) {
-      cal=cal+quiz.valorResPregunta6;
-    }
-    if (values.respuesta7 === quiz.respuestaCorrectaP7) {
-      cal=cal+quiz.valorResPregunta7;
-    }
-    if (values.respuesta8 === quiz.respuestaCorrectaP8) {
-      cal=cal+quiz.valorResPregunta8;
-    }
-  
-    if (values.respuesta9 === quiz.respuestaCorrectaP9) {
-      cal=cal+quiz.valorResPregunta9;
-    }
-    if (values.respuesta10 === quiz.respuestaCorrectaP10) {
-      cal=cal+quiz.valorResPregunta10;
-    }
     if(isNaN(cal)){
       cal=0;
     }
@@ -992,6 +780,8 @@ export async function registrarResultadoCuestionario(values, quiz) {
     const querySnapshot = await getDocs(resu);
   
     if (querySnapshot.size > 0) {
+
+      /*
       let idRes;
       console.log("Hay al menos un registro con esa informacion");
       querySnapshot.forEach((doc) => {
@@ -1001,7 +791,7 @@ export async function registrarResultadoCuestionario(values, quiz) {
         idRes = doc.id;
       });
       console.log("Nuevo intento::>", intento);
-      if (intento > 3) {
+      if (intento === 1) {
         console.log(
           "Ya no puede volver a hacer el cuestionario porque ya tienen 3 intentos"
         );
@@ -1035,7 +825,7 @@ export async function registrarResultadoCuestionario(values, quiz) {
           "Avance.PromedioGeneral": prom,
         });
         //retornar 1
-      }
+      }*/
     } else {
       console.log("Sin datos");
       // Add a new document with a generated id.

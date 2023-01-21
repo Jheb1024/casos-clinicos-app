@@ -67,7 +67,7 @@ function CuestionarioModal({ quiz }) {
               </div>
               <br />
               <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta1} 
+                Valor: {quiz.valorResPregunta1} puntos
               </div>
             </div>
             <br />
@@ -91,7 +91,7 @@ function CuestionarioModal({ quiz }) {
                 <br />
               </div>
               <div className='valor-respuesta'>
-                Valor: {quiz?.valorResPregunta2} 
+                Valor: {quiz?.valorResPregunta2} puntos
               </div>
             </div>
             <div className='pregunta'>
@@ -113,7 +113,7 @@ function CuestionarioModal({ quiz }) {
 
               </div>
               <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta3} 
+                Valor: {quiz.valorResPregunta3} puntos
               </div>
 
             </div>
@@ -137,152 +137,7 @@ function CuestionarioModal({ quiz }) {
 
               </div>
               <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta4} 
-              </div>
-
-            </div>
-
-            <br />
-            <div className='pregunta'>
-              <div className='pregunta-respuesta'>
-                <label htmlFor="pregunta_1">Pregunta 5</label>
-                <br />
-                <input className="pregunta_field" type="text" name="pregunta_5" value={quiz.pregunta_5} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_5_1" placeholder="Respuesta 1" value={quiz.respuesta_5_1} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_5_2" placeholder="Respuesta 2" value={quiz.respuesta_5_2} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_5_3" placeholder="Respuesta 3" value={quiz.respuesta_5_3} readOnly />
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_5_4" placeholder="Respuesta 4" value={quiz.respuesta_5_4} readOnly />
-
-              </div>
-              <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta5} 
-              </div>
-
-            </div>
-            <br />
-            <div className='pregunta'>
-              <div className='pregunta-respuesta'>
-                <label htmlFor="pregunta-_">Pregunta 6</label>
-                <br />
-                <input className="pregunta_field" type="text" name="pregunta_6" value={quiz.pregunta_6} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_6_1" placeholder="Respuesta 1" value={quiz.respuesta_6_1} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_6_2" placeholder="Respuesta 2" value={quiz.respuesta_6_2} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_6_3" placeholder="Respuesta 3" value={quiz.respuesta_6_3} readOnly />
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_6_4" placeholder="Respuesta 4" value={quiz.respuesta_6_4} readOnly />
-
-              </div>
-              <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta6} 
-              </div>
-
-            </div>
-            <br />
-            <div className='pregunta'>
-              <div className='pregunta-respuesta'>
-                <label htmlFor="pregunta_7">Pregunta 7</label>
-                <br />
-                <input className="pregunta_field" type="text" name="pregunta_7" value={quiz.pregunta_7} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_7_1" placeholder="Respuesta 1" value={quiz.respuesta_7_1} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_7_2" placeholder="Respuesta 2" value={quiz.respuesta_7_2} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_7_3" placeholder="Respuesta 3" value={quiz.respuesta_7_3} readOnly />
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_7_4" placeholder="Respuesta 4" value={quiz.respuesta_7_4} readOnly />
-
-              </div>
-              <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta7} 
-              </div>
-
-            </div>
-            <br />
-            <div className='pregunta'>
-              <div className='pregunta-respuesta'>
-                <label htmlFor="pregunta_8">Pregunta 8</label>
-                <br />
-                <input className="pregunta_field" type="text" name="pregunta_8" value={quiz.pregunta_8} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_8_1" placeholder="Respuesta 1" value={quiz.respuesta_8_1} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_8_2" placeholder="Respuesta 2" value={quiz.respuesta_8_2} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_8_3" placeholder="Respuesta 3" value={quiz.respuesta_8_3} readOnly />
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_8_4" placeholder="Respuesta 4" value={quiz.respuesta_8_4} readOnly />
-
-              </div>
-              <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta8} 
-              </div>
-
-            </div>
-            <br />
-            <div className='pregunta'>
-              <div className='pregunta-respuesta'>
-                <label htmlFor="pregunta-9">Pregunta 9</label>
-                <br />
-                <input className="pregunta_field" type="text" name="pregunta_9" value={quiz.pregunta_9} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_9_1" placeholder="Respuesta 1" value={quiz.respuesta_9_1} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_9_2" placeholder="Respuesta 2" value={quiz.respuesta_9_2} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_9_3" placeholder="Respuesta 3" value={quiz.respuesta_9_3} readOnly />
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_9_4" placeholder="Respuesta 4" value={quiz.respuesta_9_4} readOnly />
-
-              </div>
-              <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta9} 
-              </div>
-
-            </div>
-            <br />
-            <div className='pregunta'>
-              <div className='pregunta-respuesta'>
-                <label htmlFor="pregunta_10">Pregunta 10</label>
-                <br />
-                <input className="pregunta_field" type="text" name="pregunta_10" value={quiz.pregunta_10} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_10_1" placeholder="Respuesta 1" value={quiz.respuesta_10_1} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_10_2" placeholder="Respuesta 2" value={quiz.respuesta_10_2} readOnly />
-
-                <br />
-                <input className="respuesta_field" type="text" name="respuesta_10_3" placeholder="Respuesta 3" value={quiz.respuesta_10_3} readOnly />
-                <br/>
-                <input className="respuesta_field" type="text" name="respuesta_1043" placeholder="Respuesta43" value={quiz.respuesta_10_4} readOnly />
-
-              </div>
-              <div className='valor-respuesta'>
-                Valor: {quiz.valorResPregunta10} 
+                Valor: {quiz.valorResPregunta4} puntos
               </div>
 
             </div>
